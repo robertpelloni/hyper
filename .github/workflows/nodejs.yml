@@ -33,7 +33,7 @@ jobs:
           corepack enable pnpm
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools
+        run: python3 -m pip install --break-system-packages packaging setuptools
       - name: Get pnpm store directory path
         id: pnpm-store-dir-path
         run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
@@ -143,7 +143,7 @@ jobs:
           corepack enable pnpm
           corepack prepare pnpm@${{ env.PNPM_VERSION }} --activate
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools
+        run: python3 -m pip install --break-system-packages packaging setuptools
       - name: Get pnpm store directory path
         id: pnpm-store-dir-path
         run: echo "dir=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
@@ -161,7 +161,7 @@ jobs:
       - name: Compile
         run: pnpm run build
       - name: rebuild node-pty
-        uses: pguyot/arm-runner-action@v2.5.2
+        uses: pguyot/arm-runner-action@v2.6.5
         with:
           image_additional_mb: 2000
           base_image: ${{ matrix.image }}

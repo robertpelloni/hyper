@@ -1,34 +1,43 @@
 # SUBMODULES_FEATURES: TormentNexus Integrated Functionalities
 
-## Structural Map
-- `submodules/bobbybookmarks`: Internal tool catalog, resource aggregator, and MCP directory.
-- `submodules/hermes-agent`: Advanced agentic harness with tool use and reasoning.
-- `submodules/pi-mono`: Default agent harness and task execution engine.
-- `submodules/tabby`: Self-hosted AI coding assistant core.
-- `submodules/warp`: Terminal with AI integration and collaborative features.
+## Technical Mapping & Analysis
 
-## Functionality List
+### Tabby-Go (Go-based Core)
+- **PTY Handling**: Advanced terminal management in `pkg/pty` and `pkg/session`.
+- **Remote Protocols**: Support for SSH, Telnet, and Serial.
+- **AI Integration**: Base client for LLM interaction in `pkg/ai`.
+- **Security**: Secret management via `pkg/vault` and `pkg/keychain`.
 
-### BobbyBookmarks
-- **Tool Cataloging**: Scrapes and indexes MCP directories and coding tools.
-- **Resource Aggregation**: Maintains a centralized database of links and documentation.
-- **Backend API**: Go-based API for tool and bookmark management.
-- **MCP Integration**: `extract_mcp.py` for automated MCP tool extraction.
+### Pi-Mono (Go-based Agent Harness)
+- **Autonomous Loop**: Primary execution engine in `pkg/agent`.
+- **Multi-Model Support**: Anthropic, OpenAI, and Google providers in `pkg/ai`.
+- **Task Scheduling**: Structured scheduler for agent actions.
+- **Frontends**: TUI (BubbleTea) and CLI implementations.
 
-### Hermes-Agent
-- **Agentic reasoning**: Advanced chains for task decomposition.
-- **Tool usage**: Native support for complex tool calls.
-- **Recursion**: Recursive submodule `tinker-atropos` for specialized LLM tasks.
+### Hermes-Agent (Python-based Intelligence)
+- **Toolbox**: Extensive library of tools for browser use, code execution, and system interaction.
+- **Learning Loop**: Self-improving logic and skill discovery.
+- **Memory**: Persistent trajectory and conversation search.
 
-### Pi-Mono
-- **Agent Orchestration**: Core harness for running multiple AI agents.
-- **Task Management**: Structured task execution and tracking.
-- **Memory Management**: Sessions and context persistence.
+### Warp (Rust-based Terminal)
+- **UI Paradigm**: Block-based terminal execution.
+- **AI Workflows**: Context-aware command suggestions and shared workflows.
 
-### Tabby
-- **Code Intelligence**: High-performance code completion and indexing.
-- **LLM Integration**: Interface for local and remote LLMs.
+## Implementation Details for Reimplementation
 
-### Warp
-- **Terminal UI**: Block-based command execution and AI-powered command suggestions.
-- **Collaboration**: Shared terminal workflows and cloud-sync.
+### 1. Agent Harness (`internal/agent`)
+- Based on `Pi-Mono`'s `Agent` struct.
+- Port the execution loop to support streaming and tool calls.
+- Integrate tool registration from `Hermes-Agent` schemas.
+
+### 2. Code Intelligence (`internal/intelligence`)
+- Port `Tabby`'s indexing logic.
+- Implement code completion handlers using the LLM interface from `Pi-Mono`.
+
+### 3. Block Terminal (`internal/terminal`)
+- Implement "Block" data structure in Go to track command input/output pairs.
+- Store block history in a local database (reusing `BobbyBookmarks` schema).
+
+### 4. Tool Registry & MCP (`internal/mcp`)
+- Dynamically register Go-based tools and aggregate external MCP servers.
+- Use `BobbyBookmarks` as the backend for tool discovery.
