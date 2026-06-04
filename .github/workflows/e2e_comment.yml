@@ -14,14 +14,14 @@ jobs:
           WORKFLOW_RUN_INFO: ${{ toJSON(github.event.workflow_run) }}
         run: echo "$WORKFLOW_RUN_INFO"
       - name: Download Artifacts
-        uses: dawidd6/action-download-artifact@v3.1.4
+        uses: actions/download-artifact@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: nodejs.yml
           run_id: ${{ github.event.workflow_run.id }}
           name: e2e
       - name: Get PR number
-        uses: dawidd6/action-download-artifact@v3.1.4
+        uses: actions/download-artifact@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: nodejs.yml
@@ -29,7 +29,7 @@ jobs:
           name: pr_num
       - name: Read the pr_num file
         id: pr_num_reader
-        uses: juliangruber/read-file-action@v1.1.7
+        uses: actions/read-file-action@v1
         with:
           path: ./pr_num.txt
       - name: List images
