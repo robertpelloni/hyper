@@ -9,7 +9,7 @@
     "name": "ZEIT, Inc.",
     "email": "team@zeit.co"
   },
-  "repository": "zeit/hyper",
+  "repository": "robertpelloni/tormentnexus",
   "scripts": {
     "postinstall": "npx patch-package"
   },

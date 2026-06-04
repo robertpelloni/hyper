@@ -170,6 +170,7 @@ jobs:
           copy_artifact_path: target/node_modules/node-pty
           copy_artifact_dest: target/node_modules
           commands: |
+            sudo apt-get update && sudo apt-get install -y python3-setuptools
             wget https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             tar -xJf node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             sudo cp node-v18.16.0-linux-${{ matrix.name }}/* /usr/local/ -R

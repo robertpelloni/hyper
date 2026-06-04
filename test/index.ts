@@ -19,6 +19,9 @@ test.before(async () => {
 
     case 'darwin':
       pathToBinary = path.join(__dirname, '../dist/mac/TormentNexus.app/Contents/MacOS/TormentNexus');
+      if (!fs.existsSync(pathToBinary)) {
+        pathToBinary = path.join(__dirname, '../dist/mac-arm64/TormentNexus.app/Contents/MacOS/TormentNexus');
+      }
       break;
 
     case 'win32':
