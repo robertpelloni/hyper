@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Deeply inspired by https://github.com/Microsoft/vscode/blob/1.17.0/resources/win/bin/code.sh
 
-NAME="Hyper"
-HYPER_PATH="$(dirname "$(dirname "$(dirname "$(realpath "$0")")")")"
-ELECTRON="$HYPER_PATH/$NAME.exe"
+NAME="TormentNexus"
+TormentNexus_PATH="$(dirname "$(dirname "$(dirname "$(realpath "$0")")")")"
+ELECTRON="$TormentNexus_PATH/$NAME.exe"
 if grep -q Microsoft /proc/version; then
-	echo "Warning! Due to WSL limitations, you can't use CLI commands here. Please use Hyper CLI on cmd, PowerShell or GitBash/CygWin."
+	echo "Warning! Due to WSL limitations, you can't use CLI commands here. Please use TormentNexus CLI on cmd, PowerShell or GitBash/CygWin."
 	echo "Please see: https://github.com/Microsoft/WSL/issues/1494"
 	echo ""
 	# If running under WSL don't pass cli.js to Electron, as environment vars
@@ -16,9 +16,9 @@ if grep -q Microsoft /proc/version; then
 	exit $?
 fi
 if [ "$(expr substr $(uname -s) 1 9)" == "CYGWIN_NT" ]; then
-	CLI=$(cygpath -m "$HYPER_PATH/resources/bin/cli.js")
+	CLI=$(cygpath -m "$TormentNexus_PATH/resources/bin/cli.js")
 else
-	CLI="$HYPER_PATH/resources/bin/cli.js"
+	CLI="$TormentNexus_PATH/resources/bin/cli.js"
 fi
 ELECTRON_RUN_AS_NODE=1 "$ELECTRON" "$CLI" "$@"
 exit $?

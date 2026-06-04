@@ -5,7 +5,7 @@ import {v4 as uuidv4} from 'uuid';
 import {SESSION_ADD, SESSION_SET_ACTIVE} from '../../typings/constants/sessions';
 import type {SessionAddAction} from '../../typings/constants/sessions';
 import {TERM_GROUP_EXIT, TERM_GROUP_RESIZE} from '../../typings/constants/term-groups';
-import type {ITermGroup, ITermState, ITermGroups, ITermGroupReducer, Mutable} from '../../typings/hyper';
+import type {ITermGroup, ITermState, ITermGroups, ITermGroupReducer, Mutable} from '../../typings/TormentNexus';
 import {decorateTermGroupsReducer} from '../utils/plugins';
 import findBySession from '../utils/term-groups';
 

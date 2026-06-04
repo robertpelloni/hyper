@@ -4,7 +4,7 @@ import type {rawConfig} from '../../typings/config';
 import notify from '../notify';
 
 import {_init} from './init';
-import {migrateHyper3Config} from './migrate';
+import {migrateTormentNexus3Config} from './migrate';
 import {defaultCfg, cfgPath, plugs, defaultPlatformKeyPath} from './paths';
 
 let defaultConfig: rawConfig;
@@ -15,7 +15,7 @@ const _importConf = () => {
   mkdirpSync(plugs.local);
 
   try {
-    migrateHyper3Config();
+    migrateTormentNexus3Config();
   } catch (err) {
     console.error(err);
   }

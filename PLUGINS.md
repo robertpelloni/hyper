@@ -2,17 +2,17 @@
 
 ## Workflow
 
-### Run Hyper in dev mode
-Hyper can be run in dev mode by cloning this repository and following the ["Contributing" section of our README](https://github.com/vercel/hyper#contribute).
+### Run TormentNexus in dev mode
+TormentNexus can be run in dev mode by cloning this repository and following the ["Contributing" section of our README](https://github.com/vercel/TormentNexus#contribute).
 
 In dev mode you'll get more ouput and access to React/Redux dev-tools in Electron.
 
-Prerequisites and steps are described in the ["Contributing" section of our README](https://github.com/vercel/hyper#contribute).
+Prerequisites and steps are described in the ["Contributing" section of our README](https://github.com/vercel/TormentNexus#contribute).
 Be sure to use the `canary` branch.
 
 ### Create a dev config file
-Copy your config file `hyper.json` to the root of your cloned repository. Hyper, in dev mode, will use this copied config file. That means that you can continue to use your main installation of Hyper with your day-to-day configuration.
-After the first run, Hyper, in dev mode, will have created a new `plugins` directory in your repository directory.
+Copy your config file `TormentNexus.json` to the root of your cloned repository. TormentNexus, in dev mode, will use this copied config file. That means that you can continue to use your main installation of TormentNexus with your day-to-day configuration.
+After the first run, TormentNexus, in dev mode, will have created a new `plugins` directory in your repository directory.
 
 ### Setup your plugin
 Go to your recently created `<repository_root>/plugins/local` directory and create/clone your plugin repo. An even better method on macOS/Linux is to add a symlink to your plugin directory.
@@ -24,26 +24,26 @@ module.exports = {
     ...
   },
   plugins: [],
-  localPlugins: ['hyper-awesome-plugin'],
+  localPlugins: ['TormentNexus-awesome-plugin'],
   ...
 }
 ```
 
 ### Running your plugin
-To load, your plugin should expose at least one API method. All possible methods are listed [here](https://github.com/vercel/hyper/blob/canary/app/plugins/extensions.ts).
+To load, your plugin should expose at least one API method. All possible methods are listed [here](https://github.com/vercel/TormentNexus/blob/canary/app/plugins/extensions.ts).
 
-After launching Hyper in dev mode, run `pnpm run app`, it should log that your plugin has been correcty loaded: `Plugin hyper-awesome-plugin (0.1.0) loaded.`. Name and version printed are the ones in your plugins `package.json` file.
+After launching TormentNexus in dev mode, run `pnpm run app`, it should log that your plugin has been correcty loaded: `Plugin TormentNexus-awesome-plugin (0.1.0) loaded.`. Name and version printed are the ones in your plugins `package.json` file.
 
 When you put a `console.log()` in your plugin code, it will be displayed in the Electron dev-tools, but only if it is located in a renderer method, like component decorators. If it is located in the Electron main process method, like the `onApp` handler, it will be displayed in your terminal where you ran `pnpm run app` or in your VSCode console.
 
 ## Recipes
-Almost all available API methods can be found on https://hyper.is.
+Almost all available API methods can be found on https://TormentNexus.is.
 If there's any missing, let us know or submit a PR to document it!
 
 ### Components
-You can decorate almost all Hyper components with a Higher-Order Component (HOC). To understand their architecture, the easiest way is to use React dev-tools to dig in to their hierarchy.
+You can decorate almost all TormentNexus components with a Higher-Order Component (HOC). To understand their architecture, the easiest way is to use React dev-tools to dig in to their hierarchy.
 
-Multiple plugins can decorate the same Hyper component. Thus, `Component` passed as first argument to your decorator function could possibly not be an original Hyper component but a HOC of a previous plugin. If you need to retrieve a reference to a real Hyper component, you can pass down a `onDecorated` handler.
+Multiple plugins can decorate the same TormentNexus component. Thus, `Component` passed as first argument to your decorator function could possibly not be an original TormentNexus component but a HOC of a previous plugin. If you need to retrieve a reference to a real TormentNexus component, you can pass down a `onDecorated` handler.
 ```js
 exports.decorateTerms = (Terms, {React}) => {
   return class extends React.Component {
@@ -91,7 +91,7 @@ exports.decorateKeymaps = keymaps => {
 The command name can be whatever you want, but the following is better to respect the default naming convention: `<context>:<action>`.
 Hotkeys are composed by [Mousetrap supported keys](https://craig.is/killing/mice#keys).
 
-**Bonus feature**: if your command ends with `:prefix`, it would mean that you want to use this command with an additional digit to the command. Then Hyper will create all your commands under the hood. For example, this keymap `'pane:hide:prefix': 'ctrl+shift'` will automatically generate the following:
+**Bonus feature**: if your command ends with `:prefix`, it would mean that you want to use this command with an additional digit to the command. Then TormentNexus will create all your commands under the hood. For example, this keymap `'pane:hide:prefix': 'ctrl+shift'` will automatically generate the following:
 ```
 {
   'pane:hide:1': 'ctrl+shift+1',
@@ -128,7 +128,7 @@ rpc.on('command pane:snapshot', () => {
 ```
 
 ### Menu
-Your plugin can expose a `decorateMenu` function to modify the Hyper menu template.
+Your plugin can expose a `decorateMenu` function to modify the TormentNexus menu template.
 Check the [Electron documentation](https://electronjs.org/docs/api/menu-item) for more details about the different menu item types/options available.
 
 Be careful, a click handler will be executed on the main process. If you need to trigger a handler in the render process you need to use an `rpc` message like this:
@@ -191,7 +191,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
 ```
 
 ### Require Electron
-Hyper doesn't provide a reference to electron. However plugins can directly require electron.
+TormentNexus doesn't provide a reference to electron. However plugins can directly require electron.
 
 ```js
 const electron = require('electron')
@@ -201,8 +201,8 @@ const { dialog, Menu } = require('electron')
 
 This is needed in order to allow show/hide to have proper return of focus.
 
-## Hyper v2 breaking changes
-Hyper v2 uses `xterm.js` instead of `hterm`. It means that PTY output renders now in a canvas element, not with a hackable DOM structure.
+## TormentNexus v2 breaking changes
+TormentNexus v2 uses `xterm.js` instead of `hterm`. It means that PTY output renders now in a canvas element, not with a hackable DOM structure.
 For example, plugins can't use TermCSS in order to modify text or link styles anymore. It is now required to use available configuration params that are passed down to `xterm.js`.
 
 If your plugin was deeply linked with the `hterm` API (even public methods), it certainly doesn't work anymore.

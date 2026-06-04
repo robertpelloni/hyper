@@ -6,7 +6,7 @@ import {
   TERM_GROUP_EXIT,
   TERM_GROUP_EXIT_ACTIVE
 } from '../../typings/constants/term-groups';
-import type {ITermState, ITermGroup, HyperState, HyperDispatch, HyperActions} from '../../typings/hyper';
+import type {ITermState, ITermGroup, TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/TormentNexus';
 import rpc from '../rpc';
 import {getRootGroups} from '../selectors';
 import findBySession from '../utils/term-groups';
@@ -15,7 +15,7 @@ import {setActiveSession, ptyExitSession, userExitSession} from './sessions';
 
 function requestSplit(direction: 'VERTICAL' | 'HORIZONTAL') {
   return (_activeUid: string | undefined, _profile: string | undefined) =>
-    (dispatch: HyperDispatch, getState: () => HyperState): void => {
+    (dispatch: TormentNexusDispatch, getState: () => TormentNexusState): void => {
       dispatch({
         type: SESSION_REQUEST,
         effect: () => {
@@ -36,7 +36,7 @@ function requestSplit(direction: 'VERTICAL' | 'HORIZONTAL') {
 export const requestVerticalSplit = requestSplit(DIRECTION.VERTICAL);
 export const requestHorizontalSplit = requestSplit(DIRECTION.HORIZONTAL);
 
-export function resizeTermGroup(uid: string, sizes: number[]): HyperActions {
+export function resizeTermGroup(uid: string, sizes: number[]): TormentNexusActions {
   return {
     uid,
     type: TERM_GROUP_RESIZE,
@@ -45,7 +45,7 @@ export function resizeTermGroup(uid: string, sizes: number[]): HyperActions {
 }
 
 export function requestTermGroup(_activeUid: string | undefined, _profile: string | undefined) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: TERM_GROUP_REQUEST,
       effect: () => {
@@ -65,7 +65,7 @@ export function requestTermGroup(_activeUid: string | undefined, _profile: strin
 }
 
 export function setActiveGroup(uid: string) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const {termGroups} = getState();
     dispatch(setActiveSession(termGroups.activeSessions[uid]));
   };
@@ -112,7 +112,7 @@ const findNextSessionUid = (state: ITermState, group: ITermGroup) => {
 };
 
 export function ptyExitTermGroup(sessionUid: string) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const {termGroups} = getState();
     const group = findBySession(termGroups, sessionUid);
     // This might have already been closed:
@@ -137,7 +137,7 @@ export function ptyExitTermGroup(sessionUid: string) {
 }
 
 export function userExitTermGroup(uid: string) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const {termGroups} = getState();
     dispatch({
       type: TERM_GROUP_EXIT,
@@ -169,7 +169,7 @@ export function userExitTermGroup(uid: string) {
 }
 
 export function exitActiveTermGroup() {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: TERM_GROUP_EXIT_ACTIVE,
       effect() {

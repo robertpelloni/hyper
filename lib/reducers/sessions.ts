@@ -12,7 +12,7 @@ import {
   SESSION_SET_CWD,
   SESSION_SEARCH
 } from '../../typings/constants/sessions';
-import type {sessionState, session, Mutable, ISessionReducer} from '../../typings/hyper';
+import type {sessionState, session, Mutable, ISessionReducer} from '../../typings/TormentNexus';
 import {decorateSessionsReducer} from '../utils/plugins';
 
 const initialState: sessionState = Immutable<Mutable<sessionState>>({

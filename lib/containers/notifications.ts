@@ -1,10 +1,10 @@
-import type {HyperState, HyperDispatch} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch} from '../../typings/TormentNexus';
 import {dismissNotification} from '../actions/notifications';
 import {installUpdate} from '../actions/updater';
 import Notifications from '../components/notifications';
 import {connect} from '../utils/plugins';
 
-const mapStateToProps = (state: HyperState) => {
+const mapStateToProps = (state: TormentNexusState) => {
   const {ui} = state;
   const {notifications} = ui;
   let state_: Partial<{
@@ -70,7 +70,7 @@ const mapStateToProps = (state: HyperState) => {
   return state_;
 };
 
-const mapDispatchToProps = (dispatch: HyperDispatch) => {
+const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   return {
     onDismissFont: () => {
       dispatch(dismissNotification('font'));

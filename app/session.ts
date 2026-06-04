@@ -139,7 +139,7 @@ export default class Session extends EventEmitter {
 
     // Electron has a default value for process.env.GOOGLE_API_KEY
     // We don't want to leak this to the shell
-    // See https://github.com/vercel/hyper/issues/696
+    // See https://github.com/vercel/TormentNexus/issues/696
     if (baseEnv.GOOGLE_API_KEY && process.env.GOOGLE_API_KEY === baseEnv.GOOGLE_API_KEY) {
       delete baseEnv.GOOGLE_API_KEY;
     }

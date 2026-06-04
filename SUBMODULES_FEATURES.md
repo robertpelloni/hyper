@@ -3,8 +3,8 @@
 ## Technical Mapping & Analysis
 
 ### Tabby-Go (Go-based Core)
-- **PTY Handling**: Advanced terminal management in `pkg/pty` and `pkg/session`.
-- **Remote Protocols**: Support for SSH, Telnet, and Serial.
+- **PTY Handling**: Advanced terminal management in `tabby-go/pkg/pty` using `creack/pty`. Supports base64 encoding for data transmission and PTY lifecycle management.
+- **Remote Protocols**: Comprehensive SSH client in `tabby-go/pkg/ssh` using `golang.org/x/crypto/ssh`. Features include port forwarding, jump hosts, and agent forwarding.
 - **AI Integration**: Base client for LLM interaction in `pkg/ai`.
 - **Security**: Secret management via `pkg/vault` and `pkg/keychain`.
 
@@ -34,10 +34,16 @@
 - Port `Tabby`'s indexing logic.
 - Implement code completion handlers using the LLM interface from `Pi-Mono`.
 
-### 3. Block Terminal (`internal/terminal`)
+### 3. Terminal & PTY Management (`internal/terminal`)
+- Implement `pty.go` using logic from `submodules/tabby/tabby-go/pkg/pty/pty_unix.go`.
+- Support PTY resizing and asynchronous data reading with base64 signaling.
 - Implement "Block" data structure in Go to track command input/output pairs.
 - Store block history in a local database (reusing `BobbyBookmarks` schema).
 
-### 4. Tool Registry & MCP (`internal/mcp`)
+### 4. Remote Session Management (`internal/session`)
+- Port SSH client and connection manager from `submodules/tabby/tabby-go/pkg/ssh/ssh.go`.
+- Support multiple sessions per connection and proxy jump chains.
+
+### 5. Tool Registry & MCP (`internal/mcp`)
 - Dynamically register Go-based tools and aggregate external MCP servers.
 - Use `BobbyBookmarks` as the backend for tool discovery.
