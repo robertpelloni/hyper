@@ -158,7 +158,7 @@
                     "type": "string"
                 },
                 "disableLigatures": {
-                    "description": "if `false` Hyper will use ligatures provided by some fonts",
+                    "description": "if `false` TormentNexus will use ligatures provided by some fonts",
                     "type": "boolean"
                 },
                 "env": {
@@ -318,18 +318,18 @@
                 {
                     "properties": {
                         "autoUpdatePlugins": {
-                            "description": "if `true` (default), Hyper will update plugins every 5 hours\nyou can also set it to a custom time e.g. `1d` or `2h`",
+                            "description": "if `true` (default), TormentNexus will update plugins every 5 hours\nyou can also set it to a custom time e.g. `1d` or `2h`",
                             "type": [
                                 "string",
                                 "boolean"
                             ]
                         },
                         "defaultSSHApp": {
-                            "description": "if `true` hyper will be set as the default protocol client for SSH",
+                            "description": "if `true` TormentNexus will be set as the default protocol client for SSH",
                             "type": "boolean"
                         },
                         "disableAutoUpdates": {
-                            "description": "if `true` hyper will not check for updates",
+                            "description": "if `true` TormentNexus will not check for updates",
                             "type": "boolean"
                         },
                         "updateChannel": {
@@ -485,7 +485,7 @@
                             "type": "string"
                         },
                         "disableLigatures": {
-                            "description": "if `false` Hyper will use ligatures provided by some fonts",
+                            "description": "if `false` TormentNexus will use ligatures provided by some fonts",
                             "type": "boolean"
                         },
                         "env": {
@@ -744,7 +744,7 @@
             "type": "array"
         },
         "plugins": {
-            "description": "a list of plugins to fetch and install from npm\nformat: [@org/]project[#version]\nexamples:\n  `hyperpower`\n  `@company/project`\n  `project#1.0.1`",
+            "description": "a list of plugins to fetch and install from npm\nformat: [@org/]project[#version]\nexamples:\n  `TormentNexuspower`\n  `@company/project`\n  `project#1.0.1`",
             "items": {
                 "type": "string"
             },

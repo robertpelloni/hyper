@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 
-import type {NotificationsProps} from '../../typings/hyper';
+import type {NotificationsProps} from '../../typings/TormentNexus';
 import {decorate} from '../utils/plugins';
 
 import Notification_ from './notification';
@@ -78,7 +78,7 @@ const Notifications = forwardRef<HTMLDivElement, NotificationsProps>((props, ref
               void window.require('electron').shell.openExternal(ev.currentTarget.href);
               ev.preventDefault();
             }}
-            href={`https://github.com/vercel/hyper/releases/tag/${props.updateVersion}`}
+            href={`https://github.com/vercel/TormentNexus/releases/tag/${props.updateVersion}`}
           >
             notes
           </a>

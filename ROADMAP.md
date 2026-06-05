@@ -7,7 +7,7 @@
 - [x] Project rebranding to TormentNexus.
 
 ## Phase 2: Feature Porting from Submodules
-- [x] Initial Tabby compatibility layer.
+- [/] Initial Tabby compatibility layer (Skeleton).
 - [ ] Port Warp-like command blocks.
 - [ ] Integrate Codex Desktop features.
 - [ ] Implement Wave-like notebook terminal capabilities.

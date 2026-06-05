@@ -2,7 +2,7 @@
 
 ## Summary of Accomplishments
 - Initialized Go-based core (v1.25.0).
-- Renamed project from Hyper to TormentNexus across `package.json` and `app/package.json`.
+- Renamed project from TormentNexus to TormentNexus across `package.json` and `app/package.json`.
 - Established directory structure for Go implementation: `cmd/tormentnexus`, `internal/terminal`, `internal/agent`, `internal/mcp`, `internal/session`.
 - Implemented core Go components:
     - `internal/terminal/pty.go`: PTY management using `creack/pty`.

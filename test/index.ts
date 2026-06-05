@@ -15,14 +15,23 @@ test.before(async () => {
   switch (process.platform) {
     case 'linux':
       pathToBinary = path.join(__dirname, '../dist/linux-unpacked/TormentNexus');
+      if (!fs.existsSync(pathToBinary)) {
+        pathToBinary = path.join(__dirname, '../dist/linux-unpacked/tormentnexus');
+      }
       break;
 
     case 'darwin':
       pathToBinary = path.join(__dirname, '../dist/mac/TormentNexus.app/Contents/MacOS/TormentNexus');
+      if (!fs.existsSync(pathToBinary)) {
+        pathToBinary = path.join(__dirname, '../dist/mac/TormentNexus.app/Contents/MacOS/tormentnexus');
+      }
       break;
 
     case 'win32':
       pathToBinary = path.join(__dirname, '../dist/win-unpacked/TormentNexus.exe');
+      if (!fs.existsSync(pathToBinary)) {
+        pathToBinary = path.join(__dirname, '../dist/win-unpacked/tormentnexus.exe');
+      }
       break;
 
     default:

@@ -1,7 +1,7 @@
 {
   "name": "TormentNexus",
   "version": "4.0.0-canary.5",
-  "repository": "zeit/hyper",
+  "repository": "zeit/TormentNexus",
   "scripts": {
     "start": "echo 'please run `yarn run dev` in one tab and then `yarn run app` in another one'",
     "app": "cross-env ELECTRONMON_LOGLEVEL=error electronmon target",
@@ -12,7 +12,7 @@
     "test:unit": "ava",
     "test:unit:watch": "yarn run test:unit -- --watch",
     "test:e2e": "ava --config ava-e2e.config.js",
-    "postinstall": "yarn run v8-snapshot && webpack --config-name hyper-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
+    "postinstall": "yarn run v8-snapshot && webpack --config-name TormentNexus-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
     "rebuild-node-pty": "electron-rebuild -f -o node-pty -m target",
     "dist": "yarn run build && electron-builder",
     "clean": "node ./bin/rimraf-standalone.js node_modules && node ./bin/rimraf-standalone.js ./app/node_modules && node ./bin/rimraf-standalone.js ./app/renderer",

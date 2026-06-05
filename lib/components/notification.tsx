@@ -1,6 +1,6 @@
 import React, {forwardRef, useEffect, useRef, useState} from 'react';
 
-import type {NotificationProps} from '../../typings/hyper';
+import type {NotificationProps} from '../../typings/TormentNexus';
 
 const Notification = forwardRef<HTMLDivElement, React.PropsWithChildren<NotificationProps>>((props, ref) => {
   const dismissTimer = useRef<NodeJS.Timeout | undefined>(undefined);

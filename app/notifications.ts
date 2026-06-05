@@ -5,7 +5,7 @@ import ms from 'ms';
 
 import {version} from './package.json';
 
-const NEWS_URL = 'https://hyper-news.now.sh';
+const NEWS_URL = 'https://TormentNexus-news.now.sh';
 
 export default function fetchNotifications(win: BrowserWindow) {
   const {rpc} = win;
@@ -18,8 +18,8 @@ export default function fetchNotifications(win: BrowserWindow) {
   console.log('Checking for notification messages');
   fetch(NEWS_URL, {
     headers: {
-      'X-Hyper-Version': version,
-      'X-Hyper-Platform': process.platform
+      'X-TormentNexus-Version': version,
+      'X-TormentNexus-Platform': process.platform
     }
   })
     .then((res) => res.json())

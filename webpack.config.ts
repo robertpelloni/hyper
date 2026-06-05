@@ -10,7 +10,7 @@ const isProd = nodeEnv === 'production';
 const config: webpack.Configuration[] = [
   {
     mode: 'none',
-    name: 'hyper-app',
+    name: 'TormentNexus-app',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },
@@ -71,7 +71,7 @@ const config: webpack.Configuration[] = [
 
   {
     mode: 'none',
-    name: 'hyper',
+    name: 'TormentNexus',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
     },
@@ -154,7 +154,7 @@ const config: webpack.Configuration[] = [
   },
   {
     mode: 'none',
-    name: 'hyper-cli',
+    name: 'TormentNexus-cli',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },

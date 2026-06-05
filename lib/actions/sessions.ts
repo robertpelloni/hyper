@@ -13,13 +13,13 @@ import {
   SESSION_SET_XTERM_TITLE,
   SESSION_SEARCH
 } from '../../typings/constants/sessions';
-import type {HyperState, HyperDispatch, HyperActions} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/TormentNexus';
 import rpc from '../rpc';
 import {keys} from '../utils/object';
 import findBySession from '../utils/term-groups';
 
 export function addSession({uid, shell, pid, cols = null, rows = null, splitDirection, activeUid, profile}: Session) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const {sessions} = getState();
     const now = Date.now();
     dispatch({
@@ -38,7 +38,7 @@ export function addSession({uid, shell, pid, cols = null, rows = null, splitDire
 }
 
 export function requestSession(profile: string | undefined) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: SESSION_REQUEST,
       effect: () => {
@@ -51,7 +51,7 @@ export function requestSession(profile: string | undefined) {
 }
 
 export function addSessionData(uid: string, data: string) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: SESSION_ADD_DATA,
       data,
@@ -69,7 +69,7 @@ export function addSessionData(uid: string, data: string) {
 }
 
 function createExitAction(type: typeof SESSION_USER_EXIT | typeof SESSION_PTY_EXIT) {
-  return (uid: string) => (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (uid: string) => (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     return dispatch({
       type,
       uid,
@@ -83,7 +83,7 @@ function createExitAction(type: typeof SESSION_USER_EXIT | typeof SESSION_PTY_EX
           window.close();
         }
       }
-    } as HyperActions);
+    } as TormentNexusActions);
   };
 }
 
@@ -93,7 +93,7 @@ export const userExitSession = createExitAction(SESSION_USER_EXIT);
 export const ptyExitSession = createExitAction(SESSION_PTY_EXIT);
 
 export function setActiveSession(uid: string) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: SESSION_SET_ACTIVE,
       uid
@@ -101,13 +101,13 @@ export function setActiveSession(uid: string) {
   };
 }
 
-export function clearActiveSession(): HyperActions {
+export function clearActiveSession(): TormentNexusActions {
   return {
     type: SESSION_CLEAR_ACTIVE
   };
 }
 
-export function setSessionXtermTitle(uid: string, title: string): HyperActions {
+export function setSessionXtermTitle(uid: string, title: string): TormentNexusActions {
   return {
     type: SESSION_SET_XTERM_TITLE,
     uid,
@@ -116,7 +116,7 @@ export function setSessionXtermTitle(uid: string, title: string): HyperActions {
 }
 
 export function resizeSession(uid: string, cols: number, rows: number) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const {termGroups} = getState();
     const group = findBySession(termGroups, uid)!;
     const isStandaloneTerm = !group.parentUid && !group.children.length;
@@ -136,7 +136,7 @@ export function resizeSession(uid: string, cols: number, rows: number) {
 }
 
 export function openSearch(uid?: string) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const targetUid = uid || getState().sessions.activeUid!;
     dispatch({
       type: SESSION_SEARCH,
@@ -147,7 +147,7 @@ export function openSearch(uid?: string) {
 }
 
 export function closeSearch(uid?: string, keyEvent?: any) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     const targetUid = uid || getState().sessions.activeUid!;
     if (getState().sessions.sessions[targetUid]?.search) {
       dispatch({
@@ -164,7 +164,7 @@ export function closeSearch(uid?: string, keyEvent?: any) {
 }
 
 export function sendSessionData(uid: string | null, data: string, escaped?: boolean) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: SESSION_USER_DATA,
       data,

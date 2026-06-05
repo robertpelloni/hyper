@@ -1,14 +1,27 @@
 # DEPLOYMENT
 
-## Prerequisites
-- Go 1.25.0
-- Node.js 18+
-- Yarn
+## Building TormentNexus
 
-## Building from Source
-1. Install dependencies: `yarn install --ignore-engines`
-2. Build Go core: `go build -o bin/tormentnexus ./cmd/tormentnexus/main.go`
-3. Build frontend: `yarn run build`
+1. **Install Dependencies:**
+   ```bash
+   yarn install --ignore-engines
+   ```
+
+2. **Build Go Core:**
+   ```bash
+   go build -o bin/tormentnexus ./cmd/tormentnexus/main.go
+   ```
+
+3. **Build Frontend:**
+   ```bash
+   yarn run build
+   ```
+
+4. **Package Application:**
+   ```bash
+   yarn run dist
+   ```
 
 ## Running
-Execute the Go binary: `./bin/tormentnexus` or run the Electron app: `yarn run app`.
+
+Execute the Go binary or run the packaged application from the `dist/` directory.

@@ -133,26 +133,26 @@ export type sessionState = Immutable<{
   write?: any;
 }>;
 
-export type ITermGroupReducer = Reducer<ITermState, HyperActions>;
+export type ITermGroupReducer = Reducer<ITermState, TormentNexusActions>;
 
-export type IUiReducer = Reducer<uiState, HyperActions>;
+export type IUiReducer = Reducer<uiState, TormentNexusActions>;
 
-export type ISessionReducer = Reducer<sessionState, HyperActions>;
+export type ISessionReducer = Reducer<sessionState, TormentNexusActions>;
 
 import type {Middleware, Reducer} from 'redux';
-export type hyperPlugin = {
+export type TormentNexusPlugin = {
   getTabProps: any;
   getTabsProps: any;
   getTermGroupProps: any;
   getTermProps: any;
   mapHeaderDispatch: any;
-  mapHyperDispatch: any;
-  mapHyperTermDispatch: any;
+  mapTormentNexusDispatch: any;
+  mapTormentNexusTermDispatch: any;
   mapNotificationsDispatch: any;
   mapTermsDispatch: any;
   mapHeaderState: any;
-  mapHyperState: any;
-  mapHyperTermState: any;
+  mapTormentNexusState: any;
+  mapTormentNexusTermState: any;
   mapNotificationsState: any;
   mapTermsState: any;
   middleware: Middleware;
@@ -163,7 +163,7 @@ export type hyperPlugin = {
   reduceUI: IUiReducer;
 };
 
-export type HyperState = {
+export type TormentNexusState = {
   ui: uiState;
   sessions: sessionState;
   termGroups: ITermState;
@@ -178,7 +178,7 @@ import type {TermGroupActions} from './constants/term-groups';
 import type {InitActions} from './constants';
 import type {TabActions} from './constants/tabs';
 
-export type HyperActions = (
+export type TormentNexusActions = (
   | UIActions
   | ConfigActions
   | SessionActions
@@ -190,7 +190,7 @@ export type HyperActions = (
 ) & {effect?: () => void};
 
 import type configureStore from '../lib/store/configure-store';
-export type HyperDispatch = ReturnType<typeof configureStore>['dispatch'];
+export type TormentNexusDispatch = ReturnType<typeof configureStore>['dispatch'];
 
 import type {ReactChild, ReactNode} from 'react';
 type extensionProps = Partial<{
@@ -203,8 +203,8 @@ type extensionProps = Partial<{
 import type {HeaderConnectedProps} from '../lib/containers/header';
 export type HeaderProps = HeaderConnectedProps & extensionProps;
 
-import type {HyperConnectedProps} from '../lib/containers/hyper';
-export type HyperProps = HyperConnectedProps & extensionProps;
+import type {TormentNexusConnectedProps} from '../lib/containers/TormentNexus';
+export type TormentNexusProps = TormentNexusConnectedProps & extensionProps;
 
 import type {NotificationsConnectedProps} from '../lib/containers/notifications';
 export type NotificationsProps = NotificationsConnectedProps & extensionProps;

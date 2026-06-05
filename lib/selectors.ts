@@ -1,8 +1,8 @@
 import {createSelector} from 'reselect';
 
-import type {HyperState} from '../typings/hyper';
+import type {TormentNexusState} from '../typings/TormentNexus';
 
-const getTermGroups = ({termGroups}: Pick<HyperState, 'termGroups'>) => termGroups.termGroups;
+const getTermGroups = ({termGroups}: Pick<TormentNexusState, 'termGroups'>) => termGroups.termGroups;
 export const getRootGroups = createSelector(getTermGroups, (termGroups) =>
   Object.keys(termGroups)
     .map((uid) => termGroups[uid])

@@ -1,4 +1,4 @@
-![](https://assets.vercel.com/image/upload/v1549723846/repositories/hyper/hyper-3-repo-banner.png)
+![](https://assets.vercel.com/image/upload/v1549723846/repositories/TormentNexus/TormentNexus-3-repo-banner.png)
 
 <p align="center">
   <a aria-label="Vercel logo" href="https://vercel.com">
@@ -6,10 +6,10 @@
   </a>
  </p>
   
-[![Node CI](https://github.com/vercel/hyper/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/hyper/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
+[![Node CI](https://github.com/vercel/TormentNexus/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/TormentNexus/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
 [![Changelog #213](https://img.shields.io/badge/changelog-%23213-lightgrey.svg)](https://changelog.com/213)
 
-For more details, head to: https://hyper.is
+For more details, head to: https://TormentNexus.is
 
 ## Project goals
 
@@ -19,21 +19,21 @@ In the future, we anticipate the community will come up with innovative addition
 
 ## Usage
 
-[Download the latest release!](https://hyper.is/#installation)
+[Download the latest release!](https://TormentNexus.is/#installation)
 
 ### Linux
 #### Arch and derivatives
-Hyper is available in the [AUR](https://aur.archlinux.org/packages/hyper/). Use an AUR [package manager](https://wiki.archlinux.org/index.php/AUR_helpers) e.g. [paru](https://github.com/Morganamilo/paru)
+TormentNexus is available in the [AUR](https://aur.archlinux.org/packages/TormentNexus/). Use an AUR [package manager](https://wiki.archlinux.org/index.php/AUR_helpers) e.g. [paru](https://github.com/Morganamilo/paru)
 
 ```sh
-paru -S hyper
+paru -S TormentNexus
 ```
 
 #### NixOS
-Hyper is available as [Nix package](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/hyper/default.nix), to install the app run this command:
+TormentNexus is available as [Nix package](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/TormentNexus/default.nix), to install the app run this command:
 
 ```sh
-nix-env -i hyper
+nix-env -i TormentNexus
 ```
 
 ### macOS
@@ -42,18 +42,18 @@ Use [Homebrew Cask](https://brew.sh) to download the app by running these comman
 
 ```bash
 brew update
-brew install --cask hyper
+brew install --cask TormentNexus
 ```
 
 ### Windows
 
-Use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/hyper/)):
+Use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/TormentNexus/)):
 
 ```bash
-choco install hyper
+choco install TormentNexus
 ```
 
-**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://hyper.is/#installation) if that's the case.
+**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://TormentNexus.is/#installation) if that's the case.
 
 ## Contribute
 
@@ -76,9 +76,9 @@ Regardless of the platform you are working on, you will need to have Yarn instal
 2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
 3. Install the dependencies: `yarn`
 4. Build the code and watch for changes: `yarn run dev`
-5. To run `hyper`
+5. To run `TormentNexus`
   * `yarn run app` from another terminal tab/window/pane
-  * If you are using **Visual Studio Code**, select `Launch Hyper` in debugger configuration to launch a new Hyper instance with debugger attached.
+  * If you are using **Visual Studio Code**, select `Launch TormentNexus` in debugger configuration to launch a new TormentNexus instance with debugger attached.
   * If you interrupt `yarn run dev`, you'll need to relaunch it each time you want to test something. Webpack will watch changes and will rebuild renderer code when needed (and only what have changed). You'll just have to relaunch electron by using yarn run app or VSCode launch task.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
@@ -110,7 +110,7 @@ If you have issues in the `codesign` step when running `yarn run dist` on macOS,
 
 ## Related Repositories
 
-- [Website](https://github.com/vercel/hyper-site)
-- [Sample Extension](https://github.com/vercel/hyperpower)
-- [Sample Theme](https://github.com/vercel/hyperyellow)
-- [Awesome Hyper](https://github.com/bnb/awesome-hyper)
+- [Website](https://github.com/vercel/TormentNexus-site)
+- [Sample Extension](https://github.com/vercel/TormentNexuspower)
+- [Sample Theme](https://github.com/vercel/TormentNexusyellow)
+- [Awesome TormentNexus](https://github.com/bnb/awesome-TormentNexus)

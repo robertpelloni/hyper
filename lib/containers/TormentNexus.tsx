@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import type {MousetrapInstance} from 'mousetrap';
 import stylis from 'stylis';
 
-import type {HyperState, HyperProps, HyperDispatch} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusProps, TormentNexusDispatch} from '../../typings/TormentNexus';
 import * as uiActions from '../actions/ui';
 import {getRegisteredKeys, getCommandHandler, shouldPreventDefault} from '../command-registry';
 import type Terms from '../components/terms';
@@ -16,7 +16,7 @@ import TermsContainer from './terms';
 
 const isMac = /Mac/.test(navigator.userAgent);
 
-const Hyper = forwardRef<HTMLDivElement, HyperProps>((props, ref) => {
+const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) => {
   const mousetrap = useRef<MousetrapInstance | null>(null);
   const terms = useRef<Terms | null>(null);
 
@@ -95,10 +95,10 @@ const Hyper = forwardRef<HTMLDivElement, HyperProps>((props, ref) => {
   const borderWidth = isMac_ ? '' : `${maximized ? '0' : '1'}px`;
   stylis.set({prefix: false});
   return (
-    <div id="hyper" ref={ref}>
+    <div id="TormentNexus" ref={ref}>
       <div
         style={{fontFamily: uiFontFamily, borderColor, borderWidth}}
-        className={`hyper_main ${isMac_ && 'hyper_mainRounded'} ${fullScreen ? 'fullScreen' : ''}`}
+        className={`TormentNexus_main ${isMac_ && 'TormentNexus_mainRounded'} ${fullScreen ? 'fullScreen' : ''}`}
       >
         <HeaderContainer />
         <TermsContainer ref_={onTermsRef} />
@@ -111,7 +111,7 @@ const Hyper = forwardRef<HTMLDivElement, HyperProps>((props, ref) => {
 
       <style jsx>
         {`
-          .hyper_main {
+          .TormentNexus_main {
             position: fixed;
             top: 0;
             left: 0;
@@ -120,7 +120,7 @@ const Hyper = forwardRef<HTMLDivElement, HyperProps>((props, ref) => {
             border: 1px solid #333;
           }
 
-          .hyper_mainRounded {
+          .TormentNexus_mainRounded {
             border-radius: 10.5px;
             overflow: hidden;
           }
@@ -128,17 +128,17 @@ const Hyper = forwardRef<HTMLDivElement, HyperProps>((props, ref) => {
       </style>
 
       {/*
-        Add custom CSS to Hyper.
+        Add custom CSS to TormentNexus.
         We add a scope to the customCSS so that it can get around the weighting applied by styled-jsx
       */}
-      <style dangerouslySetInnerHTML={{__html: stylis('#hyper', customCSS)}} />
+      <style dangerouslySetInnerHTML={{__html: stylis('#TormentNexus', customCSS)}} />
     </div>
   );
 });
 
-Hyper.displayName = 'Hyper';
+TormentNexus.displayName = 'TormentNexus';
 
-const mapStateToProps = (state: HyperState) => {
+const mapStateToProps = (state: TormentNexusState) => {
   return {
     isMac,
     customCSS: state.ui.css,
@@ -152,16 +152,16 @@ const mapStateToProps = (state: HyperState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: HyperDispatch) => {
+const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   return {
-    execCommand: (command: string, fn: (e: any, dispatch: HyperDispatch) => void, e: any) => {
+    execCommand: (command: string, fn: (e: any, dispatch: TormentNexusDispatch) => void, e: any) => {
       dispatch(uiActions.execCommand(command, fn, e));
     }
   };
 };
 
-const HyperContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(Hyper, 'Hyper');
+const TormentNexusContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(TormentNexus, 'TormentNexus');
 
-export default HyperContainer;
+export default TormentNexusContainer;
 
-export type HyperConnectedProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;
+export type TormentNexusConnectedProps = ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>;

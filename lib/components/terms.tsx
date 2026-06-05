@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {TermsProps, HyperDispatch} from '../../typings/hyper';
+import type {TermsProps, TormentNexusDispatch} from '../../typings/TormentNexus';
 import {registerCommandHandlers} from '../command-registry';
 import {ObjectTypedKeys} from '../utils/object';
 import {decorate, getTermGroupProps} from '../utils/plugins';
@@ -16,7 +16,7 @@ const isMac = /Mac/.test(navigator.userAgent);
 
 export default class Terms extends React.Component<React.PropsWithChildren<TermsProps>> {
   terms: Record<string, Term>;
-  registerCommands: (cmds: Record<string, (e: any, dispatch: HyperDispatch) => void>) => void;
+  registerCommands: (cmds: Record<string, (e: any, dispatch: TormentNexusDispatch) => void>) => void;
   constructor(props: TermsProps, context: any) {
     super(props, context);
     this.terms = {};

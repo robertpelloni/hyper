@@ -6,7 +6,7 @@ TormentNexus is a high-performance terminal and autonomous agent harness built w
 - **Go-based Core:** Leveraging Go's performance for PTY management, SSH, and agent execution.
 - **MCP Aggregator:** Acting as a central hub for Model Context Protocol servers.
 - **Autonomous Execution:** Built-in loops for agents to interact with the shell and external tools.
-- **Extensibility:** Maintaining compatibility with Hyper's plugin ecosystem while adding deep backend capabilities.
+- **Extensibility:** Maintaining compatibility with TormentNexus's plugin ecosystem while adding deep backend capabilities.
 
 ## User-Satisfaction Design
 - Seamless integration of AI suggestions.

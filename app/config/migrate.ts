@@ -142,9 +142,9 @@ export const _write = (path: string, data: string) => {
   writeFileSync(path, format, 'utf8');
 };
 
-// Migrate Hyper3 config to Hyper4 but only if the user hasn't manually
+// Migrate TormentNexus3 config to TormentNexus4 but only if the user hasn't manually
 // touched the new config and if the old config is not a symlink
-export const migrateHyper3Config = () => {
+export const migrateTormentNexus3Config = () => {
   copy(schemaPath, resolve(cfgDir, schemaFile), (err) => {
     if (err) {
       console.error(err);
@@ -161,7 +161,7 @@ export const migrateHyper3Config = () => {
   }
 
   // Migrate
-  copySync(resolve(dirname(legacyCfgPath), '.hyper_plugins', 'local'), plugs.local);
+  copySync(resolve(dirname(legacyCfgPath), '.TormentNexus_plugins', 'local'), plugs.local);
 
   const defaultCfgData = JSON.parse(readFileSync(defaultCfg, 'utf8'));
   let newCfgData;
@@ -172,19 +172,19 @@ export const migrateHyper3Config = () => {
 
     const pluginCode = configToPlugin(legacyCfgRaw);
     if (pluginCode) {
-      const pluginPath = resolve(plugs.local, 'migrated-hyper3-config.js');
-      newCfgData.localPlugins = ['migrated-hyper3-config', ...(newCfgData.localPlugins || [])];
+      const pluginPath = resolve(plugs.local, 'migrated-TormentNexus3-config.js');
+      newCfgData.localPlugins = ['migrated-TormentNexus3-config', ...(newCfgData.localPlugins || [])];
       _write(pluginPath, pluginCode);
     }
   } catch (e) {
     console.error(e);
     notify(
-      'Hyper 4',
-      `Failed to migrate your config from Hyper 3.\nDefault config will be created instead at ${cfgPath}`
+      'TormentNexus 4',
+      `Failed to migrate your config from TormentNexus 3.\nDefault config will be created instead at ${cfgPath}`
     );
     newCfgData = defaultCfgData;
   }
   _write(cfgPath, JSON.stringify(newCfgData, null, 2));
 
-  notify('Hyper 4', `Settings location and format has changed to ${cfgPath}`);
+  notify('TormentNexus 4', `Settings location and format has changed to ${cfgPath}`);
 };

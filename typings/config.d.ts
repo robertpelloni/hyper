@@ -21,13 +21,13 @@ export type ColorMap = {
 
 type rootConfigOptions = {
   /**
-   * if `true` (default), Hyper will update plugins every 5 hours
+   * if `true` (default), TormentNexus will update plugins every 5 hours
    * you can also set it to a custom time e.g. `1d` or `2h`
    */
   autoUpdatePlugins: boolean | string;
-  /** if `true` hyper will be set as the default protocol client for SSH */
+  /** if `true` TormentNexus will be set as the default protocol client for SSH */
   defaultSSHApp: boolean;
-  /** if `true` hyper will not check for updates */
+  /** if `true` TormentNexus will not check for updates */
   disableAutoUpdates: boolean;
   /** choose either `'stable'` for receiving highly polished, or `'canary'` for less polished but more frequent updates */
   updateChannel: 'stable' | 'canary';
@@ -78,7 +78,7 @@ type profileConfigOptions = {
   cursorColor: string;
   /** `'BEAM'` for |, `'UNDERLINE'` for _, `'BLOCK'` for █ */
   cursorShape: 'BEAM' | 'UNDERLINE' | 'BLOCK';
-  /** if `false` Hyper will use ligatures provided by some fonts */
+  /** if `false` TormentNexus will use ligatures provided by some fonts */
   disableLigatures: boolean;
   /** for environment variables */
   env: {[k: string]: string};
@@ -216,7 +216,7 @@ export type rawConfig = {
    * a list of plugins to fetch and install from npm
    * format: [@org/]project[#version]
    * examples:
-   *   `hyperpower`
+   *   `TormentNexuspower`
    *   `@company/project`
    *   `project#1.0.1`
    */
