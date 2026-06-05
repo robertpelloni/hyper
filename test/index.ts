@@ -14,15 +14,15 @@ test.before(async () => {
 
   switch (process.platform) {
     case 'linux':
-      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/hyper');
+      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/TormentNexus');
       break;
 
     case 'darwin':
-      pathToBinary = path.join(__dirname, '../dist/mac/Hyper.app/Contents/MacOS/Hyper');
+      pathToBinary = path.join(__dirname, '../dist/mac/TormentNexus.app/Contents/MacOS/TormentNexus');
       break;
 
     case 'win32':
-      pathToBinary = path.join(__dirname, '../dist/win-unpacked/Hyper.exe');
+      pathToBinary = path.join(__dirname, '../dist/win-unpacked/TormentNexus.exe');
       break;
 
     default:

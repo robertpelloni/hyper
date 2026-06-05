@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools
+        run: python3 -m pip install packaging setuptools --break-system-packages
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -135,7 +135,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools
+        run: python3 -m pip install packaging setuptools --break-system-packages
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -149,7 +149,7 @@ jobs:
         run: |
           yarn install
           sudo apt update
-          sudo apt install libarchive-tools qemu-user-static python3-setuptools
+          sudo apt install libarchive-tools qemu-user-static
       - name: Compile
         run: yarn run build
       - name: rebuild node-pty
@@ -165,6 +165,9 @@ jobs:
             wget https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             tar -xJf node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             sudo cp node-v18.16.0-linux-${{ matrix.name }}/* /usr/local/ -R
+            # Ensure distutils is available inside the ARM container
+            sudo apt update
+            sudo apt install -y python3-setuptools
             npm run rebuild-node-pty
       - name: chown node-pty
         run: |
