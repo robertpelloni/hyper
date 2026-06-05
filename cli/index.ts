@@ -234,11 +234,11 @@ const main = (argv: string[]) => {
     options['stdio'] = 'ignore';
     if (process.platform === 'darwin') {
       //Use `open` to prevent multiple TormentNexus process
-      const cmd = `open -b co.zeit.TormentNexus ${args_}`;
-      const opts = {
-        env
-      };
-      return promisify(exec)(cmd, opts);
+      const cmd = 'open';
+      const child_args = ['-b', 'com.tormentnexus.app', ...args_];
+      const child = spawn(cmd, child_args, { env, detached: true, stdio: 'ignore' });
+      child.unref();
+      return Promise.resolve();
     }
   }
 
