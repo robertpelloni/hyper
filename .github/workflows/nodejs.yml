@@ -72,8 +72,9 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
       - name: Archive Build Artifacts
-        uses: LabhanshAgrawal/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
+          name: build-${{ matrix.os }}
           path: |
             dist/*.dmg
             dist/*.snap
@@ -93,9 +94,9 @@ jobs:
         env:
           SHELL: /bin/bash
       - name: Archive E2E test screenshot
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: e2e
+          name: e2e-${{ matrix.os }}
           path: dist/tmp/*.png
       - name: Save the pr number in an artifact
         if: github.event_name == 'pull_request'
@@ -103,7 +104,7 @@ jobs:
           PR_NUM: ${{ github.event.number }}
         run: echo $PR_NUM > pr_num.txt
       - name: Upload the pr num
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: github.event_name == 'pull_request'
         with:
           name: pr_num
@@ -148,11 +149,11 @@ jobs:
         run: |
           yarn install
           sudo apt update
-          sudo apt install libarchive-tools
+          sudo apt install libarchive-tools qemu-user-static python3-setuptools
       - name: Compile
         run: yarn run build
       - name: rebuild node-pty
-        uses: pguyot/arm-runner-action@v2.5.2
+        uses: pguyot/arm-runner-action@v2.6.5
         with:
           image_additional_mb: 2000
           base_image: ${{ matrix.image }}
@@ -180,8 +181,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Archive Build Artifacts
-        uses: LabhanshAgrawal/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
+          name: build-linux-arm-${{ matrix.name }}
           path: |
             dist/*.snap
             dist/*.AppImage
