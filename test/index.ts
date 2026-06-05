@@ -62,3 +62,15 @@ test.after(async () => {
 test('see if dev tools are open', async (t) => {
   t.false(await app.evaluate(({webContents}) => !!webContents.getFocusedWebContents()?.isDevToolsOpened()));
 });
+
+test('check go core connectivity', async (t) => {
+  const isGoCoreRunning = await app.evaluate(async () => {
+    try {
+      const response = await fetch('http://localhost:9876/mcp/servers');
+      return response.ok;
+    } catch (e) {
+      return false;
+    }
+  });
+  t.true(isGoCoreRunning);
+});

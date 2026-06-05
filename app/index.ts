@@ -36,8 +36,27 @@ import * as plugins from './plugins';
 import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
+import {spawn} from 'child_process';
 
 const windowSet = new Set<BrowserWindow>([]);
+
+let goCoreProcess: any;
+
+function startGoCore() {
+  const binaryPath = resolve(isDev ? __dirname : app.getAppPath(), '../bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : ''));
+  console.log('Starting TormentNexus Go Core:', binaryPath);
+  goCoreProcess = spawn(binaryPath, [], {
+    env: {...process.env, TORMENTNEXUS_PORT: '9876'}
+  });
+
+  goCoreProcess.stdout.on('data', (data: any) => {
+    console.log(`Go Core: ${data}`);
+  });
+
+  goCoreProcess.stderr.on('data', (data: any) => {
+    console.error(`Go Core Error: ${data}`);
+  });
+}
 
 // expose to plugins
 app.config = config;
@@ -152,6 +171,9 @@ app.on('ready', () =>
         return hwin;
       }
 
+      // Start Go Core foundation
+      startGoCore();
+
       // when opening create a new window
       createWindow();
 
@@ -168,6 +190,9 @@ app.on('ready', () =>
       });
 
       app.on('window-all-closed', () => {
+        if (goCoreProcess) {
+          goCoreProcess.kill();
+        }
         if (process.platform !== 'darwin') {
           app.quit();
         }

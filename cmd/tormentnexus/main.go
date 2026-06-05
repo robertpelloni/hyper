@@ -1,32 +1,78 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/robertpelloni/tormentnexus/internal/terminal"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/gorilla/mux"
 	"github.com/robertpelloni/tormentnexus/internal/agent"
 	"github.com/robertpelloni/tormentnexus/internal/mcp"
+	"github.com/robertpelloni/tormentnexus/internal/terminal"
 )
 
-func main() {
-	fmt.Println("TormentNexus starting...")
+var harness *agent.Harness
+var aggregator *mcp.Aggregator
 
-	// Test Terminal
-	session, err := terminal.NewSession("/bin/sh", []string{"-c", "ls"})
-	if err != nil {
-		fmt.Printf("Error starting terminal: %v\n", err)
-	} else {
-		fmt.Println("Terminal session started.")
-		session.Close()
+func main() {
+	harness = agent.NewHarness()
+	harness.Start()
+	aggregator = mcp.NewAggregator()
+
+	r := mux.NewRouter()
+	r.HandleFunc("/agent/execute", executeCommand).Methods("POST")
+	r.HandleFunc("/mcp/servers", listServers).Methods("GET")
+	r.HandleFunc("/terminal/session", startTerminal).Methods("POST")
+
+	port := os.Getenv("TORMENTNEXUS_PORT")
+	if port == "" {
+		port = "9876"
 	}
 
-	// Test Agent
-	harness := agent.NewHarness()
-	harness.Start()
-	resp, _ := harness.Execute("echo hello")
-	fmt.Println("Agent response:", resp)
+	fmt.Printf("TormentNexus Go Core listening on port %s\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, r))
+}
 
-	// Test MCP
-	agg := mcp.NewAggregator()
-	agg.RegisterServer("default", "http://localhost:8080")
-	fmt.Println("MCP Servers:", agg.ListServers())
+func executeCommand(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Command string `json:"command"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	resp, err := harness.Execute(req.Command)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	json.NewEncoder(w).Encode(map[string]string{"response": resp})
+}
+
+func listServers(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(aggregator.ListServers())
+}
+
+func startTerminal(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		Shell string   `json:"shell"`
+		Args  []string `json:"args"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	session, err := terminal.NewSession(req.Shell, req.Args)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// Note: Real implementation would handle PTY over WebSocket here.
+	session.Close()
+	json.NewEncoder(w).Encode(map[string]string{"status": "Terminal test session closed successfully"})
 }
