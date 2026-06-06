@@ -12,14 +12,13 @@
     - `internal/mcp/aggregator.go`: Aggregator for Model Context Protocol servers.
     - `internal/session/remote.go`: SSH support.
 - Modernized CI/CD pipeline in `.github/workflows/nodejs.yml` to support latest `upload-artifact@v4` and fixed ARM build issues.
-- Verified Go build and ran unit tests.
+- Integrated Go core as a sidecar process in Electron and verified connectivity with E2E tests.
 
 ## Structural Shifts
 - The project is now a hybrid Go/Electron application rebranded as "TormentNexus".
 - UI containers were migrated to PascalCase TormentNexus naming.
 
 ## Remaining Tasks (Next Session)
-- Wire the Go backend to the Electron frontend via an RPC layer.
-- Complete feature porting from Tabby, Warp, and Wave.
-- Implement robust LLM integrations in `internal/agent`.
+- Complete feature porting from Tabby, Warp, and Wave (current implementations are skeletons).
 - Harden SSH security (replace `InsecureIgnoreHostKey`).
+- Deepen the REST/gRPC API for agent interaction.

@@ -14,6 +14,7 @@ func NewRemoteSession(addr, user, password string) (*RemoteSession, error) {
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
+		// TODO: Secure host key verification. Use InsecureIgnoreHostKey only for development.
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
 	}
 	client, err := ssh.Dial("tcp", addr, config)
