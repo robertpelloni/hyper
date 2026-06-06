@@ -1,13 +1,14 @@
 # ROADMAP
 
-## Phase 1: Go Core Foundation (Current)
+## Phase 1: Go Core Foundation (Complete)
 - [x] PTY management implementation.
 - [x] Basic agent harness.
 - [x] MCP aggregator skeleton.
 - [x] Project rebranding to TormentNexus.
+- [x] Electron sidecar integration.
 
-## Phase 2: Feature Porting from Submodules
-- [/] Initial Tabby compatibility layer (Skeleton).
+## Phase 2: Feature Porting from Submodules (In Progress)
+- [x] Initial Tabby compatibility layer (Skeleton).
 - [ ] Port Warp-like command blocks.
 - [ ] Integrate Codex Desktop features.
 - [ ] Implement Wave-like notebook terminal capabilities.
