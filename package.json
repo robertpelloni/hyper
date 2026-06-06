@@ -6,7 +6,7 @@
     "start": "echo 'please run `yarn run dev` in one tab and then `yarn run app` in another one'",
     "app": "cross-env ELECTRONMON_LOGLEVEL=error electronmon target",
     "dev": "concurrently -n \"Webpack,TypeScript\" -c \"cyan.bold,blue.bold\" \"webpack -w\" \"tsc --build -v --pretty --watch --preserveWatchOutput\" -k",
-    "build": "cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
+    "build": "go build -o bin/tormentnexus ./cmd/tormentnexus/main.go && cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.json",
     "test": "yarn run lint && yarn run test:unit",
     "test:unit": "ava",

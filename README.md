@@ -4,11 +4,12 @@ TormentNexus is a high-performance terminal and autonomous agent harness built w
 
 ## Key Features
 
-- **Go-based Core:** High-performance PTY management and system interactions.
-- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction.
+- **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
+- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction via REST API.
 - **MCP Aggregator:** Centralized hub for Model Context Protocol (MCP) servers.
 - **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
 - **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
+- **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
 
 ## Setup and Usage
 
@@ -41,13 +42,13 @@ TormentNexus is a high-performance terminal and autonomous agent harness built w
     ```
 
 ### Running the Application
-- **Run in Development Mode:**
+- **Run the full Electron App:**
   ```bash
   yarn run dev
   # Then in another tab
   yarn run app
   ```
-- **Run the Go Harness standalone:**
+- **Standalone Go Core:**
   ```bash
   ./bin/tormentnexus
   ```
@@ -58,6 +59,7 @@ For more detailed information, please refer to:
 - [ROADMAP.md](./ROADMAP.md): Current progress and future plans.
 - [DEPLOY.md](./DEPLOY.md): Deployment instructions.
 - [MISSION.md](./MISSION.md): Core values and project philosophy.
+- [CHANGELOG.md](./CHANGELOG.md): History of changes and releases.
 
 ## License
 MIT
