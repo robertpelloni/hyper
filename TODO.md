@@ -1,1 +1,10 @@
-# TODO\n\n- [ ] Implement PTY management in Go.\n- [ ] Integrate Tabby features.\n- [ ] Wire Go backend to Electron UI.
+# TODO
+
+## Phase 2: Feature Integration
+- [ ] Port Warp-like command blocks.
+- [ ] Implement full support for Tabby LSP extensions.
+- [ ] Integrate notebook-style terminal output from Wave.
+
+## Enhancement
+- [ ] Add gRPC interface for agent-core communication.
+- [ ] Implement secure SSH host key management.

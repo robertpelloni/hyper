@@ -234,7 +234,7 @@ const main = (argv: string[]) => {
     options['stdio'] = 'ignore';
     if (process.platform === 'darwin') {
       //Use `open` to prevent multiple TormentNexus process
-      const cmd = `open -b co.zeit.TormentNexus ${args_}`;
+      const cmd = `open -b com.tormentnexus.app ${args_}`;
       const opts = {
         env
       };

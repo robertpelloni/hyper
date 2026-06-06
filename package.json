@@ -1,6 +1,6 @@
 {
   "name": "TormentNexus",
-  "version": "4.0.0-canary.5",
+  "version": "1.0.0",
   "repository": "robertpelloni/TormentNexus",
   "scripts": {
     "start": "echo 'please run `yarn run dev` in one tab and then `yarn run app` in another one'",
@@ -12,7 +12,7 @@
     "test:unit": "ava",
     "test:unit:watch": "yarn run test:unit -- --watch",
     "test:e2e": "ava --config ava-e2e.config.js",
-    "postinstall": "yarn run v8-snapshot && webpack --config-name TormentNexus-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
+    "postinstall": "go build -o bin/tormentnexus ./cmd/tormentnexus/main.go && yarn run v8-snapshot && webpack --config-name TormentNexus-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
     "rebuild-node-pty": "electron-rebuild -f -o node-pty -m target",
     "dist": "yarn run build && electron-builder",
     "clean": "node ./bin/rimraf-standalone.js node_modules && node ./bin/rimraf-standalone.js ./app/node_modules && node ./bin/rimraf-standalone.js ./app/renderer",
@@ -24,8 +24,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "ZEIT, Inc.",
-    "email": "team@zeit.co"
+    "name": "TormentNexus Team",
+    "email": "contact@tormentnexus.com"
   },
   "dependencies": {
     "@electron/remote": "2.1.2",

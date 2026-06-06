@@ -7,7 +7,7 @@
     "app": "target"
   },
   "extraResources": [
-
+    "./bin/tormentnexus*",
     "./bin/cli.js",
     {
       "from": "./build/${os}/",
