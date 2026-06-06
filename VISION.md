@@ -17,6 +17,6 @@ Acting as a centralized aggregator, TormentNexus allows for seamless discovery a
 Our frontend goes beyond the traditional character stream. By implementing command blocks and rich metadata rendering, we provide a visual structure for AI interactions that feels natural and productive.
 
 ## User-Satisfaction Design
-- **Frictionless Onboarding:** Reusing the Hyper plugin ecosystem while offering deep AI primitives.
+- **Frictionless Onboarding:** Reusing the TormentNexus plugin ecosystem while offering deep AI primitives.
 - **Visual Clarity:** Interactive UI for agentic actions and command outputs.
 - **Stability:** A robust, type-safe architecture spanning Go and TypeScript.

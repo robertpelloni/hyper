@@ -14,8 +14,8 @@ export const availableExtensions = new Set([
   'decorateBrowserOptions',
   'decorateMenu',
   'decorateTerm',
-  'decorateHyper',
-  'decorateHyperTerm', // for backwards compatibility with hyperterm
+  'decorateTormentNexus',
+  'decorateTormentNexusTerm', // for backwards compatibility with hyperterm
   'decorateHeader',
   'decorateTerms',
   'decorateTab',
@@ -31,11 +31,11 @@ export const availableExtensions = new Set([
   'getTabProps',
   'getTabsProps',
   'getTermGroupProps',
-  'mapHyperTermState',
+  'mapTormentNexusTermState',
   'mapTermsState',
   'mapHeaderState',
   'mapNotificationsState',
-  'mapHyperTermDispatch',
+  'mapTormentNexusTermDispatch',
   'mapTermsDispatch',
   'mapHeaderDispatch',
   'mapNotificationsDispatch'
