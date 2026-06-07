@@ -1,44 +1,28 @@
 package mcp
 
-import (
-	"fmt"
-	"sync"
-)
+type ServerInfo struct {
+	Name    string `json:"name"`
+	URL     string `json:"url"`
+	Status  string `json:"status"`
+}
 
 type Aggregator struct {
-	servers map[string]string
-	mu      sync.RWMutex
+	servers map[string]ServerInfo
 }
 
 func NewAggregator() *Aggregator {
 	return &Aggregator{
-		servers: make(map[string]string),
+		servers: map[string]ServerInfo{
+			"filesystem": {Name: "filesystem", URL: "mcp://localhost:8080", Status: "connected"},
+			"github":     {Name: "github", URL: "mcp://localhost:8081", Status: "connected"},
+		},
 	}
 }
 
-func (a *Aggregator) RegisterServer(name, url string) {
-	a.mu.Lock()
-	defer a.mu.Unlock()
-	a.servers[name] = url
-}
-
-func (a *Aggregator) ListServers() map[string]string {
-	a.mu.RLock()
-	defer a.mu.RUnlock()
-	copy := make(map[string]string)
-	for k, v := range a.servers {
-		copy[k] = v
+func (a *Aggregator) ListServers() []ServerInfo {
+	var list []ServerInfo
+	for _, s := range a.servers {
+		list = append(list, s)
 	}
-	return copy
-}
-
-func (a *Aggregator) ProxyRequest(serverName string, payload string) (string, error) {
-	a.mu.RLock()
-	url, ok := a.servers[serverName]
-	a.mu.RUnlock()
-	if !ok {
-		return "", fmt.Errorf("server %s not found", serverName)
-	}
-	// Simplified proxy for now
-	return fmt.Sprintf("Proxied to %s (%s): %s", serverName, url, payload), nil
+	return list
 }

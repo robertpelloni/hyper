@@ -27,11 +27,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.25.x'
-          check-latest: true
       - name: Fix node-gyp and Python
         run: python3 -m pip install packaging setuptools --break-system-packages
       - name: Get yarn cache directory path
@@ -140,11 +135,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: '1.25.x'
-          check-latest: true
       - name: Fix node-gyp and Python
         run: python3 -m pip install packaging setuptools --break-system-packages
       - name: Get yarn cache directory path

@@ -1,5 +1,10 @@
 # TODO
-- [ ] Implement WebSocket PTY bridge.
-- [ ] Secure SSH host key checking.
-- [ ] Add real LSP support in the agent harness.
-- [ ] Wire command blocks to React UI.
+
+## Phase 2: Feature Integration
+- [ ] Port Warp-like command blocks.
+- [ ] Implement full support for Tabby LSP extensions.
+- [ ] Integrate notebook-style terminal output from Wave.
+
+## Enhancement
+- [ ] Add gRPC interface for agent-core communication.
+- [ ] Implement secure SSH host key management.
