@@ -33,3 +33,4 @@ TormentNexus is the evolution of the Hyper terminal into a comprehensive Go-powe
 
 ## End-to-End Verification
 END-TO-END connectivity between the React frontend and the Go sidecar has been verified using Playwright-based E2E tests, ensuring the harness is fully operational and ready for Phase 2 feature expansion.
+Final release packages (deb, AppImage, snap) successfully prepared and verified for x64 Linux. Go Core sidecar integration confirmed via E2E tests.
