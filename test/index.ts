@@ -69,13 +69,17 @@ test('see if dev tools are open', async (t) => {
 });
 
 test('check go core connectivity', async (t) => {
-  const isGoCoreRunning = await app.evaluate(async () => {
-    try {
-      const response = await fetch('http://localhost:9876/mcp/servers');
-      return response.ok;
-    } catch (e) {
-      return false;
-    }
+  const isGoCoreRunning = await app.evaluate(async ({net}) => {
+    return new Promise((resolve) => {
+      const request = net.request('http://localhost:9876/mcp/servers');
+      request.on('response', (response) => {
+        resolve(response.statusCode === 200);
+      });
+      request.on('error', (err) => {
+        resolve({error: err.message});
+      });
+      request.end();
+    });
   });
-  t.true(isGoCoreRunning);
+  t.is(isGoCoreRunning, true, `Go Core not responding: ${JSON.stringify(isGoCoreRunning)}`);
 });

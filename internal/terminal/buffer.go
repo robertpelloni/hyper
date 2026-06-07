@@ -2,8 +2,6 @@ package terminal
 
 import (
 	"sync"
-	"time"
-	"github.com/google/uuid"
 )
 
 type Buffer struct {
@@ -13,12 +11,9 @@ type Buffer struct {
 }
 
 type CommandBlock struct {
-	ID        string    `json:"id"`
-	Command   string    `json:"command"`
-	Output    string    `json:"output"`
-	Status    int       `json:"status"`
-	StartTime time.Time `json:"startTime"`
-	EndTime   time.Time `json:"endTime"`
+	Command string
+	Output  string
+	Status  int
 }
 
 func NewBuffer() *Buffer {
@@ -28,16 +23,13 @@ func NewBuffer() *Buffer {
 	}
 }
 
-func (b *Buffer) AddBlock(cmd string, output string, status int, start time.Time, end time.Time) {
+func (b *Buffer) AddBlock(cmd string, output string, status int) {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	b.blocks = append(b.blocks, CommandBlock{
-		ID:        uuid.NewString(),
-		Command:   cmd,
-		Output:    output,
-		Status:    status,
-		StartTime: start,
-		EndTime:   end,
+		Command: cmd,
+		Output:  output,
+		Status:  status,
 	})
 }
 

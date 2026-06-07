@@ -24,7 +24,6 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/agent/execute", executeCommand).Methods("POST")
 	r.HandleFunc("/mcp/servers", listServers).Methods("GET")
-	r.HandleFunc("/mcp/tools", aggregator.HandleMCPListTools).Methods("GET")
 	r.HandleFunc("/terminal/session", startTerminal).Methods("POST")
 
 	port := os.Getenv("TORMENTNEXUS_PORT")
@@ -62,18 +61,18 @@ func startTerminal(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Shell string   `json:"shell"`
 		Args  []string `json:"args"`
-		Env   []string `json:"env"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	session, err := terminal.NewSession(r.Context(), req.Shell, req.Args, req.Env)
+	session, err := terminal.NewSession(req.Shell, req.Args)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	// Note: Real implementation would handle PTY over WebSocket here.
 	session.Close()
 	json.NewEncoder(w).Encode(map[string]string{"status": "Terminal test session closed successfully"})
 }
