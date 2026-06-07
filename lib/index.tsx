@@ -9,6 +9,7 @@ import type {configOptions} from '../typings/config';
 
 import {loadConfig, reloadConfig} from './actions/config';
 import init from './actions/index';
+import {executeAgentCommand} from './utils/go-core';
 import {addNotificationMessage} from './actions/notifications';
 import * as sessionActions from './actions/sessions';
 import * as termGroupActions from './actions/term-groups';
@@ -243,4 +244,14 @@ root.render(
 
 rpc.on('reload', () => {
   plugins.reload();
+});
+
+rpc.on('agent check req', () => {
+  executeAgentCommand('status')
+    .then((resp) => {
+      store_.dispatch(addNotificationMessage(`Agent Status: ${resp.response}`, null, true));
+    })
+    .catch((err) => {
+      store_.dispatch(addNotificationMessage(`Agent Error: ${err.message}`, null, true));
+    });
 });

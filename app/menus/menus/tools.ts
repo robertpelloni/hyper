@@ -23,6 +23,15 @@ const toolsMenu = (
       {
         type: 'separator'
       },
+      {
+        label: 'Run Agent Health Check',
+        click() {
+          execCommand('agent:check');
+        }
+      },
+      {
+        type: 'separator'
+      },
       ...(process.platform === 'win32'
         ? <MenuItemConstructorOptions[]>[
             {

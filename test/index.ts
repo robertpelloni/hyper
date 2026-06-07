@@ -77,3 +77,22 @@ test('check go core connectivity', async (t) => {
   });
   t.true(isGoCoreRunning);
 });
+
+test('trigger agent health check via RPC', async (t) => {
+  const result = await app.evaluate(async ({BrowserWindow}) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (!win) return 'No window found';
+    win.rpc.emit('agent check req');
+    return 'Triggered';
+  });
+  t.is(result, 'Triggered');
+
+  // Wait for notification to appear in the UI
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+  const screenshot = await app.evaluate(async ({BrowserWindow}) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    return win.capturePage().then((img) => img.toPNG().toString('base64'));
+  });
+  t.truthy(screenshot);
+});

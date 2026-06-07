@@ -135,6 +135,9 @@ const commands: Record<string, (focusedWindow?: BrowserWindow) => void> = {
   },
   'window:toggleKeepOnTop': (focusedWindow) => {
     focusedWindow?.setAlwaysOnTop(!focusedWindow.isAlwaysOnTop());
+  },
+  'agent:check': (focusedWindow) => {
+    focusedWindow?.rpc.emit('agent check req');
   }
 };
 
