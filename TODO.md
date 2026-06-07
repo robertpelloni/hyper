@@ -1,10 +1,11 @@
 # TODO
 
-## Phase 2: Feature Integration
-- [ ] Port Warp-like command blocks.
-- [ ] Implement full support for Tabby LSP extensions.
-- [ ] Integrate notebook-style terminal output from Wave.
+## Immediate Next Steps (Phase 2)
+- [ ] **Warp Blocks:** Implement terminal output segmenting into logical command blocks.
+- [ ] **Tabby LSP:** Flesh out the completion engine to support actual LSP extensions.
+- [ ] **Security:** Replace `InsecureIgnoreHostKey` with a proper host key verification mechanism.
+- [ ] **Performance:** Explore gRPC for the sidecar bridge.
 
-## Enhancement
-- [ ] Add gRPC interface for agent-core communication.
-- [ ] Implement secure SSH host key management.
+## UI/UX
+- [ ] Wire the Agent Harness status to the terminal status bar.
+- [ ] Implement interactive agent prompts within the terminal buffer.

@@ -43,10 +43,9 @@ const windowSet = new Set<BrowserWindow>([]);
 let goCoreProcess: any;
 
 function startGoCore() {
-  const binaryPath = resolve(
-    isDev ? __dirname : dirname(app.getPath('exe')),
-    'resources/bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : '')
-  );
+  const binaryPath = isDev
+    ? resolve(__dirname, '../bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : ''))
+    : resolve(dirname(app.getPath('exe')), 'resources/bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : ''));
   console.log('Starting TormentNexus Go Core:', binaryPath);
   goCoreProcess = spawn(binaryPath, [], {
     env: {...process.env, TORMENTNEXUS_PORT: '9876'}

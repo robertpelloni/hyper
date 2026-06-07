@@ -31,8 +31,8 @@ func main() {
 		port = "9876"
 	}
 
-	fmt.Printf("TormentNexus Go Core listening on port %s\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, r))
+	fmt.Printf("TormentNexus Go Core listening on 127.0.0.1:%s\n", port)
+	log.Fatal(http.ListenAndServe("127.0.0.1:"+port, r))
 }
 
 func executeCommand(w http.ResponseWriter, r *http.Request) {

@@ -1,24 +1,19 @@
 # ROADMAP
 
-## Phase 1: Go Core Foundation (Complete)
-- [x] PTY management implementation.
-- [x] Basic agent harness.
-- [x] MCP aggregator skeleton.
-- [x] Project rebranding to TormentNexus.
-- [x] Electron sidecar integration.
+## Phase 1: Go Core & Rebranding (Complete)
+- [x] Initialized Go-based core sidecar.
+- [x] Renamed project to TormentNexus (UI, build, metadata).
+- [x] Implemented PTY management in Go.
+- [x] Integrated Agent Harness and MCP Aggregator foundation.
+- [x] Verified UI-to-Go connectivity via RPC and E2E tests.
 
-## Phase 2: Feature Porting from Submodules (In Progress)
-- [x] Initial Tabby compatibility layer (Skeleton).
-- [ ] Port Warp-like command blocks.
-- [ ] Integrate Codex Desktop features.
-- [ ] Implement Wave-like notebook terminal capabilities.
+## Phase 2: Feature Parity & Agent Expansion (Next)
+- [ ] Implement Warp-like command blocks in the Go core and React UI.
+- [ ] Achieve full Tabby LSP compatibility in the agent harness.
+- [ ] Integrate notebook-style terminal output from Wave.
+- [ ] Secure SSH host key verification.
+- [ ] Transition to gRPC for low-latency sidecar communication.
 
-## Phase 3: Advanced Agent Capabilities
-- [ ] Integration with Claude Code and Gemini CLI.
-- [ ] Full autonomous loop with tool-use (MCP).
-- [ ] Agentic file system and git management.
-
-## Phase 4: UI/UX Refinement
-- [ ] Wire Go backend to Electron UI via RPC.
-- [ ] Implement interactive command blocks in the frontend.
-- [ ] Status bar integration for AI status.
+## Phase 3: Autonomous Agent Loop
+- [ ] Full autonomous execution with file system and git tool-use.
+- [ ] Deep integration with Claude Code and Gemini CLI capabilities.
