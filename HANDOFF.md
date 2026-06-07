@@ -16,3 +16,7 @@
 - Port Warp-like command blocks to the Go core and React UI.
 - Implement full Tabby LSP compatibility in the agent harness.
 - Secure SSH host key verification logic.
+
+## Benchmarking & Performance
+- Benchmarks can be run via `go test -v -bench=. ./internal/agent/...`.
+- Timing metrics are printed to stdout during agent execution for real-time monitoring.
