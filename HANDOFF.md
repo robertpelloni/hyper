@@ -1,19 +1,18 @@
-# TormentNexus v1.0.0: Session Handoff & Final Status
+# TormentNexus v1.0.0: Final Session Handoff
 
 ## Final Accomplishments
-- **Architectural Shift:** Successfully evolved Hyper into **TormentNexus**, a hybrid Go/Electron autonomous LLM harness.
-- **Go Core sidecar:** Implemented a functional Go backend on port 9876 handling PTY, SSH, and Agent logic.
-- **Production Readiness:** Fixed binary path resolution in the Electron main process for packaged builds.
-- **E2E Verification:** Confirmed UI-to-Go connectivity using Playwright tests in a production-like environment.
-- **Full Rebranding:** Completed project-wide renaming to TormentNexus, including UI, config, and build metadata.
-- **CI/CD Modernization:** Updated GitHub Actions to support Go v1.25.x and ARM architecture.
+- **Hybrid Architecture:** Fully integrated Go sidecar (v1.25.0) for PTY and Agentic logic.
+- **UI Wiring:** Connected the "Agent Health Check" tool in the UI to the Go backend via RPC.
+- **E2E Stability:** Expanded Playwright suite to cover Go connectivity and RPC-based UI updates.
+- **Production Packaging:** Fixed binary path resolution for packaged AppImage/deb/snap distributions.
+- **Documentation:** Established a complete 11-file documentation suite covering all aspects of the project.
 
-## Technical Details
-- **Go Core Binary:** Located at `bin/tormentnexus`, bundled in `resources/bin/` of the final package.
-- **PTY Engine:** Uses `creack/pty` for high-performance terminal operations.
-- **Agent API:** RESTful endpoints for `/agent/execute` and `/mcp/servers`.
+## Technical Notes
+- **Communication:** Frontend uses `lib/utils/go-core.ts` for REST and `lib/index.tsx` for handling RPC triggers from the main process.
+- **Go Version:** Strictly requires v1.25.0.
+- **Port:** Defaults to 9876, configurable via `TORMENTNEXUS_PORT`.
 
-## Future Directions (Phase 2)
-- Transition from REST to gRPC for lower-latency communication.
-- Implement full feature parity with Tabby's LSP and Warp's command blocks.
-- Secure SSH host key verification.
+## Future Roadmap (Phase 2)
+- Port Warp-like command blocks to the Go core and React UI.
+- Implement full Tabby LSP compatibility in the agent harness.
+- Secure SSH host key verification logic.

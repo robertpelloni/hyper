@@ -1,27 +1,37 @@
 # TormentNexus v1.0.0: Final Release Summary
 
-## Project State
-TormentNexus has successfully transitioned from a standalone Electron terminal (Hyper) to a hybrid Go/Electron autonomous LLM harness. The foundation for Phase 1 is complete, verified, and ready for deployment.
+TormentNexus is the evolution of the Hyper terminal into a comprehensive Go-powered LLM harness.
 
-## Integrated Features
-- **Go Sidecar Core:** High-performance backend on port 9876 handling PTY, SSH, and Agent execution.
-- **PTY Engine:** Native PTY support via `creack/pty`, integrated into the Electron main process.
-- **Agent Harness:** Initial framework for autonomous execution loops, completion logic, and tool use.
-- **MCP Aggregator:** Hub for Model Context Protocol servers, allowing the terminal to connect to external data sources.
-- **Rebranding:** Comprehensive rebranding to TormentNexus across all UI components, build systems, and metadata.
-- **CI/CD:** Modernized pipeline for multi-platform distribution (x64/ARM64).
+## Key Components
 
-## Verification Results
-- **Unit Tests:** Go and Frontend unit tests pass.
-- **E2E Integration:** Playwright tests confirm that the Electron UI successfully communicates with the Go sidecar REST API in a production environment.
-- **Packaging:** Linux .deb, .AppImage, and .snap packages successfully generated and verified.
+### 1. High-Performance Go Core
+- **Location:** `cmd/tormentnexus/main.go`, `internal/`
+- **Features:**
+    - PTY management via `creack/pty`.
+    - SSH remote session support.
+    - Autonomous agent execution loop.
+    - Model Context Protocol (MCP) server aggregator.
+- **Integration:** Runs as a sidecar process (port 9876) managed by the Electron main process.
 
-## Documentation Reference
-- [README.md](./README.md): Overview and Setup.
-- [USAGE.md](./USAGE.md): User guide for Agentic Mode and MCP.
-- [DEPLOY.md](./DEPLOY.md): Release and deployment instructions.
-- [VISION.md](./VISION.md): Architectural roadmap.
-- [HANDOFF.md](./HANDOFF.md): Transition guide for future development.
+### 2. Electron Frontend (Integrated)
+- **Location:** `app/`, `lib/`
+- **Rebranding:** Full migration from "Hyper" to "TormentNexus".
+- **Bridge:** A TypeScript utility (`lib/utils/go-core.ts`) provides a REST-based interface.
+- **UI Integration:** Added "Agent Health Check" to the Tools menu, allowing real-time status probing of the Go Agent Harness.
 
-## Conclusion
-The v1.0.0 release establishes TormentNexus as a powerful foundation for AI-native terminal development. All core directives have been met, and the codebase is archived in a stable, verified state.
+### 3. Modernized CI/CD
+- **Location:** `.github/workflows/nodejs.yml`
+- **Capabilities:** Multi-platform builds (Linux, macOS, Windows) with ARM64 support.
+
+### 4. Documentation Suite
+- **README.md:** Setup and usage guide.
+- **VISION.md & MISSION.md:** Philosophical and architectural roadmap.
+- **USAGE.md:** Detailed user guide for Agentic Mode.
+- **DEPLOY.md:** Release instructions.
+
+## End-to-End Verification
+Comprehensive E2E integration tests confirm:
+1. Electron main process correctly spawns and manages the Go core sidecar.
+2. Frontend successfully communicates with Go Core via REST API.
+3. RPC events (e.g., Agent Health Check) correctly trigger backend logic and update the UI with notifications.
+4. Production binary resolution handles both dev and packaged environments.
