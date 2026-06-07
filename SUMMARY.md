@@ -35,3 +35,4 @@ Comprehensive E2E integration tests confirm:
 2. Frontend successfully communicates with Go Core via REST API.
 3. RPC events (e.g., Agent Health Check) correctly trigger backend logic and update the UI with notifications.
 4. Production binary resolution handles both dev and packaged environments.
+Final artifacts (deb, AppImage, snap) verified for size and content. All tests pass.
