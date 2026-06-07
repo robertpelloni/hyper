@@ -36,23 +36,44 @@ test.before(async () => {
     executablePath: pathToBinary
   });
   await app.firstWindow();
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  // Wait longer for Go Core to start
+  await new Promise((resolve) => setTimeout(resolve, 10000));
 });
 
 test.after(async () => {
-  await app
-    .evaluate(({BrowserWindow}) =>
-      BrowserWindow.getFocusedWindow()
-        ?.capturePage()
-        .then((img) => img.toPNG().toString('base64'))
-    )
-    .then((img) => Buffer.from(img || '', 'base64'))
-    .then(async (imageBuffer) => {
-      await fs.writeFile(`dist/tmp/${process.platform}_test.png`, imageBuffer);
-    });
-  await app.close();
+  if (app) {
+    await app
+      .evaluate(({BrowserWindow}) =>
+        BrowserWindow.getFocusedWindow()
+          ?.capturePage()
+          .then((img) => img.toPNG().toString('base64'))
+      )
+      .then((img) => Buffer.from(img || '', 'base64'))
+      .then(async (imageBuffer) => {
+        await fs.mkdirp('dist/tmp');
+        await fs.writeFile(`dist/tmp/${process.platform}_test.png`, imageBuffer);
+      })
+      .catch(() => {});
+    await app.close();
+  }
 });
 
 test('see if dev tools are open', async (t) => {
   t.false(await app.evaluate(({webContents}) => !!webContents.getFocusedWebContents()?.isDevToolsOpened()));
+});
+
+test('check go core connectivity', async (t) => {
+  const isGoCoreRunning = await app.evaluate(async ({net}) => {
+    return new Promise((resolve) => {
+      const request = net.request('http://localhost:9876/mcp/servers');
+      request.on('response', (response) => {
+        resolve(response.statusCode === 200);
+      });
+      request.on('error', () => {
+        resolve(false);
+      });
+      request.end();
+    });
+  });
+  t.true(isGoCoreRunning);
 });

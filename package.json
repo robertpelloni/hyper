@@ -7,7 +7,7 @@
     "start": "echo 'please run `pnpm run dev` in one tab and then `pnpm run app` in another one'",
     "app": "cross-env ELECTRONMON_LOGLEVEL=error electronmon target",
     "dev": "concurrently -n \"Webpack,TypeScript\" -c \"cyan.bold,blue.bold\" \"webpack -w\" \"tsc --build -v --pretty --watch --preserveWatchOutput\" -k",
-    "build": "cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
+    "build": "go build -o bin/tormentnexus ./cmd/tormentnexus/main.go && cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.json",
     "test": "pnpm run lint && pnpm run test:unit",
     "test:unit": "ava",
@@ -25,8 +25,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "ZEIT, Inc.",
-    "email": "team@zeit.co"
+    "name": "TormentNexus Team",
+    "email": "contact@tormentnexus.com"
   },
   "dependencies": {
     "@electron/remote": "2.1.2",

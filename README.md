@@ -11,13 +11,21 @@
 
 For more details, head to: https://TormentNexus.is
 
-## Project goals
+- **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
+- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction via REST API.
+- **MCP Aggregator:** Centralized hub for Model Context Protocol (MCP) servers.
+- **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
+- **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
+- **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
 
-The goal of the project is to create a beautiful and extensible experience for command-line interface users, built on open web standards. In the beginning, our focus will be primarily around speed, stability and the development of the correct API for extension authors.
+## Setup and Usage
 
-In the future, we anticipate the community will come up with innovative additions to enhance what could be the simplest, most powerful and well-tested interface for productivity.
+### Prerequisites
+- **Go:** 1.25.0 or later
+- **Node.js:** 18.x or later
+- **Yarn:** Latest version
 
-## Usage
+### Building from Source
 
 [Download the latest release!](https://TormentNexus.is/#installation)
 
@@ -36,7 +44,13 @@ TormentNexus is available as [Nix package](https://github.com/NixOS/nixpkgs/blob
 nix-env -i TormentNexus
 ```
 
-### macOS
+## Documentation
+For more detailed information, please refer to:
+- [VISION.md](./VISION.md): The long-term project goal.
+- [ROADMAP.md](./ROADMAP.md): Current progress and future plans.
+- [DEPLOY.md](./DEPLOY.md): Deployment instructions.
+- [MISSION.md](./MISSION.md): Core values and project philosophy.
+- [CHANGELOG.md](./CHANGELOG.md): History of changes and releases.
 
 Use [Homebrew Cask](https://brew.sh) to download the app by running these commands:
 

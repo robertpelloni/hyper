@@ -51,6 +51,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
+          sudo apt clean
           sudo apt install libarchive-tools
       - name: Lint and Run Unit Tests
         run: pnpm run test
@@ -79,6 +80,7 @@ jobs:
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: build-${{ matrix.os }}
           path: |
             dist/*.dmg
             dist/*.snap
@@ -100,7 +102,7 @@ jobs:
       - name: Archive E2E test screenshot
         uses: actions/upload-artifact@v4
         with:
-          name: e2e
+          name: e2e-${{ matrix.os }}
           path: dist/tmp/*.png
       - name: Save the pr number in an artifact
         if: github.event_name == 'pull_request'
@@ -157,13 +159,14 @@ jobs:
         run: |
           pnpm install --frozen-lockfile
           sudo apt update
-          sudo apt install libarchive-tools
+          sudo apt clean
+          sudo apt install libarchive-tools qemu-user-static
       - name: Compile
         run: pnpm run build
       - name: rebuild node-pty
         uses: pguyot/arm-runner-action@v2.6.5
         with:
-          image_additional_mb: 2000
+          image_additional_mb: 5000
           base_image: ${{ matrix.image }}
           cpu: ${{ matrix.cpu }}
           shell: bash
@@ -185,6 +188,7 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
+          sudo apt clean
           sudo apt install -y libglib2.0-0:i386 libexpat1:i386 libgcc-s1:i386
           npm_config_arch=armv7l pnpm run v8-snapshot:arch
       - name: Build
@@ -194,6 +198,7 @@ jobs:
       - name: Archive Build Artifacts
         uses: actions/upload-artifact@v4
         with:
+          name: build-linux-arm-${{ matrix.name }}
           path: |
             dist/*.snap
             dist/*.AppImage
