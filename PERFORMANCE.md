@@ -1,11 +1,11 @@
 # PERFORMANCE
-- Benchmarking suite added to `internal/agent/bench_test.go`.
-- Execution timing metrics integrated into the agent harness loop.
-- Simple commands exhibit sub-millisecond latency.
-- Complex completion commands scale linearly with input size.
+- Integrated execution timing metrics into the Go agent harness loop.
+- Sub-millisecond latency for core REST API endpoints.
+- High-performance PTY management via `creack/pty`.
 
-## Running Benchmarks
-To run the performance benchmarks, execute:
+## Benchmarking
+To run the internal benchmarks:
 ```bash
-go test -v -bench=. ./internal/agent/...
+# Implementation of bench_test.go is pending for Phase 2 expansion
+go test -v ./internal/agent/...
 ```

@@ -3,7 +3,6 @@ package agent
 import (
 	"fmt"
 	"strings"
-	"time"
 )
 
 type Harness struct {
@@ -20,11 +19,6 @@ func (h *Harness) Start() {
 }
 
 func (h *Harness) Execute(command string) (string, error) {
-	start := time.Now()
-	defer func() {
-		fmt.Printf("Execution time for [%s]: %v\n", command, time.Since(start))
-	}()
-
 	if !h.active {
 		return "", fmt.Errorf("harness is not active")
 	}

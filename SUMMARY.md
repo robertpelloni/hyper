@@ -36,8 +36,3 @@ Comprehensive E2E integration tests confirm:
 3. RPC events (e.g., Agent Health Check) correctly trigger backend logic and update the UI with notifications.
 4. Production binary resolution handles both dev and packaged environments.
 Final artifacts (deb, AppImage, snap) verified for size and content. All tests pass.
-
-## Performance Benchmarking
-- Integrated a benchmarking suite in `internal/agent/bench_test.go`.
-- Added execution timing metrics to the Go agent harness.
-- Verified sub-millisecond response times for core agent logic.
