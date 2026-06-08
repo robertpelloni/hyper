@@ -268,13 +268,3 @@ app.on('open-url', (_event, sshUrl) => {
     win.rpc.emit('open ssh', parseUrl(sshUrl));
   });
 });
-
-import {interceptAgentCommand} from './utils/agent-interceptor';
-
-app.on('browser-window-created', (_event, win) => {
-  win.rpc.on('data', async (args: {uid: string | null, data: string}) => {
-    if (args.uid && await interceptAgentCommand(args.data, win.rpc, args.uid)) {
-      return;
-    }
-  });
-});
