@@ -22,3 +22,10 @@ plugins
 !.vscode/launch.json
 .idea
 bin/tormentnexus*
+node_modules/
+dist/
+target/
+cache/
+*.txt
+*.log
+bin/tormentnexus

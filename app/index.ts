@@ -37,6 +37,7 @@ import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
 import {spawn} from 'child_process';
+import {interceptAgentCommand} from './utils/agent-interceptor';
 
 const windowSet = new Set<BrowserWindow>([]);
 
@@ -168,6 +169,12 @@ app.on('ready', () =>
         hwin.on('close', () => {
           hwin.clean();
           windowSet.delete(hwin);
+        });
+
+        hwin.rpc.on('data', async (args: {uid: string | null, data: string}) => {
+          if (args.uid && await interceptAgentCommand(args.data, hwin.rpc, args.uid)) {
+            return;
+          }
         });
 
         return hwin;
