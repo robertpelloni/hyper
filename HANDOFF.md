@@ -1,18 +1,15 @@
-# TormentNexus v1.0.0: Final Session Handoff
+# TormentNexus v1.0.0: Release and Handoff
 
-## Final Accomplishments
-- **Hybrid Architecture:** Fully integrated Go sidecar (v1.25.0) for PTY and Agentic logic.
-- **UI Wiring:** Connected the "Agent Health Check" tool in the UI to the Go backend via RPC.
-- **E2E Stability:** Expanded Playwright suite to cover Go connectivity and RPC-based UI updates.
-- **Production Packaging:** Fixed binary path resolution for packaged AppImage/deb/snap distributions.
-- **Documentation:** Established a complete 11-file documentation suite covering all aspects of the project.
+## Release Summary
+TormentNexus v1.0.0 is the foundational release of the hybrid Go/Electron autonomous LLM harness. The architecture is stable, verified, and benchmarked.
 
-## Technical Notes
-- **Communication:** Frontend uses `lib/utils/go-core.ts` for REST and `lib/index.tsx` for handling RPC triggers from the main process.
-- **Go Version:** Strictly requires v1.25.0.
-- **Port:** Defaults to 9876, configurable via `TORMENTNEXUS_PORT`.
+## Technical Context
+- **Sidecar:** Go core listens on 127.0.0.1:9876.
+- **Interception:** '/agent ' commands are intercepted in 'app/index.ts' and processed by 'app/utils/agent-interceptor.ts'.
+- **Testing:** Playwright E2E tests confirm connectivity and basic agent feedback loop.
+- **Go Core:** Modules for PTY, Agent, MCP, and Session are located in 'internal/'.
 
-## Future Roadmap (Phase 2)
-- Port Warp-like command blocks to the Go core and React UI.
-- Implement full Tabby LSP compatibility in the agent harness.
-- Secure SSH host key verification logic.
+## Instructions for Successor
+1. Start with Phase 2 items in ROADMAP.md.
+2. The Go Core is ready for gRPC implementation to replace/supplement REST.
+3. Feature parity with Warp and Tabby should be the primary focus for the next major milestone.

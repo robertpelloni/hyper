@@ -1,11 +1,11 @@
 # TODO
 
-## Immediate Next Steps (Phase 2)
-- [ ] **Warp Blocks:** Implement terminal output segmenting into logical command blocks.
-- [ ] **Tabby LSP:** Flesh out the completion engine to support actual LSP extensions.
-- [ ] **Security:** Replace `InsecureIgnoreHostKey` with a proper host key verification mechanism.
-- [ ] **Performance:** Explore gRPC for the sidecar bridge.
+## Immediate Next Steps (Phase 2 Start)
+- [ ] Implement command block boundary detection in Go PTY.
+- [ ] Wire block metadata (status, timing) to the React frontend.
+- [ ] Create initial Tabby LSP client in the agent harness.
+- [ ] Implement SSH HostKeyCallback for secure remote sessions.
 
-## UI/UX
-- [ ] Wire the Agent Harness status to the terminal status bar.
-- [ ] Implement interactive agent prompts within the terminal buffer.
+## Maintenance
+- [ ] Migrate REST API to gRPC for reduced bridge latency.
+- [ ] Expand benchmarking to cover concurrent agent sessions.
