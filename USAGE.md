@@ -35,3 +35,10 @@ Configuration is managed via `TormentNexus.json`.
 ## Tips and Tricks
 - Use `ssh://` links to open remote sessions managed by the Go core's secure SSH module.
 - Check the status bar for real-time AI processing indicators.
+
+## Performance and Monitoring
+- Real-time execution metrics are enabled for all agent commands.
+- Run benchmarks to verify harness latency:
+  ```bash
+  go test -v -bench=. ./internal/agent/...
+  ```
