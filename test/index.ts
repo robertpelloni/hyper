@@ -102,3 +102,19 @@ test('trigger agent health check via RPC', async (t) => {
   });
   t.truthy(screenshot);
 });
+
+test('agent command interaction', async (t) => {
+  const result = await app.evaluate(async ({BrowserWindow}) => {
+    const win = BrowserWindow.getAllWindows()[0];
+    if (!win) return 'No window found';
+
+    // Simulate typing into the terminal
+    win.rpc.emit('data', {uid: win.uid, data: '/agent status'});
+
+    // Give it some time to process
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    return 'Command emitted';
+  });
+  t.is(result, 'Command emitted');
+});
