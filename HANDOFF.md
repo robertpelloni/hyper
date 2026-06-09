@@ -1,10 +1,19 @@
-# TormentNexus v1.0.0: Architecture Handoff
+# TormentNexus v1.0.0: Project Handoff & Archive
 
-## Session Highlights
-- **Integrated Go Core:** Spawns as a sidecar from the main process.
-- **Command Interceptor:** Wired to the terminal data stream to handle interactive AI triggers.
-- **E2E Stability:** Expanded the Playwright suite to verify the interactive feedback loop.
-- **Documentation:** Full suite of documentation (VISION, ROADMAP, USAGE, etc.) established.
+## Final Release State
+The terminal has been successfully transitioned to **TormentNexus v1.0.0**, a Go-powered autonomous LLM harness.
 
-## Next Phase: Feature Deepening
-Focus on Phase 2 items in ROADMAP.md: Warp-like command blocks and full Tabby LSP integration.
+## Architectural Summary
+- **Hybrid Core:** Electron UI + Go Sidecar (REST API on port 9876).
+- **Agent Integration:** Interactive `/agent` commands wired to the Go execution loop.
+- **Verification:** System stable with unit, bench, and E2E coverage.
+
+## Codebase Archive
+- **Primary Logic:** `internal/` (Go), `lib/` (React), `app/` (Electron Main).
+- **Dist Artifacts:** Cleaned from repo; generated via `yarn run dist`.
+- **Docs:** Comprehensive suite of 12 MD files documenting vision, roadmap, and usage.
+
+## Future Recommendations
+1. Focus Phase 2 on **Warp-like Command Blocks**.
+2. Enhance **Tabby LSP** protocol support.
+3. Replace REST with **gRPC** for internal communication.
