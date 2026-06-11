@@ -45,7 +45,7 @@ export function newWindow(
     frame: process.platform === 'darwin',
     transparent: process.platform === 'darwin',
     icon,
-    show: Boolean(process.env.HYPER_DEBUG || process.env.HYPERTERM_DEBUG || isDev),
+    show: Boolean(process.env.TORMENTNEXUS_DEBUG || isDev),
     acceptFirstMouse: true,
     webPreferences: {
       nodeIntegration: true,

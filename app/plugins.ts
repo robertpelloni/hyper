@@ -188,7 +188,7 @@ export const getLoadedPluginVersions = () => {
 // we schedule the initial plugins update
 // a bit after the user launches the terminal
 // to prevent slowness
-if (cache.get('tormentnexus.plugins') !== id || process.env.HYPER_FORCE_UPDATE) {
+if (cache.get('tormentnexus.plugins') !== id || process.env.TORMENTNEXUS_FORCE_UPDATE) {
   // install immediately if the user changed plugins
   console.log('plugins have changed / not init, scheduling plugins installation');
   setTimeout(() => {

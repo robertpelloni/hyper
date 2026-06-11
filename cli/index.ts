@@ -206,7 +206,7 @@ const main = (argv: string[]) => {
 
   const env = Object.assign({}, process.env, {
     // this will signal TormentNexus that it was spawned from this module
-    HYPER_CLI: '1',
+    TORMENTNEXUS_CLI: '1',
     ELECTRON_NO_ATTACH_CONSOLE: '1'
   });
 
