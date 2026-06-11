@@ -13,7 +13,7 @@ const helpMenu = (commands: Record<string, string>, showAbout: () => void): Menu
     {
       label: `${app.name} Website`,
       click() {
-        void shell.openExternal('https://TormentNexus.is');
+        void shell.openExternal('https://tormentnexus.is');
       }
     },
     {
@@ -26,8 +26,8 @@ const helpMenu = (commands: Record<string, string>, showAbout: () => void): Menu
   If not, please try and fulfil these first.
 -->
 <!-- 👉 Checked checkbox should look like this: [x] -->
-- [ ] Your TormentNexus.app version is **${version}**. Please verify you're using the [latest](https://github.com/vercel/TormentNexus/releases/latest) TormentNexus.app version
-- [ ] I have searched the [issues](https://github.com/vercel/TormentNexus/issues) of this repo and believe that this is not a duplicate
+- [ ] Your TormentNexus.app version is **${version}**. Please verify you're using the [latest](https://github.com/vercel/tormentnexus/releases/latest) TormentNexus.app version
+- [ ] I have searched the [issues](https://github.com/vercel/tormentnexus/issues) of this repo and believe that this is not a duplicate
 ---
 - **Any relevant information from devtools?** _(CMD+OPTION+I on macOS, CTRL+SHIFT+I elsewhere)_:
 <!-- 👉 Replace with info if applicable, or N/A -->
@@ -43,12 +43,12 @@ const helpMenu = (commands: Record<string, string>, showAbout: () => void): Menu
 
 
 ---
-<!-- TormentNexus.json config -->
+<!-- tormentnexus.json config -->
 - **${app.name} version**: ${env.TERM_PROGRAM_VERSION} "${app.getVersion()}"
 - **OS ARCH VERSION:** ${platform} ${arch} ${release()}
 - **Electron:** ${versions.electron}  **LANG:** ${env.LANG}
 - **SHELL:** ${env.SHELL}   **TERM:** ${env.TERM}
-<details><summary><strong>TormentNexus.json contents</strong></summary>
+<details><summary><strong>tormentnexus.json contents</strong></summary>
 
 \`\`\`json
 ${JSON.stringify(getConfig(), null, 2)}
@@ -61,11 +61,11 @@ ${JSON.stringify(getPlugins(), null, 2)}
 \`\`\`
 </details>`;
 
-        const issueURL = `https://github.com/vercel/TormentNexus/issues/new?body=${encodeURIComponent(body)}`;
+        const issueURL = `https://github.com/vercel/tormentnexus/issues/new?body=${encodeURIComponent(body)}`;
         const copyAndSend = () => {
           clipboard.writeText(body);
           void shell.openExternal(
-            `https://github.com/vercel/TormentNexus/issues/new?body=${encodeURIComponent(
+            `https://github.com/vercel/tormentnexus/issues/new?body=${encodeURIComponent(
               '<!-- We have written the needed data into your clipboard because it was too large to send. ' +
                 'Please paste. -->\n'
             )}`

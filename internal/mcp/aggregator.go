@@ -14,7 +14,6 @@ func NewAggregator() *Aggregator {
 	return &Aggregator{
 		servers: map[string]ServerInfo{
 			"filesystem": {Name: "filesystem", URL: "mcp://localhost:8080", Status: "connected"},
-			"github":     {Name: "github", URL: "mcp://localhost:8081", Status: "connected"},
 		},
 	}
 }

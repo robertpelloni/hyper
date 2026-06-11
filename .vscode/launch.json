@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch TormentNexus",
+      "name": "Launch Hyper",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
       "program": "${workspaceRoot}/target/index.js",
       "protocol": "inspector"

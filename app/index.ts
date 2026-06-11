@@ -22,7 +22,7 @@ import * as config from './config';
 config.setup();
 
 // Native
-import {resolve, dirname} from 'path';
+import {resolve} from 'path';
 
 // Packages
 import {app, BrowserWindow, Menu, screen} from 'electron';
@@ -36,30 +36,8 @@ import * as plugins from './plugins';
 import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
-import {spawn} from 'child_process';
-import {interceptAgentCommand} from './utils/agent-interceptor';
 
 const windowSet = new Set<BrowserWindow>([]);
-
-let goCoreProcess: any;
-
-function startGoCore() {
-  const binaryPath = isDev
-    ? resolve(__dirname, '../bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : ''))
-    : resolve(dirname(app.getPath('exe')), 'resources/bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : ''));
-  console.log('Starting TormentNexus Go Core:', binaryPath);
-  goCoreProcess = spawn(binaryPath, [], {
-    env: {...process.env, TORMENTNEXUS_PORT: '9876'}
-  });
-
-  goCoreProcess.stdout.on('data', (data: any) => {
-    console.log(`Go Core: ${data}`);
-  });
-
-  goCoreProcess.stderr.on('data', (data: any) => {
-    console.error(`Go Core Error: ${data}`);
-  });
-}
 
 // expose to plugins
 app.config = config;
@@ -171,17 +149,8 @@ app.on('ready', () =>
           windowSet.delete(hwin);
         });
 
-        hwin.rpc.on('data', async (args: {uid: string | null, data: string}) => {
-          if (args.uid && await interceptAgentCommand(args.data, hwin.rpc, args.uid)) {
-            return;
-          }
-        });
-
         return hwin;
       }
-
-      // Start Go Core foundation
-      startGoCore();
 
       // when opening create a new window
       createWindow();
@@ -199,9 +168,6 @@ app.on('ready', () =>
       });
 
       app.on('window-all-closed', () => {
-        if (goCoreProcess) {
-          goCoreProcess.kill();
-        }
         if (process.platform !== 'darwin') {
           app.quit();
         }
@@ -273,15 +239,5 @@ app.on('open-file', (_event, path) => {
 app.on('open-url', (_event, sshUrl) => {
   GetWindow((win: BrowserWindow) => {
     win.rpc.emit('open ssh', parseUrl(sshUrl));
-  });
-});
-
-import {interceptAgentCommand} from './utils/agent-interceptor';
-
-app.on('browser-window-created', (_event, win) => {
-  win.rpc.on('data', async (args: {uid: string | null, data: string}) => {
-    if (args.uid && await interceptAgentCommand(args.data, win.rpc, args.uid)) {
-      return;
-    }
   });
 });

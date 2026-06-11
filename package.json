@@ -1,18 +1,18 @@
 {
-  "name": "TormentNexus",
-  "version": "1.0.0",
-  "repository": "robertpelloni/TormentNexus",
+  "name": "tormentnexus",
+  "version": "4.0.0-canary.5",
+  "repository": "zeit/tormentnexus",
   "scripts": {
     "start": "echo 'please run `yarn run dev` in one tab and then `yarn run app` in another one'",
     "app": "cross-env ELECTRONMON_LOGLEVEL=error electronmon target",
     "dev": "concurrently -n \"Webpack,TypeScript\" -c \"cyan.bold,blue.bold\" \"webpack -w\" \"tsc --build -v --pretty --watch --preserveWatchOutput\" -k",
-    "build": "go build -o bin/tormentnexus ./cmd/tormentnexus/main.go && cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
+    "build": "cross-env NODE_ENV=production webpack && tsc -b -v && cross-env BABEL_ENV=production babel target/renderer/bundle.js --out-file target/renderer/bundle.js --no-comments --minified",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx,.json",
     "test": "yarn run lint && yarn run test:unit",
     "test:unit": "ava",
     "test:unit:watch": "yarn run test:unit -- --watch",
     "test:e2e": "ava --config ava-e2e.config.js",
-    "postinstall": "go build -o bin/tormentnexus ./cmd/tormentnexus/main.go && yarn run v8-snapshot && webpack --config-name TormentNexus-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
+    "postinstall": "yarn run v8-snapshot && webpack --config-name tormentnexus-app && electron-builder install-app-deps && yarn run rebuild-node-pty && cpy --cwd=target node_modules \"../../app/\" && husky install && yarn run generate-schema",
     "rebuild-node-pty": "electron-rebuild -f -o node-pty -m target",
     "dist": "yarn run build && electron-builder",
     "clean": "node ./bin/rimraf-standalone.js node_modules && node ./bin/rimraf-standalone.js ./app/node_modules && node ./bin/rimraf-standalone.js ./app/renderer",
@@ -24,8 +24,8 @@
   },
   "license": "MIT",
   "author": {
-    "name": "TormentNexus Team",
-    "email": "contact@tormentnexus.com"
+    "name": "ZEIT, Inc.",
+    "email": "team@zeit.co"
   },
   "dependencies": {
     "@electron/remote": "2.1.2",

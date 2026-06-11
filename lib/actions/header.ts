@@ -6,7 +6,7 @@ import {
   UI_WINDOW_MINIMIZE,
   UI_WINDOW_CLOSE
 } from '../../typings/constants/ui';
-import type {TormentNexusDispatch} from '../../typings/TormentNexus';
+import type {TormentNexusDispatch} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 
 import {userExitTermGroup, setActiveGroup} from './term-groups';

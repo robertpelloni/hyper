@@ -24,7 +24,7 @@ import {
   UI_LEAVE_FULLSCREEN
 } from '../../typings/constants/ui';
 import {UPDATE_AVAILABLE} from '../../typings/constants/updater';
-import type {uiState, Mutable, IUiReducer} from '../../typings/TormentNexus';
+import type {uiState, Mutable, IUiReducer} from '../../typings/tormentnexus';
 import {decorateUIReducer} from '../utils/plugins';
 
 const isWindows = ['Windows', 'Win16', 'Win32', 'WinCE'].includes(navigator.platform) || process.platform === 'win32';

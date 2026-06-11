@@ -7,7 +7,7 @@
     "app": "target"
   },
   "extraResources": [
-    "./bin/tormentnexus*",
+    "./bin/yarn-standalone.js",
     "./bin/cli.js",
     {
       "from": "./build/${os}/",

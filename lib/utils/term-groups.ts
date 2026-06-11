@@ -1,4 +1,4 @@
-import type {ITermState} from '../../typings/TormentNexus';
+import type {ITermState} from '../../typings/tormentnexus';
 
 export default function findBySession(termGroupState: ITermState, sessionUid: string) {
   const {termGroups} = termGroupState;

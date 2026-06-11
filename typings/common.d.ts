@@ -82,7 +82,6 @@ export type RendererEvents = {
   'split request vertical': {activeUid?: string; profile?: string};
   'termgroup add req': {activeUid?: string; profile?: string};
   'termgroup close req': never;
-  'agent check req': never;
   'session add': Session;
   'session data': string;
   'session exit': {uid: string};

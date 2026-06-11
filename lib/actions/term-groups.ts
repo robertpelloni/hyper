@@ -6,7 +6,7 @@ import {
   TERM_GROUP_EXIT,
   TERM_GROUP_EXIT_ACTIVE
 } from '../../typings/constants/term-groups';
-import type {ITermState, ITermGroup, TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/TormentNexus';
+import type {ITermState, ITermGroup, TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 import {getRootGroups} from '../selectors';
 import findBySession from '../utils/term-groups';

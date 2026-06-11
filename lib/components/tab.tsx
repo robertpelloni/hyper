@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 
-import type {TabProps} from '../../typings/TormentNexus';
+import type {TabProps} from '../../typings/tormentnexus';
 
 const Tab = forwardRef<HTMLLIElement, TabProps>((props, ref) => {
   const handleClick = (event: React.MouseEvent) => {

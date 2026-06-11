@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import type {TormentNexusState} from '../typings/TormentNexus';
+import type {TormentNexusState} from '../typings/tormentnexus';
 
 const getTermGroups = ({termGroups}: Pick<TormentNexusState, 'termGroups'>) => termGroups.termGroups;
 export const getRootGroups = createSelector(getTermGroups, (termGroups) =>

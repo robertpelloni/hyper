@@ -14,7 +14,7 @@ import type {ConnectOptions} from 'react-redux/es/components/connect';
 import type {Dispatch, Middleware} from 'redux';
 
 import type {
-  TormentNexusPlugin,
+  tormentnexusPlugin,
   IUiReducer,
   ISessionReducer,
   ITermGroupReducer,
@@ -26,7 +26,7 @@ import type {
   TermProps,
   Assignable,
   TormentNexusActions
-} from '../../typings/TormentNexus';
+} from '../../typings/tormentnexus';
 import Notification from '../components/notification';
 
 import IPCChildProcess from './ipc-child-process';
@@ -37,7 +37,7 @@ import {ObjectTypedKeys} from './object';
 const plugins = remoteRequire('./plugins') as typeof import('../../app/plugins');
 
 // `require`d modules
-let modules: TormentNexusPlugin[];
+let modules: tormentnexusPlugin[];
 
 // cache of decorated components
 let decorated: Record<string, React.ComponentClass<any>> = {};
@@ -167,7 +167,7 @@ export function decorate<P extends Record<string, any>>(
 
 // patching Module._load
 // so plugins can `require` them without needing their own version
-// https://github.com/vercel/TormentNexus/issues/619
+// https://github.com/vercel/tormentnexus/issues/619
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Module = require('module') as typeof import('module') & {_load: Function};
 const originalLoad = Module._load;
@@ -181,16 +181,16 @@ Module._load = function _load(path: string) {
     case 'react-dom':
       console.warn('DEPRECATED: If your plugin requires `react-dom`, it must bundle it as a dependency');
       return ReactDOM;
-    case 'TormentNexus/component':
+    case 'tormentnexus/component':
       console.warn(
-        'DEPRECATED: If your plugin requires `TormentNexus/component`, it must requires `react.PureComponent` instead and bundle `react` as a dependency'
+        'DEPRECATED: If your plugin requires `tormentnexus/component`, it must requires `react.PureComponent` instead and bundle `react` as a dependency'
       );
       return PureComponent;
-    case 'TormentNexus/notify':
+    case 'tormentnexus/notify':
       return notify;
-    case 'TormentNexus/Notification':
+    case 'tormentnexus/Notification':
       return Notification;
-    case 'TormentNexus/decorate':
+    case 'tormentnexus/decorate':
       return decorate;
     case 'child_process':
       return process.platform === 'darwin' ? IPCChildProcess : ChildProcess;
@@ -271,7 +271,7 @@ const loadModules = () => {
     .concat(paths.localPlugins)
     .filter((plugin) => loadedPlugins.indexOf(pathModule.basename(plugin)) !== -1)
     .map((path) => {
-      let mod: TormentNexusPlugin;
+      let mod: tormentnexusPlugin;
       const pluginName = getPluginName(path);
       const pluginVersion = getPluginVersion(path);
 
@@ -295,13 +295,13 @@ const loadModules = () => {
         }
       });
 
-      // mapTormentNexusTermState mapping for backwards compatibility with hyperterm
+      // mapTormentNexusTermState mapping for backwards compatibility with tormentnexusterm
       if (mod.mapTormentNexusTermState) {
         mod.mapTormentNexusState = mod.mapTormentNexusTermState;
         console.error('mapTormentNexusTermState is deprecated. Use mapTormentNexusState instead.');
       }
 
-      // mapTormentNexusTermDispatch mapping for backwards compatibility with hyperterm
+      // mapTormentNexusTermDispatch mapping for backwards compatibility with tormentnexusterm
       if (mod.mapTormentNexusTermDispatch) {
         mod.mapTormentNexusDispatch = mod.mapTormentNexusTermDispatch;
         console.error('mapTormentNexusTermDispatch is deprecated. Use mapTormentNexusDispatch instead.');
@@ -379,7 +379,7 @@ const loadModules = () => {
 
       return mod;
     })
-    .filter((mod): mod is TormentNexusPlugin => Boolean(mod));
+    .filter((mod): mod is tormentnexusPlugin => Boolean(mod));
 
   const deprecatedPlugins = plugins.getDeprecatedConfig();
   Object.keys(deprecatedPlugins).forEach((name) => {

@@ -8,7 +8,7 @@ import {VscRegex} from '@react-icons/all-files/vsc/VscRegex';
 import {VscWholeWord} from '@react-icons/all-files/vsc/VscWholeWord';
 import clsx from 'clsx';
 
-import type {SearchBoxProps} from '../../typings/TormentNexus';
+import type {SearchBoxProps} from '../../typings/tormentnexus';
 
 type SearchButtonColors = {
   foregroundColor: string;

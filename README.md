@@ -1,65 +1,116 @@
-# TormentNexus: The Ultimate LLM Harness
+![](https://assets.vercel.com/image/upload/v1549723846/repositories/tormentnexus/tormentnexus-3-repo-banner.png)
 
-TormentNexus is a high-performance terminal and autonomous agent harness built with a Go-based core and an Electron frontend. It is designed to be the central hub for AI-powered development, integrating features from top-tier tools like Tabby, Warp, and others.
+<p align="center">
+  <a aria-label="Vercel logo" href="https://vercel.com">
+    <img src="https://img.shields.io/badge/MADE%20BY%20Vercel-000000.svg?style=for-the-badge&logo=vercel&labelColor=000000&logoWidth=20">
+  </a>
+ </p>
 
-## Key Features
+[![Node CI](https://github.com/vercel/tormentnexus/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/tormentnexus/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
+[![Changelog #213](https://img.shields.io/badge/changelog-%23213-lightgrey.svg)](https://changelog.com/213)
 
-- **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
-- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction via REST API.
-- **MCP Aggregator:** Centralized hub for Model Context Protocol (MCP) servers.
-- **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
-- **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
-- **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
+For more details, head to: https://tormentnexus.is
 
-## Setup and Usage
+## Project goals
 
-### Prerequisites
-- **Go:** 1.25.0 or later
-- **Node.js:** 18.x or later
-- **Yarn:** Latest version
+The goal of the project is to create a beautiful and extensible experience for command-line interface users, built on open web standards. In the beginning, our focus will be primarily around speed, stability and the development of the correct API for extension authors.
 
-### Building from Source
+In the future, we anticipate the community will come up with innovative additions to enhance what could be the simplest, most powerful and well-tested interface for productivity.
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/robertpelloni/TormentNexus.git
-    cd TormentNexus
-    ```
+## Usage
 
-2.  **Install Dependencies:**
-    ```bash
-    yarn install --ignore-engines
-    ```
+[Download the latest release!](https://tormentnexus.is/#installation)
 
-3.  **Build the Go Core:**
-    ```bash
-    go build -o bin/tormentnexus ./cmd/tormentnexus/main.go
-    ```
+### Linux
+#### Arch and derivatives
+TormentNexus is available in the [AUR](https://aur.archlinux.org/packages/tormentnexus/). Use an AUR [package manager](https://wiki.archlinux.org/index.php/AUR_helpers) e.g. [paru](https://github.com/Morganamilo/paru)
 
-4.  **Build the Frontend:**
-    ```bash
-    yarn run build
-    ```
+```sh
+paru -S tormentnexus
+```
 
-### Running the Application
-- **Run the full Electron App:**
-  ```bash
-  yarn run dev
-  # Then in another tab
-  yarn run app
-  ```
-- **Standalone Go Core:**
-  ```bash
-  ./bin/tormentnexus
-  ```
+#### NixOS
+TormentNexus is available as [Nix package](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/tormentnexus/default.nix), to install the app run this command:
 
-## Documentation
-For more detailed information, please refer to:
-- [VISION.md](./VISION.md): The long-term project goal.
-- [ROADMAP.md](./ROADMAP.md): Current progress and future plans.
-- [DEPLOY.md](./DEPLOY.md): Deployment instructions.
-- [MISSION.md](./MISSION.md): Core values and project philosophy.
-- [CHANGELOG.md](./CHANGELOG.md): History of changes and releases.
+```sh
+nix-env -i tormentnexus
+```
 
-## License
-MIT
+### macOS
+
+Use [Homebrew Cask](https://brew.sh) to download the app by running these commands:
+
+```bash
+brew update
+brew install --cask tormentnexus
+```
+
+### Windows
+
+Use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/tormentnexus/)):
+
+```bash
+choco install tormentnexus
+```
+
+**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://tormentnexus.is/#installation) if that's the case.
+
+## Contribute
+
+Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
+
+1. Install necessary packages:
+  * Windows
+    - Be sure to run  `yarn global add windows-build-tools` from an elevated prompt (as an administrator) to install `windows-build-tools`.
+  * macOS
+    - Once you have installed Yarn, you can skip this section!
+  * Linux (You can see [here](https://en.wikipedia.org/wiki/List_of_Linux_distributions) what your Linux is based on.)
+    - RPM-based
+        + `GraphicsMagick`
+        + `libicns-utils`
+        + `xz` (Installed by default on some distributions.)
+    - Debian-based
+        + `graphicsmagick`
+        + `icnsutils`
+        + `xz-utils`
+2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
+3. Install the dependencies: `yarn`
+4. Build the code and watch for changes: `yarn run dev`
+5. To run `tormentnexus`
+  * `yarn run app` from another terminal tab/window/pane
+  * If you are using **Visual Studio Code**, select `Launch TormentNexus` in debugger configuration to launch a new TormentNexus instance with debugger attached.
+  * If you interrupt `yarn run dev`, you'll need to relaunch it each time you want to test something. Webpack will watch changes and will rebuild renderer code when needed (and only what have changed). You'll just have to relaunch electron by using yarn run app or VSCode launch task.
+
+To make sure that your code works in the finished application, you can generate the binaries like this:
+
+```bash
+yarn run dist
+```
+
+After that, you will see the binary in the `./dist` folder!
+
+#### Known issues that can happen during development
+
+##### Error building `node-pty`
+
+If after building during development you get an alert dialog related to `node-pty` issues,
+make sure its build process is working correctly by running `yarn run rebuild-node-pty`.
+
+If you are on macOS, this typically is related to Xcode issues (like not having agreed
+to the Terms of Service by running `sudo xcodebuild` after a fresh Xcode installation).
+
+##### Error with `C++` on macOS when running `yarn`
+
+If you are getting compiler errors when running `yarn` add the environment variable `export CXX=clang++`
+
+##### Error with `codesign` on macOS when running `yarn run dist`
+
+If you have issues in the `codesign` step when running `yarn run dist` on macOS, you can temporarily disable code signing locally by setting
+`export CSC_IDENTITY_AUTO_DISCOVERY=false` for the current terminal session.
+
+## Related Repositories
+
+- [Website](https://github.com/vercel/tormentnexus-site)
+- [Sample Extension](https://github.com/vercel/tormentnexuspower)
+- [Sample Theme](https://github.com/vercel/tormentnexusyellow)
+- [Awesome TormentNexus](https://github.com/bnb/awesome-tormentnexus)

@@ -72,7 +72,6 @@ func startTerminal(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// Note: Real implementation would handle PTY over WebSocket here.
 	session.Close()
 	json.NewEncoder(w).Encode(map[string]string{"status": "Terminal test session closed successfully"})
 }

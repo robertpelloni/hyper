@@ -16,7 +16,7 @@ import {Unicode11Addon} from 'xterm-addon-unicode11';
 import {WebLinksAddon} from 'xterm-addon-web-links';
 import {WebglAddon} from 'xterm-addon-webgl';
 
-import type {TermProps} from '../../typings/TormentNexus';
+import type {TermProps} from '../../typings/tormentnexus';
 import terms from '../terms';
 import processClipboard from '../utils/paste';
 import {decorate} from '../utils/plugins';

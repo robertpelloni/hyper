@@ -2,7 +2,7 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 
-import type {TormentNexusState, TormentNexusDispatch, TermGroupProps, TermGroupOwnProps} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch, TermGroupProps, TermGroupOwnProps} from '../../typings/tormentnexus';
 import {resizeTermGroup} from '../actions/term-groups';
 import {decorate, getTermProps, getTermGroupProps} from '../utils/plugins';
 

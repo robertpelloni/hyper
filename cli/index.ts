@@ -103,7 +103,7 @@ const lsRemote = (pattern?: string) => {
   // note that no errors are catched by this function
   const URL = `https://api.npms.io/v2/search?q=${
     (pattern && `${pattern}+`) || ''
-  }keywords:TormentNexus-plugin,TormentNexus-theme&size=250`;
+  }keywords:tormentnexus-plugin,tormentnexus-theme&size=250`;
   type npmResult = {package: {name: string; description: string}};
   return got(URL)
     .then((response) => JSON.parse(response.body).results as npmResult[])
@@ -127,7 +127,7 @@ args.command(
         if (entries.length === 0) {
           spinner.fail();
           console.error(chalk.red(`Your search '${query}' did not match any plugins`));
-          console.error(`${chalk.red('Try')} ${chalk.green('TormentNexus ls-remote')}`);
+          console.error(`${chalk.red('Try')} ${chalk.green('tormentnexus ls-remote')}`);
           process.exit(1);
         } else {
           const msg = columnify(entries);
@@ -177,7 +177,7 @@ args.command(
 
 args.command(
   'version',
-  'Show the version of TormentNexus',
+  'Show the version of tormentnexus',
   () => {
     console.log(version);
     process.exit(0);
@@ -191,7 +191,7 @@ args.option(['v', 'verbose'], 'Verbose mode', false);
 
 const main = (argv: string[]) => {
   const flags = args.parse(argv, {
-    name: 'TormentNexus',
+    name: 'tormentnexus',
     version: false,
     mri: {
       boolean: ['v', 'verbose']
@@ -206,7 +206,7 @@ const main = (argv: string[]) => {
 
   const env = Object.assign({}, process.env, {
     // this will signal TormentNexus that it was spawned from this module
-    TORMENTNEXUS_CLI: '1',
+    HYPER_CLI: '1',
     ELECTRON_NO_ATTACH_CONSOLE: '1'
   });
 
@@ -234,7 +234,7 @@ const main = (argv: string[]) => {
     options['stdio'] = 'ignore';
     if (process.platform === 'darwin') {
       //Use `open` to prevent multiple TormentNexus process
-      const cmd = `open -b com.tormentnexus.app ${args_}`;
+      const cmd = `open -b co.zeit.tormentnexus ${args_}`;
       const opts = {
         env
       };

@@ -1,4 +1,4 @@
-import type {TormentNexusState, TormentNexusDispatch} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch} from '../../typings/tormentnexus';
 import {
   resizeSession,
   sendSessionData,

@@ -24,7 +24,7 @@ import {
   UI_CONTEXTMENU_OPEN,
   UI_COMMAND_EXEC
 } from '../../typings/constants/ui';
-import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions, ITermGroups} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions, ITermGroups} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 import {getRootGroups} from '../selectors';
 import {isExecutable} from '../utils/file';

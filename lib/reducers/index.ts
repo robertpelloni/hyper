@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
 import type {Reducer} from 'redux';
 
-import type {TormentNexusActions, TormentNexusState} from '../../typings/TormentNexus';
+import type {TormentNexusActions, TormentNexusState} from '../../typings/tormentnexus';
 
 import sessions from './sessions';
 import termGroups from './term-groups';

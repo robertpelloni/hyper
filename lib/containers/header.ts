@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import type {TormentNexusState, TormentNexusDispatch, ITab} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch, ITab} from '../../typings/tormentnexus';
 import {closeTab, changeTab, maximize, openHamburgerMenu, unmaximize, minimize, close} from '../actions/header';
 import {requestTermGroup} from '../actions/term-groups';
 import Header from '../components/header';

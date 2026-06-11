@@ -1,6 +1,6 @@
 import type {Dispatch, Middleware} from 'redux';
 
-import type {TormentNexusActions, TormentNexusState} from '../../typings/TormentNexus';
+import type {TormentNexusActions, TormentNexusState} from '../../typings/tormentnexus';
 import terms from '../terms';
 
 // the only side effect we perform from middleware

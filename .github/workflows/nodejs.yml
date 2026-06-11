@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools --break-system-packages
+        run: python3 -m pip install packaging setuptools
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -46,7 +46,6 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt clean
           sudo apt install libarchive-tools
       - name: Lint and Run Unit Tests
         run: yarn run test
@@ -73,9 +72,8 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
       - name: Archive Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: LabhanshAgrawal/upload-artifact@v3
         with:
-          name: build-${{ matrix.os }}
           path: |
             dist/*.dmg
             dist/*.snap
@@ -95,9 +93,9 @@ jobs:
         env:
           SHELL: /bin/bash
       - name: Archive E2E test screenshot
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: e2e-${{ matrix.os }}
+          name: e2e
           path: dist/tmp/*.png
       - name: Save the pr number in an artifact
         if: github.event_name == 'pull_request'
@@ -105,7 +103,7 @@ jobs:
           PR_NUM: ${{ github.event.number }}
         run: echo $PR_NUM > pr_num.txt
       - name: Upload the pr num
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         if: github.event_name == 'pull_request'
         with:
           name: pr_num
@@ -136,7 +134,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Fix node-gyp and Python
-        run: python3 -m pip install packaging setuptools --break-system-packages
+        run: python3 -m pip install packaging setuptools
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -150,14 +148,13 @@ jobs:
         run: |
           yarn install
           sudo apt update
-          sudo apt clean
-          sudo apt install libarchive-tools qemu-user-static
+          sudo apt install libarchive-tools
       - name: Compile
         run: yarn run build
       - name: rebuild node-pty
-        uses: pguyot/arm-runner-action@v2.6.5
+        uses: pguyot/arm-runner-action@v2.5.2
         with:
-          image_additional_mb: 5000
+          image_additional_mb: 2000
           base_image: ${{ matrix.image }}
           cpu: ${{ matrix.cpu }}
           shell: bash
@@ -167,10 +164,6 @@ jobs:
             wget https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             tar -xJf node-v18.16.0-linux-${{ matrix.name }}.tar.xz
             sudo cp node-v18.16.0-linux-${{ matrix.name }}/* /usr/local/ -R
-            # Ensure distutils is available inside the ARM container
-            sudo apt update
-            sudo apt clean
-            sudo apt install -y python3-setuptools
             npm run rebuild-node-pty
       - name: chown node-pty
         run: |
@@ -180,7 +173,6 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt update
-          sudo apt clean
           sudo apt install -y libglib2.0-0:i386 libexpat1:i386 libgcc-s1:i386
           npm_config_arch=armv7l yarn run v8-snapshot:arch
       - name: Build
@@ -188,9 +180,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Archive Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: LabhanshAgrawal/upload-artifact@v3
         with:
-          name: build-linux-arm-${{ matrix.name }}
           path: |
             dist/*.snap
             dist/*.AppImage

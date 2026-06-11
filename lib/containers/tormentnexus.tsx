@@ -4,7 +4,7 @@ import Mousetrap from 'mousetrap';
 import type {MousetrapInstance} from 'mousetrap';
 import stylis from 'stylis';
 
-import type {TormentNexusState, TormentNexusProps, TormentNexusDispatch} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusProps, TormentNexusDispatch} from '../../typings/tormentnexus';
 import * as uiActions from '../actions/ui';
 import {getRegisteredKeys, getCommandHandler, shouldPreventDefault} from '../command-registry';
 import type Terms from '../components/terms';
@@ -95,10 +95,10 @@ const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) 
   const borderWidth = isMac_ ? '' : `${maximized ? '0' : '1'}px`;
   stylis.set({prefix: false});
   return (
-    <div id="TormentNexus" ref={ref}>
+    <div id="tormentnexus" ref={ref}>
       <div
         style={{fontFamily: uiFontFamily, borderColor, borderWidth}}
-        className={`TormentNexus_main ${isMac_ && 'TormentNexus_mainRounded'} ${fullScreen ? 'fullScreen' : ''}`}
+        className={`tormentnexus_main ${isMac_ && 'tormentnexus_mainRounded'} ${fullScreen ? 'fullScreen' : ''}`}
       >
         <HeaderContainer />
         <TermsContainer ref_={onTermsRef} />
@@ -111,7 +111,7 @@ const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) 
 
       <style jsx>
         {`
-          .TormentNexus_main {
+          .tormentnexus_main {
             position: fixed;
             top: 0;
             left: 0;
@@ -120,7 +120,7 @@ const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) 
             border: 1px solid #333;
           }
 
-          .TormentNexus_mainRounded {
+          .tormentnexus_mainRounded {
             border-radius: 10.5px;
             overflow: hidden;
           }
@@ -131,7 +131,7 @@ const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) 
         Add custom CSS to TormentNexus.
         We add a scope to the customCSS so that it can get around the weighting applied by styled-jsx
       */}
-      <style dangerouslySetInnerHTML={{__html: stylis('#TormentNexus', customCSS)}} />
+      <style dangerouslySetInnerHTML={{__html: stylis('#tormentnexus', customCSS)}} />
     </div>
   );
 });

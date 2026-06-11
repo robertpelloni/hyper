@@ -5,7 +5,7 @@ import ms from 'ms';
 
 import {version} from './package.json';
 
-const NEWS_URL = 'https://TormentNexus-news.now.sh';
+const NEWS_URL = 'https://tormentnexus-news.now.sh';
 
 export default function fetchNotifications(win: BrowserWindow) {
   const {rpc} = win;

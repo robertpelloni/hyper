@@ -13,14 +13,14 @@ const regParts = [
   {name: 'Icon', value: `${appPath}`}
 ];
 
-function addValues(TormentNexusKey: HKEY, commandKey: HKEY) {
+function addValues(tormentnexusKey: HKEY, commandKey: HKEY) {
   try {
-    Registry.setValueSZ(TormentNexusKey, regParts[1].name, regParts[1].value);
+    Registry.setValueSZ(tormentnexusKey, regParts[1].name, regParts[1].value);
   } catch (error) {
     console.error(error);
   }
   try {
-    Registry.setValueSZ(TormentNexusKey, regParts[2].name, regParts[2].value);
+    Registry.setValueSZ(tormentnexusKey, regParts[2].name, regParts[2].value);
   } catch (err) {
     console.error(err);
   }
@@ -34,14 +34,14 @@ function addValues(TormentNexusKey: HKEY, commandKey: HKEY) {
 export const add = () => {
   regKeys.forEach((regKey) => {
     try {
-      const TormentNexusKey =
+      const tormentnexusKey =
         Registry.openKey(Registry.HKCU, regKey, Registry.Access.ALL_ACCESS) ||
         Registry.createKey(Registry.HKCU, regKey, Registry.Access.ALL_ACCESS);
       const commandKey =
         Registry.openKey(Registry.HKCU, `${regKey}\\${regParts[0].key}`, Registry.Access.ALL_ACCESS) ||
         Registry.createKey(Registry.HKCU, `${regKey}\\${regParts[0].key}`, Registry.Access.ALL_ACCESS);
-      addValues(TormentNexusKey, commandKey);
-      Registry.closeKey(TormentNexusKey);
+      addValues(tormentnexusKey, commandKey);
+      Registry.closeKey(tormentnexusKey);
       Registry.closeKey(commandKey);
     } catch (error) {
       console.error(error);

@@ -3,15 +3,15 @@
 ## Workflow
 
 ### Run TormentNexus in dev mode
-TormentNexus can be run in dev mode by cloning this repository and following the ["Contributing" section of our README](https://github.com/vercel/TormentNexus#contribute).
+TormentNexus can be run in dev mode by cloning this repository and following the ["Contributing" section of our README](https://github.com/vercel/tormentnexus#contribute).
 
 In dev mode you'll get more ouput and access to React/Redux dev-tools in Electron.
 
-Prerequisites and steps are described in the ["Contributing" section of our README](https://github.com/vercel/TormentNexus#contribute).
+Prerequisites and steps are described in the ["Contributing" section of our README](https://github.com/vercel/tormentnexus#contribute).
 Be sure to use the `canary` branch.
 
 ### Create a dev config file
-Copy your config file `TormentNexus.json` to the root of your cloned repository. TormentNexus, in dev mode, will use this copied config file. That means that you can continue to use your main installation of TormentNexus with your day-to-day configuration.
+Copy your config file `tormentnexus.json` to the root of your cloned repository. TormentNexus, in dev mode, will use this copied config file. That means that you can continue to use your main installation of TormentNexus with your day-to-day configuration.
 After the first run, TormentNexus, in dev mode, will have created a new `plugins` directory in your repository directory.
 
 ### Setup your plugin
@@ -24,20 +24,20 @@ module.exports = {
     ...
   },
   plugins: [],
-  localPlugins: ['TormentNexus-awesome-plugin'],
+  localPlugins: ['tormentnexus-awesome-plugin'],
   ...
 }
 ```
 
 ### Running your plugin
-To load, your plugin should expose at least one API method. All possible methods are listed [here](https://github.com/vercel/TormentNexus/blob/canary/app/plugins/extensions.ts).
+To load, your plugin should expose at least one API method. All possible methods are listed [here](https://github.com/vercel/tormentnexus/blob/canary/app/plugins/extensions.ts).
 
-After launching TormentNexus in dev mode, run `yarn run app`, it should log that your plugin has been correcty loaded: `Plugin TormentNexus-awesome-plugin (0.1.0) loaded.`. Name and version printed are the ones in your plugins `package.json` file.
+After launching TormentNexus in dev mode, run `yarn run app`, it should log that your plugin has been correcty loaded: `Plugin tormentnexus-awesome-plugin (0.1.0) loaded.`. Name and version printed are the ones in your plugins `package.json` file.
 
 When you put a `console.log()` in your plugin code, it will be displayed in the Electron dev-tools, but only if it is located in a renderer method, like component decorators. If it is located in the Electron main process method, like the `onApp` handler, it will be displayed in your terminal where you ran `yarn run app` or in your VSCode console.
 
 ## Recipes
-Almost all available API methods can be found on https://TormentNexus.is.
+Almost all available API methods can be found on https://tormentnexus.is.
 If there's any missing, let us know or submit a PR to document it!
 
 ### Components

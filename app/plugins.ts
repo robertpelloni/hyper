@@ -60,7 +60,7 @@ config.subscribe(() => {
 
 // patching Module._load
 // so plugins can `require` them without needing their own version
-// https://github.com/vercel/TormentNexus/issues/619
+// https://github.com/vercel/tormentnexus/issues/619
 function patchModuleLoad() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const Module = require('module');
@@ -75,14 +75,14 @@ function patchModuleLoad() {
       case 'react-dom':
         // DEPRECATED
         return ReactDom;
-      case 'TormentNexus/component':
+      case 'tormentnexus/component':
         // DEPRECATED
         return React.PureComponent;
       // These return Object, since they work differently on the backend, than on the frontend.
       // Still needs to be here, to prevent errors, while loading plugins.
-      case 'TormentNexus/Notification':
-      case 'TormentNexus/notify':
-      case 'TormentNexus/decorate':
+      case 'tormentnexus/Notification':
+      case 'tormentnexus/notify':
+      case 'tormentnexus/decorate':
         return Object;
       default:
         // eslint-disable-next-line prefer-rest-params
@@ -116,7 +116,7 @@ function updatePlugins({force = false} = {}) {
       notify('Error updating plugins.', err, {error: err});
     } else {
       // flag successful plugin update
-      cache.set('TormentNexus.plugins', id_);
+      cache.set('tormentnexus.plugins', id_);
 
       // cache paths
       paths = getPaths();
@@ -130,8 +130,8 @@ function updatePlugins({force = false} = {}) {
       const loaded = modules.length;
       const total = paths.plugins.length + paths.localPlugins.length;
       const pluginVersions = JSON.stringify(getPluginVersions());
-      const changed = cache.get('TormentNexus.plugin-versions') !== pluginVersions && loaded === total;
-      cache.set('TormentNexus.plugin-versions', pluginVersions);
+      const changed = cache.get('tormentnexus.plugin-versions') !== pluginVersions && loaded === total;
+      cache.set('tormentnexus.plugin-versions', pluginVersions);
 
       // notify watchers
       watchers.forEach((fn) => {
@@ -188,7 +188,7 @@ export const getLoadedPluginVersions = () => {
 // we schedule the initial plugins update
 // a bit after the user launches the terminal
 // to prevent slowness
-if (cache.get('TormentNexus.plugins') !== id || process.env.TORMENTNEXUS_FORCE_UPDATE) {
+if (cache.get('tormentnexus.plugins') !== id || process.env.HYPER_FORCE_UPDATE) {
   // install immediately if the user changed plugins
   console.log('plugins have changed / not init, scheduling plugins installation');
   setTimeout(() => {
@@ -207,13 +207,13 @@ if (cache.get('TormentNexus.plugins') !== id || process.env.TORMENTNEXUS_FORCE_U
 function syncPackageJSON() {
   const dependencies = toDependencies(plugins);
   const pkg = {
-    name: 'TormentNexus-plugins',
-    description: 'Auto-generated from `TormentNexus.json`!',
+    name: 'tormentnexus-plugins',
+    description: 'Auto-generated from `tormentnexus.json`!',
     private: true,
     version: '0.0.1',
-    repository: 'vercel/TormentNexus',
+    repository: 'vercel/tormentnexus',
     license: 'MIT',
-    homepage: 'https://TormentNexus.is',
+    homepage: 'https://tormentnexus.is',
     dependencies
   };
 
@@ -313,9 +313,9 @@ function requirePlugins(): any[] {
   };
 
   return [
-    ...localPlugins.filter((p) => basename(p) === 'migrated-TormentNexus3-config'),
+    ...localPlugins.filter((p) => basename(p) === 'migrated-tormentnexus3-config'),
     ...plugins_,
-    ...localPlugins.filter((p) => basename(p) !== 'migrated-TormentNexus3-config')
+    ...localPlugins.filter((p) => basename(p) !== 'migrated-tormentnexus3-config')
   ]
     .map(load)
     .filter((v): v is Record<string, any> => Boolean(v));

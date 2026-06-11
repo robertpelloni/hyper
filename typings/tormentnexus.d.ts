@@ -140,7 +140,7 @@ export type IUiReducer = Reducer<uiState, TormentNexusActions>;
 export type ISessionReducer = Reducer<sessionState, TormentNexusActions>;
 
 import type {Middleware, Reducer} from 'redux';
-export type TormentNexusPlugin = {
+export type tormentnexusPlugin = {
   getTabProps: any;
   getTabsProps: any;
   getTermGroupProps: any;
@@ -203,7 +203,7 @@ type extensionProps = Partial<{
 import type {HeaderConnectedProps} from '../lib/containers/header';
 export type HeaderProps = HeaderConnectedProps & extensionProps;
 
-import type {TormentNexusConnectedProps} from '../lib/containers/TormentNexus';
+import type {TormentNexusConnectedProps} from '../lib/containers/tormentnexus';
 export type TormentNexusProps = TormentNexusConnectedProps & extensionProps;
 
 import type {NotificationsConnectedProps} from '../lib/containers/notifications';

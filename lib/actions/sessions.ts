@@ -13,7 +13,7 @@ import {
   SESSION_SET_XTERM_TITLE,
   SESSION_SEARCH
 } from '../../typings/constants/sessions';
-import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 import {keys} from '../utils/object';
 import findBySession from '../utils/term-groups';

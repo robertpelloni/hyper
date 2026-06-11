@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef, forwardRef} from 'react';
 
 import sum from 'lodash/sum';
 
-import type {SplitPaneProps} from '../../typings/TormentNexus';
+import type {SplitPaneProps} from '../../typings/tormentnexus';
 
 const SplitPane = forwardRef<HTMLDivElement, SplitPaneProps>((props, ref) => {
   const dragPanePosition = useRef<number>(0);
