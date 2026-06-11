@@ -48,4 +48,4 @@ The configuration file is located at:
 - **macOS**: `~/Library/Application Support/TormentNexus/TormentNexus.json`
 - **Windows**: `%APPDATA%\TormentNexus\TormentNexus.json`
 
-You can customize themes, plugins, and shell settings just like in the original Hyper terminal, but with added fields for agent tuning and sidecar management.
+You can customize themes, plugins, and shell settings just like in the original TormentNexus terminal, but with added fields for agent tuning and sidecar management.

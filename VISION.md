@@ -15,7 +15,7 @@ AI is not a plugin; it's a first-class citizen. Features like Warp-style command
 TormentNexus prioritizes secure remote management. By implementing strict host key verification and local-only sidecar binding, we ensure that your LLM-augmented workflow remains private and protected from man-in-the-middle attacks.
 
 ### 4. Extensible Ecosystem
-Maintaining compatibility with the legacy Hyper plugin system while introducing the Model Context Protocol (MCP) allows TormentNexus to aggregate a vast array of tools and data sources, from local filesystems to remote cloud APIs.
+Maintaining compatibility with the legacy TormentNexus plugin system while introducing the Model Context Protocol (MCP) allows TormentNexus to aggregate a vast array of tools and data sources, from local filesystems to remote cloud APIs.
 
 ## The Future
 TormentNexus will evolve into a multi-agent orchestration platform, where the terminal doesn't just execute commands—it observes, learns, and anticipates your next move.

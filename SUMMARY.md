@@ -1,7 +1,7 @@
 # PROJECT SUMMARY: TORMENTNEXUS V1.1.0
 
 ## Core Transformation
-The legacy Hyper terminal has been successfully ported to a hybrid architecture featuring a high-performance Go sidecar core. This transition enables the project to serve as a high-performance harness for autonomous AI agents.
+The legacy TormentNexus terminal has been successfully ported to a hybrid architecture featuring a high-performance Go sidecar core. This transition enables the project to serve as a high-performance harness for autonomous AI agents.
 
 ## Ported Features
 - **Warp-style Command Blocks**: Real-time output capturing and status tracking (Success/Error) with timing data.

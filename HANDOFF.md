@@ -1,7 +1,7 @@
 # HANDOFF - TormentNexus v1.1.0
 
 ## Summary
-The transformation of Hyper into **TormentNexus**, a hybrid Go/Electron autonomous LLM harness, is complete. The architecture is now stabilized with a high-performance Go sidecar (v1.23.0) and a rebranded Electron frontend.
+The transformation of TormentNexus into **TormentNexus**, a hybrid Go/Electron autonomous LLM harness, is complete. The architecture is now stabilized with a high-performance Go sidecar (v1.23.0) and a rebranded Electron frontend.
 
 ## Final State
 - **Project Identity**: Fully rebranded to TormentNexus PascalCase. Configs and binaries use the new naming convention.
