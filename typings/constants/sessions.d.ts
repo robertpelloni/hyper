@@ -11,6 +11,13 @@ export const SESSION_USER_DATA = 'SESSION_USER_DATA';
 export const SESSION_SET_XTERM_TITLE = 'SESSION_SET_XTERM_TITLE';
 export const SESSION_SET_CWD = 'SESSION_SET_CWD';
 export const SESSION_SEARCH = 'SESSION_SEARCH';
+export const SESSION_SET_COMMAND_BLOCKS = 'SESSION_SET_COMMAND_BLOCKS';
+
+export interface SessionSetCommandBlocksAction {
+  type: typeof SESSION_SET_COMMAND_BLOCKS;
+  uid: string;
+  blocks: any[];
+}
 
 export interface SessionAddAction {
   type: typeof SESSION_ADD;
@@ -90,4 +97,5 @@ export type SessionActions =
   | SessionUserDataAction
   | SessionSetXtermTitleAction
   | SessionSetCwdAction
-  | SessionSearchAction;
+  | SessionSearchAction
+  | SessionSetCommandBlocksAction;

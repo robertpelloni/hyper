@@ -229,6 +229,26 @@ export function newWindow(
   rpc.on('data', ({uid, data, escaped}) => {
     const session = uid && sessions.get(uid);
     if (session) {
+      if (data.startsWith('/agent ')) {
+        const command = data.slice(7).trim();
+        const {interceptAgentCommand} = require('../utils/agent-integration');
+
+        rpc.emit('add notification', {
+          text: `Agent is thinking: ${command}`,
+          url: '',
+          dismissable: false
+        });
+
+        interceptAgentCommand(command)
+          .then((response: string) => {
+            session.write(`\r\n[Agent]: ${response}\r\n`);
+          })
+          .catch((err: Error) => {
+            session.write(`\r\n[Agent Error]: ${err.message}\r\n`);
+          });
+        return;
+      }
+
       if (escaped) {
         const escapedData = session.shell?.endsWith('cmd.exe')
           ? `"${data}"` // This is how cmd.exe does it

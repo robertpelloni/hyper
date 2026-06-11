@@ -119,6 +119,7 @@ export type session = {
   resizeAt?: number;
   rows: number | null;
   search: boolean;
+  blocks: any[];
   shell: string | null;
   title: string;
   uid: string;
@@ -387,6 +388,7 @@ export type TermProps = {
   scrollback: number;
   search: boolean;
   searchAddon: SearchAddon | null;
+  blocks: any[];
   selectionColor: string;
   term: Terminal | null;
   uid: string;

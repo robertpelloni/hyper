@@ -514,6 +514,13 @@ export default class Term extends React.PureComponent<
     return (
       <div className={`term_fit ${this.props.isTermActive ? 'term_active' : ''}`} onMouseUp={this.onMouseUp}>
         {this.props.customChildrenBefore}
+        <div className="term_blocks">
+          {(this.props as any).blocks?.map((block: any) => (
+            <div key={block.id} className={`term_block term_block_${block.status}`}>
+              <div className="term_block_command">{block.command}</div>
+            </div>
+          ))}
+        </div>
         <div ref={this.onTermWrapperRef} className="term_fit term_wrapper" />
         {this.props.customChildren}
         {this.props.search ? (
@@ -561,6 +568,36 @@ export default class Term extends React.PureComponent<
           .term_wrapper {
             /* TODO: decide whether to keep this or not based on understanding what xterm-selection is for */
             overflow: hidden;
+          }
+
+          .term_blocks {
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
+            z-index: 10;
+          }
+
+          .term_block {
+            border-left: 3px solid transparent;
+            padding-left: 5px;
+            margin-bottom: 2px;
+          }
+
+          .term_block_1 {
+            border-left-color: #50fa7b;
+          } /* Success */
+          .term_block_2 {
+            border-left-color: #ff5555;
+          } /* Error */
+          .term_block_0 {
+            border-left-color: #f1fa8c;
+          } /* Running */
+
+          .term_block_command {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: inherit;
           }
         `}</style>
       </div>

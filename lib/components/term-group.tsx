@@ -110,6 +110,7 @@ class TermGroup_ extends React.PureComponent<TermGroupProps> {
       screenReaderMode: this.props.screenReaderMode,
       windowsPty: this.props.windowsPty,
       imageSupport: this.props.imageSupport,
+      blocks: (session as any).blocks,
       uid
     });
 
