@@ -1,6 +1,6 @@
 {
   "name": "tormentnexus",
-  "version": "4.0.0-canary.5",
+  "version": "1.1.0",
   "repository": "robertpelloni/TormentNexus",
   "scripts": {
     "start": "echo 'please run `yarn run dev` in one tab and then `yarn run app` in another one'",
