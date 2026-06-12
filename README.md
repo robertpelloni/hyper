@@ -1,3 +1,4 @@
+![](https://assets.vercel.com/image/upload/v1549723846/repositories/tormentnexus/tormentnexus-3-repo-banner.png)
 
 <p align="center">
   <a aria-label="Vercel logo" href="https://vercel.com">
@@ -5,10 +6,10 @@
   </a>
  </p>
 
-[![Node CI](https://github.com/robertpelloni/TormentNexus/workflows/Node%20CI/badge.svg?event=push)](https://github.com/robertpelloni/TormentNexus/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
+[![Node CI](https://github.com/vercel/tormentnexus/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/tormentnexus/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
 [![Changelog #213](https://img.shields.io/badge/changelog-%23213-lightgrey.svg)](https://changelog.com/213)
 
-For more details, head to: https://github.com/robertpelloni/TormentNexus
+For more details, head to: https://tormentnexus.is
 
 ## Project goals
 
@@ -18,7 +19,7 @@ In the future, we anticipate the community will come up with innovative addition
 
 ## Usage
 
-[Download the latest release!](https://github.com/robertpelloni/TormentNexus/#installation)
+[Download the latest release!](https://tormentnexus.is/#installation)
 
 ### Linux
 #### Arch and derivatives
@@ -52,7 +53,7 @@ Use [chocolatey](https://chocolatey.org/) to install the app by running the foll
 choco install tormentnexus
 ```
 
-**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://github.com/robertpelloni/TormentNexus/#installation) if that's the case.
+**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://tormentnexus.is/#installation) if that's the case.
 
 ## Contribute
 
@@ -109,7 +110,7 @@ If you have issues in the `codesign` step when running `yarn run dist` on macOS,
 
 ## Related Repositories
 
-- [Website](https://github.com/robertpelloni/TormentNexus-site)
-- [Sample Extension](https://github.com/robertpelloni/TormentNexuspower)
-- [Sample Theme](https://github.com/robertpelloni/TormentNexusyellow)
+- [Website](https://github.com/vercel/tormentnexus-site)
+- [Sample Extension](https://github.com/vercel/tormentnexuspower)
+- [Sample Theme](https://github.com/vercel/tormentnexusyellow)
 - [Awesome TormentNexus](https://github.com/bnb/awesome-tormentnexus)
