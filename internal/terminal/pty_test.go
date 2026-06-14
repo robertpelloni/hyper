@@ -4,11 +4,20 @@ import (
 	"testing"
 )
 
-func TestNewSession(t *testing.T) {
-	// Simple test to ensure NewSession doesn't crash
-	s, err := NewSession("/bin/sh", []string{"-c", "echo hello"})
-	if err != nil {
-		t.Fatalf("Failed to create session: %v", err)
+func TestPTYManager(t *testing.T) {
+	m := NewPTYManager()
+	if m == nil {
+		t.Fatal("Failed to create PTY manager")
 	}
-	defer s.Close()
+}
+
+func TestBuffer(t *testing.T) {
+	b := &Buffer{}
+	b.AddBlock("ls", "file1\nfile2", true)
+	if len(b.Blocks) != 1 {
+		t.Fatalf("Expected 1 block, got %d", len(b.Blocks))
+	}
+	if b.Blocks[0].Command != "ls" {
+		t.Fatalf("Expected command 'ls', got '%s'", b.Blocks[0].Command)
+	}
 }

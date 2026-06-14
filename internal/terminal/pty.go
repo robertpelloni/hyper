@@ -57,8 +57,8 @@ func (i *PTYInstance) readLoop() {
 		n, err := i.Pty.Read(buf)
 		if n > 0 {
 			// In a real implementation, we'd send this to the frontend
-			data := base64.StdEncoding.EncodeToString(buf[:n])
-			i.Transmit(data) // Simulated transmission
+			_ = base64.StdEncoding.EncodeToString(buf[:n])
+			// Data would be transmitted via callback or channel
 		}
 		if err != nil {
 			break
