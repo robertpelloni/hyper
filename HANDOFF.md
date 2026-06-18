@@ -8,11 +8,14 @@
 - **Documentation:** Established a complete 11-file documentation suite covering all aspects of the project.
 
 ## Technical Notes
+- **Multi-Language Shift:** Transitioning from a purely TS/Go stack to a 5-language stack: TS, Rust, Go, C#, and Java.
+- **Pi-Mono:** Temporarily fetched the `pi-mono` submodule, analyzed `packages/agent/src/agent.ts`, replicated its struct/class across all 5 languages, and removed the submodule.
 - **Communication:** Frontend uses `lib/utils/go-core.ts` for REST and `lib/index.tsx` for handling RPC triggers from the main process.
 - **Go Version:** Strictly requires v1.25.0.
 - **Port:** Defaults to 9876, configurable via `TORMENTNEXUS_PORT`.
 
 ## Future Roadmap (Phase 2)
+- Build out the rest of the execution loops and tool integrations for the newly created Agent classes in TS, Rust, Go, C#, and Java.
 - Port Warp-like command blocks to the Go core and React UI.
 - Implement full Tabby LSP compatibility in the agent harness.
 - Secure SSH host key verification logic.

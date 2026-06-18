@@ -12,6 +12,7 @@
 - [ ] Port Warp-like command blocks.
 - [ ] Integrate Codex Desktop features.
 - [ ] Implement Wave-like notebook terminal capabilities.
+- [x] Port pi-mono Agent features across 5 languages (TypeScript, Rust, Go, C#, Java).
 
 ## Phase 3: Advanced Agent Capabilities
 - [ ] Integration with Claude Code and Gemini CLI.

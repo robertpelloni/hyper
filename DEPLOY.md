@@ -3,10 +3,16 @@
 ## Prerequisites
 - **Go:** v1.25.0 (Environment uses this version explicitly)
 - **Node.js:** v18+ (LTS recommended)
+- **Rust:** Latest stable (for Rust feature parity)
+- **C#:** .NET 8+ SDK
+- **Java:** JDK 17+
 - **Yarn:** v1.22+
 - **Python:** v3.12+ (with `setuptools` for `node-gyp` compatibility)
 
 ## Build Process
+
+### Multi-Language Targets
+TormentNexus is building out feature parity across 5 languages: TypeScript, Rust, Go, C#, and Java. Compilation for these new targets will be integrated into the main CI/CD flow in upcoming iterations.
 
 ### 1. Dependency Installation
 Install all Node.js and Electron dependencies. Use the `--ignore-engines` flag if running on newer Node versions (e.g., Node 22).

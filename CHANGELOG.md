@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## [1.1.0] - Unreleased
+### Added
+- Multi-language foundation (TypeScript, Rust, Go, C#, Java).
+- Initial porting of `pi-mono`'s core Agent harness across all 5 languages.
+
 ## [1.0.0] - 2026-06-05
 ### Added
 - Complete project rebranding to **TormentNexus**.
