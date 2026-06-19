@@ -52,7 +52,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt clean
-          sudo apt install libarchive-tools
+          sudo apt install -y libarchive-tools rpm
       - name: Lint and Run Unit Tests
         run: pnpm run test
       - name: Getting Build Icon

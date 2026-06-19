@@ -72,6 +72,11 @@
     "xterm-addon-web-links": "0.9.0",
     "xterm-addon-webgl": "0.16.0"
   },
+  "pnpm": {
+    "overrides": {
+      "@tootallnate/once": "2.0.0"
+    }
+  },
   "devDependencies": {
     "@ava/babel": "2.0.0",
     "@ava/typescript": "^4.1.0",
@@ -110,7 +115,7 @@
     "electron": "22.3.25",
     "electron-builder": "^24.13.3",
     "electron-link": "^0.6.0",
-    "electron-mksnapshot": "29.3.0",
+    "electron-mksnapshot": "^22.3.25",
     "electronmon": "^2.0.2",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",

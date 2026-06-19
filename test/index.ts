@@ -14,7 +14,7 @@ test.before(async () => {
 
   switch (process.platform) {
     case 'linux':
-      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/TormentNexus');
+      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/tormentnexus');
       break;
 
     case 'darwin':
@@ -37,7 +37,7 @@ test.before(async () => {
   });
   await app.firstWindow();
   // Wait longer for Go Core to start
-  await new Promise((resolve) => setTimeout(resolve, 10000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 });
 
 test.after(async () => {
