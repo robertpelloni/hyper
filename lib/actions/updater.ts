@@ -11,7 +11,12 @@ export function installUpdate(): TormentNexusActions {
   };
 }
 
-export function updateAvailable(version: string, notes: string, releaseUrl: string, canInstall: boolean): TormentNexusActions {
+export function updateAvailable(
+  version: string,
+  notes: string,
+  releaseUrl: string,
+  canInstall: boolean
+): TormentNexusActions {
   return {
     type: UPDATE_AVAILABLE,
     version,

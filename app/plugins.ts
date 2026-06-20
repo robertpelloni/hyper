@@ -1,6 +1,6 @@
 /* eslint-disable eslint-comments/disable-enable-pair */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import {exec, execFile} from 'child_process';
 import {writeFileSync} from 'fs';
 import {resolve, basename} from 'path';
@@ -287,7 +287,10 @@ function requirePlugins(): any[] {
       mod = require(path_);
       const exposed = mod && Object.keys(mod).some((key) => availableExtensions.has(key));
       if (!exposed) {
-        notify('Plugin error!', `${`Plugin "${basename(path_)}" does not expose any `}TormentNexus extension API methods`);
+        notify(
+          'Plugin error!',
+          `${`Plugin "${basename(path_)}" does not expose any `}TormentNexus extension API methods`
+        );
         return;
       }
 

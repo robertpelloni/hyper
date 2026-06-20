@@ -236,7 +236,7 @@ const main = (argv: string[]) => {
       //Use `open` to prevent multiple TormentNexus process
       const cmd = 'open';
       const child_args = ['-b', 'com.tormentnexus.app', ...args_];
-      const child = spawn(cmd, child_args, { env, detached: true, stdio: 'ignore' });
+      const child = spawn(cmd, child_args, {env, detached: true, stdio: 'ignore'});
       child.unref();
       return Promise.resolve();
     }
@@ -245,9 +245,8 @@ const main = (argv: string[]) => {
   const child = spawn(process.execPath, args_, options);
 
   if (flags.verbose) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     child.stdout?.on('data', (data) => console.log(data.toString('utf8')));
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
     child.stderr?.on('data', (data) => console.error(data.toString('utf8')));
   }
   if (flags.verbose) {
