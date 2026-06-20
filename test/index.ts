@@ -37,7 +37,7 @@ test.before(async () => {
   });
   await app.firstWindow();
   // Wait longer for Go Core to start
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await new Promise((resolve) => setTimeout(resolve, 10000));
 });
 
 test.after(async () => {

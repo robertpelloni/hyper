@@ -160,7 +160,7 @@ jobs:
           pnpm install --frozen-lockfile
           sudo apt update
           sudo apt clean
-          sudo apt install libarchive-tools qemu-user-static
+          sudo apt install -y libarchive-tools qemu-user-static rpm
       - name: Compile
         run: pnpm run build
       - name: rebuild node-pty
