@@ -33,3 +33,8 @@
 - [ ] Implement Model Context Protocol (MCP) tool aggregation and registration.
 - [ ] Implement abstract LLM Provider Interface.
 - [ ] Add generic Memory and Session Management wrappers.
+
+## Claude Code Extraction Phase
+- [ ] Implement a Plugin/Extension Manager for dynamic feature loading.
+- [ ] Implement a Slash Command Router (`/commands`) for terminal I/O.
+- [ ] Implement Dynamic System Prompt Templating.
