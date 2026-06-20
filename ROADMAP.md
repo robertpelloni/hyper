@@ -24,8 +24,12 @@
 - [ ] Implement interactive command blocks in the frontend.
 - [ ] Status bar integration for AI status.
 
-## Aider Extraction Phase
-- [ ] Implement `repomap` (Tree-sitter based context aggregation) across all languages.
-- [ ] Implement `Search and Replace` patch application logic for LLMs.
-- [ ] Add auto-git commit flow after LLM code application.
-- [ ] Implement auto-linting/testing feedback loop (run command -> capture stderr -> send back to LLM -> retry).
+## Goose Extraction Phase
+- [ ] Implement Model Context Protocol (MCP) tool aggregation and registration.
+- [ ] Implement abstract LLM Provider Interface.
+- [ ] Add generic Memory and Session Management wrappers.
+
+## Goose Extraction Phase
+- [ ] Implement Model Context Protocol (MCP) tool aggregation and registration.
+- [ ] Implement abstract LLM Provider Interface.
+- [ ] Add generic Memory and Session Management wrappers.
