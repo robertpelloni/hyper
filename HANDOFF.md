@@ -1,21 +1,20 @@
-# TormentNexus v1.0.0: Final Session Handoff
+# Session Handoff Memory
 
-## Final Accomplishments
-- **Hybrid Architecture:** Fully integrated Go sidecar (v1.25.0) for PTY and Agentic logic.
-- **UI Wiring:** Connected the "Agent Health Check" tool in the UI to the Go backend via RPC.
-- **E2E Stability:** Expanded Playwright suite to cover Go connectivity and RPC-based UI updates.
-- **Production Packaging:** Fixed binary path resolution for packaged AppImage/deb/snap distributions.
-- **Documentation:** Established a complete 11-file documentation suite covering all aspects of the project.
+## Action Summary
+In this session, the primary goal was to port the **Copilot CLI** features (`ShellExecutor` and `AliasGenerator`) to the project's target multi-language backend system.
 
-## Technical Notes
-- **Multi-Language Shift:** Transitioning from a purely TS/Go stack to a 5-language stack: TS, Rust, Go, C#, and Java.
-- **Pi-Mono:** Temporarily fetched the `pi-mono` submodule, analyzed `packages/agent/src/agent.ts`, replicated its struct/class across all 5 languages, and removed the submodule.
-- **Communication:** Frontend uses `lib/utils/go-core.ts` for REST and `lib/index.tsx` for handling RPC triggers from the main process.
-- **Go Version:** Strictly requires v1.25.0.
-- **Port:** Defaults to 9876, configurable via `TORMENTNEXUS_PORT`.
+### Key Obstacles & Resolutions
+1. **Massive Git Index Pollution**: We encountered severe environment instability due to build artifacts (`target`, `node_modules`, `frontend/wailsjs`) bleeding into the git tracking system, leading to a 1000+ line diff every time `git status` was checked.
+   * **Resolution**: Dropped the Wails auto-generated bindings from history explicitly and introduced an extremely aggressive `.gitignore` and `git clean -fdx` workflow lock. Future agent processes *must not* execute global adds or bypass gitignore boundaries without deep scrutiny.
+2. **Branch Reconciliation**: Syncing the local feature branches (`jules-1598...`) to `main` while dodging the index pollution block was necessary. A dual-direction merge script pushed the clean changes across correctly.
 
-## Future Roadmap (Phase 2)
-- Build out the rest of the execution loops and tool integrations for the newly created Agent classes in TS, Rust, Go, C#, and Java.
-- Port Warp-like command blocks to the Go core and React UI.
-- Implement full Tabby LSP compatibility in the agent harness.
-- Secure SSH host key verification logic.
+### State for Successor Model
+* The `main` trunk is now updated and safely tracking:
+  - Base `pi-mono` agent harnesses.
+  - Aider CLI features.
+  - Goose MCP capabilities.
+  - Claude Code Slash Routing and Prompting.
+  - Copilot Command prompt UI + Alias scripts.
+* Version bumped to `1.1.1` in `VERSION.md` and `CHANGELOG.md`.
+
+*You are free to resume implementation targeting the next designated agentic CLI on the priority extraction list.*

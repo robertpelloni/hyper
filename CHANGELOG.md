@@ -1,16 +1,9 @@
-# CHANGELOG
+# Changelog
 
-## [1.1.0] - Unreleased
-### Added
-- Multi-language foundation (TypeScript, Rust, Go, C#, Java).
-- Initial porting of `pi-mono`'s core Agent harness across all 5 languages.
+## 1.1.1
+- **Feature**: Extracted Copilot CLI functionality (`ShellExecutor` and `AliasGenerator`) and ported across all 5 target architectures (Go, Rust, C#, Java, TypeScript).
+- **Merge**: Successfully completed a dual-direction intelligent merge syncing previous feature-branch work to the `main` trunk without conflict regressions.
+- **System**: Deployed rigid repository Git sanitization sequence resolving large-scale node/wails artifact diff-pollution by utilizing heavy `.gitignore` boundaries.
 
-## [1.0.0] - 2026-06-05
-### Added
-- Complete project rebranding to **TormentNexus**.
-- High-performance Go core sidecar (v1.25.0) for PTY and Agent management.
-- REST API for agent execution and MCP server aggregation.
-- TypeScript bridge for seamless UI-to-Go Core connectivity.
-- Modernized CI/CD supporting GitHub Artifacts v4 and ARM64 platforms.
-- Unified documentation suite (VISION, MISSION, ROADMAP, DEPLOY).
-- Final end-to-end verification and release packaging.
+## 1.1.0
+- Base agent harness refactoring and multi-language foundational layers completed.
