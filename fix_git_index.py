@@ -1,0 +1,88 @@
+import subprocess
+import os
+
+print("Creating .gitignore...")
+with open('.gitignore', 'w') as f:
+    f.write("""# Dependency directories
+node_modules/
+jspm_packages/
+.pnpm-store/
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build artifacts and caches
+dist/
+build/
+target/
+cache/
+.eslintcache
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+out/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+bin/
+obj/
+
+# Local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+
+# Wails auto-generated code
+frontend/wailsjs/
+
+# Compiled files
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Python
+__pycache__/
+*.pyc
+
+# Rust
+target/
+Cargo.lock
+
+# Go
+vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Locks
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+""")
+subprocess.run(['git', 'add', '.gitignore'])
+subprocess.run(['git', 'commit', '-m', 'chore: forcefully update gitignore to prevent pollution'])
