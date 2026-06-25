@@ -1,80 +1,24 @@
-# Dependency directories
-node_modules/
-jspm_packages/
-.pnpm-store/
+# build output
+dist
+app/renderer
+target
+bin/cli.*
+cache
 
-# IDEs and Editors
-.idea/
-.vscode/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+pnpm-debug.log
+
+# optional dev config file and plugins directory
+TormentNexus.json
+schema.json
+plugins
+
 .DS_Store
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
-# Build artifacts and caches
-dist/
-build/
-target/
-cache/
-.eslintcache
-.next/
-.nuxt/
-.cache/
-.parcel-cache/
-out/
-coverage/
-.nyc_output/
-*.tsbuildinfo
-bin/
-obj/
-
-# Local env files
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-
-# Wails auto-generated code
-frontend/wailsjs/
-
-# Compiled files
-*.class
-*.dll
-*.exe
-*.o
-*.so
-
-# Python
-__pycache__/
-*.pyc
-
-# Rust
-target/
-Cargo.lock
-
-# Go
-vendor/
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-
-# Locks
-pnpm-lock.yaml
-yarn.lock
-package-lock.json
+.vscode/*
+!.vscode/launch.json
+.idea
+bin/tormentnexus*

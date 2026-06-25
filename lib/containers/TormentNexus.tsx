@@ -43,6 +43,7 @@ const TormentNexus = forwardRef<HTMLDivElement, TormentNexusProps>((props, ref) 
 
   const attachKeyListeners = async () => {
     if (!mousetrap.current) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       mousetrap.current = new (Mousetrap as any)(window, true);
       mousetrap.current!.stopCallback = () => {
         // All events should be intercepted even if focus is in an input/textarea
@@ -159,10 +160,7 @@ const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   };
 };
 
-const TormentNexusContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(
-  TormentNexus,
-  'TormentNexus'
-);
+const TormentNexusContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(TormentNexus, 'TormentNexus');
 
 export default TormentNexusContainer;
 

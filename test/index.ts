@@ -14,7 +14,7 @@ test.before(async () => {
 
   switch (process.platform) {
     case 'linux':
-      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/tormentnexus');
+      pathToBinary = path.join(__dirname, '../dist/linux-unpacked/TormentNexus');
       break;
 
     case 'darwin':

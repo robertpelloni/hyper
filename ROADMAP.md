@@ -12,7 +12,6 @@
 - [ ] Port Warp-like command blocks.
 - [ ] Integrate Codex Desktop features.
 - [ ] Implement Wave-like notebook terminal capabilities.
-- [x] Port pi-mono Agent features across 5 languages (TypeScript, Rust, Go, C#, Java).
 
 ## Phase 3: Advanced Agent Capabilities
 - [ ] Integration with Claude Code and Gemini CLI.
@@ -23,18 +22,3 @@
 - [ ] Wire Go backend to Electron UI via RPC.
 - [ ] Implement interactive command blocks in the frontend.
 - [ ] Status bar integration for AI status.
-
-## Goose Extraction Phase
-- [ ] Implement Model Context Protocol (MCP) tool aggregation and registration.
-- [ ] Implement abstract LLM Provider Interface.
-- [ ] Add generic Memory and Session Management wrappers.
-
-## Goose Extraction Phase
-- [ ] Implement Model Context Protocol (MCP) tool aggregation and registration.
-- [ ] Implement abstract LLM Provider Interface.
-- [ ] Add generic Memory and Session Management wrappers.
-
-## Claude Code Extraction Phase
-- [ ] Implement a Plugin/Extension Manager for dynamic feature loading.
-- [ ] Implement a Slash Command Router (`/commands`) for terminal I/O.
-- [ ] Implement Dynamic System Prompt Templating.

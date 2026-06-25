@@ -25,10 +25,9 @@
 
 ## Implementation Details for Reimplementation
 
-## 1. Agent Harness (`internal/agent` & multi-language versions)
-- Based on `Pi-Mono`'s `Agent` core class from `packages/agent/src/agent.ts`.
-- Port the execution loop to support streaming and tool calls across TypeScript, Rust, Go, C#, and Java.
-- The `Agent` implements event subscription (`listeners`), state management (`_state`), and messaging (`steeringQueue`, `followUpQueue`).
+### 1. Agent Harness (`internal/agent`)
+- Based on `Pi-Mono`'s `Agent` struct.
+- Port the execution loop to support streaming and tool calls.
 - Integrate tool registration from `Hermes-Agent` schemas.
 
 ### 2. Code Intelligence (`internal/intelligence`)

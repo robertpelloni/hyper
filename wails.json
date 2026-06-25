@@ -1,4 +1,5 @@
 {
+  "$schema": "https://wails.io/schemas/config.v2.schema.json",
   "name": "TormentNexus",
   "outputfilename": "tormentnexus",
   "frontend:install": "npm install",

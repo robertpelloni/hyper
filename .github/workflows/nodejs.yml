@@ -52,7 +52,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt clean
-          sudo apt install -y libarchive-tools rpm
+          sudo apt install libarchive-tools
       - name: Lint and Run Unit Tests
         run: pnpm run test
       - name: Getting Build Icon
@@ -160,7 +160,7 @@ jobs:
           pnpm install --frozen-lockfile
           sudo apt update
           sudo apt clean
-          sudo apt install -y libarchive-tools qemu-user-static rpm
+          sudo apt install libarchive-tools qemu-user-static
       - name: Compile
         run: pnpm run build
       - name: rebuild node-pty

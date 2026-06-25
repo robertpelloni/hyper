@@ -4,8 +4,8 @@ TormentNexus is a high-performance terminal and autonomous agent harness built w
 
 ## Core Foundational Concepts
 
-### 1. Multi-Language Parity
-TormentNexus is not just a tool; it is an ecosystem built natively across 5 languages: TypeScript, Rust, Go, C#, and Java. Each language implementation guarantees full feature parity with top-tier agentic coding harnesses. We leverage each language's strengths for distinct operational layers, allowing the core agent logic (inspired by tools like pi-mono) to function seamlessly across any environment.
+### 1. Go-powered Performance
+We leverage Go for critical backend tasks, including PTY management, SSH protocols, and high-frequency agent loops. This ensures the terminal remains responsive even during heavy LLM-driven workloads.
 
 ### 2. Universal Agent Harness
 TormentNexus is designed to be the primary interface for autonomous coding agents. With a built-in REST API and future support for gRPC, agents can interact with the system, manipulate files, and execute commands with granular control.

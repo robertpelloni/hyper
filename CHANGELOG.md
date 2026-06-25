@@ -1,8 +1,11 @@
 # Changelog
 
+## 1.1.2
+- **Feature**: Extracted Warp terminal "Command Block" feature.
+- **Porting**: Successfully ported Command Block boundary definitions, execution timings, exit code captures, and standard IO routing into the 5 target architectures (TypeScript, Rust, Go, C#, Java).
+
 ## 1.1.1
-- **Feature**: Extracted Copilot CLI functionality (`ShellExecutor` and `AliasGenerator`) and ported across all 5 target architectures (Go, Rust, C#, Java, TypeScript).
-- **Merge**: Successfully completed a dual-direction intelligent merge syncing previous feature-branch work to the `main` trunk without conflict regressions.
+- **Feature**: Extracted Copilot CLI functionality (`ShellExecutor` and `AliasGenerator`) and ported across all 5 target architectures.
 - **System**: Deployed rigid repository Git sanitization sequence resolving large-scale node/wails artifact diff-pollution by utilizing heavy `.gitignore` boundaries.
 
 ## 1.1.0

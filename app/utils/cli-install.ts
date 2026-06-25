@@ -139,11 +139,7 @@ export const installCLI = async (withNotification: boolean) => {
         'You may need to restart your computer to complete this installation process.'
       );
     } catch (err) {
-      logNotify(
-        withNotification,
-        'TormentNexus CLI installation failed',
-        `Failed to add TormentNexus CLI path to user PATH ${err}`
-      );
+      logNotify(withNotification, 'TormentNexus CLI installation failed', `Failed to add TormentNexus CLI path to user PATH ${err}`);
     }
   } else if (process.platform === 'darwin' || process.platform === 'linux') {
     // AppImages are mounted on run at a temporary path, don't create symlink
