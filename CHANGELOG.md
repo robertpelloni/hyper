@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.5
+- **Feature**: Integrated React Frontend bindings for Codex/Warp blocks via RPC.
+- **UI**: Added `WarpBlock` UI element to mirror terminal block segmentation.
+- **UI**: Added `GhostTextInput` to simulate inline terminal predictions (Codex feature).
+
 ## 1.1.4
 - **Feature**: Extracted Codex Desktop capabilities.
 - **Porting**: Ported `GhostTextManager` (inline terminal autocomplete concepts using ANSI colors) and `MultiFileContext` (local context gathering for LLMs) across the 5 language backends.
