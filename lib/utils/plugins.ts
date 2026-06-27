@@ -576,8 +576,9 @@ export function decorateSessionsReducer(fn: ISessionReducer) {
 }
 
 // redux middleware generator
-export const middleware: Middleware<{}, TormentNexusState, Dispatch<TormentNexusActions>> = (store) => (next) => (action) => {
-  const nextMiddleware = (remaining: Middleware[]) => (action_: any) =>
-    remaining.length ? remaining[0](store)(nextMiddleware(remaining.slice(1)))(action_) : next(action_);
-  nextMiddleware(middlewares)(action);
-};
+export const middleware: Middleware<{}, TormentNexusState, Dispatch<TormentNexusActions>> =
+  (store) => (next) => (action) => {
+    const nextMiddleware = (remaining: Middleware[]) => (action_: any) =>
+      remaining.length ? remaining[0](store)(nextMiddleware(remaining.slice(1)))(action_) : next(action_);
+    nextMiddleware(middlewares)(action);
+  };

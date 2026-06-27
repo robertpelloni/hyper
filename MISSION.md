@@ -11,7 +11,7 @@ We build for agents. Every feature in TormentNexus is designed with programmabil
 Latency kills productivity. By porting our core to Go, we guarantee a high-performance substrate for both character rendering and background agent logic.
 
 ### Extensibility
-We respect the past while building the future. TormentNexus maintains compatibility with the rich Hyper plugin ecosystem, allowing users to bring their favorite themes and enhancements into a modern LLM-centric environment.
+We respect the past while building the future. TormentNexus maintains compatibility with the rich TormentNexus plugin ecosystem, allowing users to bring their favorite themes and enhancements into a modern LLM-centric environment.
 
 ### Openness
 Built on open web standards and the Go language, TormentNexus is an extensible platform for the community to innovate upon.

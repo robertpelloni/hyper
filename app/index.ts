@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/order
 import {cfgPath} from './config/paths';
 
 // Print diagnostic information for a few arguments instead of running TormentNexus.
@@ -36,6 +35,7 @@ import * as plugins from './plugins';
 import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
+
 import {spawn} from 'child_process';
 
 const windowSet = new Set<BrowserWindow>([]);

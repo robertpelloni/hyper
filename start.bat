@@ -1,16 +1,16 @@
 @echo off
-:: Hyper Go Build Script - v4.63.0
+:: TormentNexus Go Build Script - v4.63.0
 :: ===================================
-:: Builds the hyper Go binary from the cmd/tormentnexus entry point
+:: Builds the tormentnexus Go binary from the cmd/tormentnexus entry point
 :: (Module was originally branded "tormentnexus" by Jules AI)
-:: TODO: Rebrand module path from tormentnexus to hyper
+:: TODO: Rebrand module path from tormentnexus to tormentnexus
 
-echo [Hyper] Building hyper-go.exe...
-go build -buildvcs=false -o hyper-go.exe -ldflags "-s -w" ./cmd/tormentnexus/
+echo [TormentNexus] Building tormentnexus.exe...
+go build -buildvcs=false -o tormentnexus.exe -ldflags "-s -w" ./cmd/tormentnexus/
 if %ERRORLEVEL% NEQ 0 (
-    echo [Hyper] BUILD FAILED
+    echo [TormentNexus] BUILD FAILED
     exit /b 1
 )
-for %%A in (hyper-go.exe) do echo [Hyper] Built: %%~zA bytes
-echo [Hyper] Starting on :8080...
-start /b hyper-go.exe
+for %%A in (tormentnexus.exe) do echo [TormentNexus] Built: %%~zA bytes
+echo [TormentNexus] Starting on :8080...
+start /b tormentnexus.exe

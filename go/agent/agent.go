@@ -1,8 +1,8 @@
 package agent
 
 import (
-	"com.tormentnexus/codex"
-	"com.tormentnexus/warp"
+	"tormentnexus/go/internal/codex"
+	"tormentnexus/go/internal/warp"
 )
 
 type TormentAgent struct {
