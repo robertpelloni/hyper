@@ -17,6 +17,7 @@ For more details, head to: https://TormentNexus.is
 - **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
 - **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
 - **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
+- **Semantic UI:** Warp-like interactive command blocks, Codex-style inline autocomplete, and Wave-like notebook capabilities integrated natively.
 
 ## Setup and Usage
 
