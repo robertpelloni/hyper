@@ -1,12 +1,14 @@
+#!/bin/bash
+cat << 'APP_EOF' > internal/terminal/pty.go
 package terminal
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"sync"
+	"encoding/json"
 
 	"github.com/creack/pty"
 )
@@ -17,10 +19,10 @@ type PTYManager struct {
 }
 
 type PTYInstance struct {
-	ID   string
-	Pty  *os.File
-	Cmd  *exec.Cmd
-	done chan struct{}
+	ID    string
+	Pty   *os.File
+	Cmd   *exec.Cmd
+	done  chan struct{}
 }
 
 func NewPTYManager() *PTYManager {
@@ -101,3 +103,4 @@ func (m *PTYManager) Resize(id string, rows, cols uint16) error {
 	}
 	return pty.Setsize(instance.Pty, &pty.Winsize{Rows: rows, Cols: cols})
 }
+APP_EOF

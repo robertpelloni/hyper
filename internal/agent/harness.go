@@ -6,7 +6,7 @@ import (
 )
 
 type Agent struct {
-	mu sync.RWMutex
+	mu       sync.RWMutex
 	Messages []string
 }
 
