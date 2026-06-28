@@ -106,3 +106,24 @@ ipcMain.handle('rpc-get-ghost-suggestion', async (event, {input}) => {
   }
   return '';
 });
+
+// Wave-like notebook terminal capabilities RPC handles
+ipcMain.handle('rpc-get-notebook', async (event, notebookId) => {
+  return {
+    id: notebookId,
+    title: "Wave Notebook " + notebookId,
+    cells: [
+      { id: "1", type: "markdown", content: "# Welcome to Wave Terminal", createdAt: Date.now() },
+      { id: "2", type: "code", content: "echo 'Wave capabilities active'", output: "Wave capabilities active", createdAt: Date.now() }
+    ]
+  };
+});
+
+ipcMain.handle('rpc-add-notebook-cell', async (event, {notebookId, type, content}) => {
+  return {
+    id: "uuid-" + Date.now(),
+    type,
+    content,
+    createdAt: Date.now()
+  };
+});

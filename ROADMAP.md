@@ -11,7 +11,7 @@
 - [x] Initial Tabby compatibility layer (Skeleton).
 - [x] Port Warp-like command blocks.
 - [x] Integrate Codex Desktop features.
-- [ ] Implement Wave-like notebook terminal capabilities.
+- [x] Implement Wave-like notebook terminal capabilities.
 
 ## Phase 3: Advanced Agent Capabilities
 - [ ] Integration with Claude Code and Gemini CLI.

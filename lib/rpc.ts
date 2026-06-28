@@ -9,3 +9,11 @@ export class TormentRPC {
     return await ipcRenderer.invoke('rpc-get-ghost-suggestion', {input});
   }
 }
+
+  static async getNotebook(notebookId: string): Promise<any> {
+    return await ipcRenderer.invoke('rpc-get-notebook', notebookId);
+  }
+
+  static async addNotebookCell(notebookId: string, type: string, content: string): Promise<any> {
+    return await ipcRenderer.invoke('rpc-add-notebook-cell', {notebookId, type, content});
+  }
