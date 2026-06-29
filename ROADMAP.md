@@ -19,6 +19,6 @@
 - [x] Agentic file system and git management.
 
 ## Phase 4: UI/UX Refinement
-- [ ] Wire Go backend to Electron UI via RPC.
+- [x] Wire Go backend to Electron UI via RPC.
 - [x] Implement interactive command blocks in the frontend.
-- [ ] Status bar integration for AI status.
+- [x] Status bar integration for AI status.
