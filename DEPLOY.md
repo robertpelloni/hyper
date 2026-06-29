@@ -70,3 +70,4 @@ To bypass code signing locally:
 export CSC_IDENTITY_AUTO_DISCOVERY=false
 yarn run dist
 ```
+If code signing still fails due to missing keychain identities on a developer machine, ensure your Apple Developer certificate is present in your login keychain or use an ad-hoc signature via `codesign --force --deep --sign - dist/mac/TormentNexus.app`.
