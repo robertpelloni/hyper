@@ -3,6 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {GhostTextInput} from './components/ghost-text-input';
 import {WarpBlock} from './components/warp-block';
 import {NotebookView} from './components/wave/notebook';
+import {StatusBar} from './components/status-bar';
 import {TormentRPC, rpcInstance} from './rpc';
 
 export const MainApp = () => {
@@ -30,15 +31,33 @@ export const MainApp = () => {
 
   return (
     <div style={{backgroundColor: '#000', color: '#fff', height: '100vh', display: 'flex', flexDirection: 'column'}}>
-      <div style={{display: 'flex', borderBottom: '1px solid #333', padding: '10px'}}>
+      <div style={{display: 'flex', borderBottom: '1px solid #333', padding: '10px', alignItems: 'center'}}>
+        <h3 style={{margin: '0 20px 0 0', color: '#888'}}>TormentNexus</h3>
         <button
-          style={{marginRight: '10px', background: activeTab === 'terminal' ? '#333' : '#111', color: '#fff'}}
+          title="Standard interactive terminal with Warp-like command blocking"
+          style={{
+            marginRight: '10px',
+            background: activeTab === 'terminal' ? '#444' : '#111',
+            color: '#fff',
+            border: '1px solid #555',
+            padding: '5px 15px',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
           onClick={() => setActiveTab('terminal')}
         >
           Terminal
         </button>
         <button
-          style={{background: activeTab === 'notebook' ? '#333' : '#111', color: '#fff'}}
+          title="Wave-like notebook interface combining markdown documentation with executable code blocks"
+          style={{
+            background: activeTab === 'notebook' ? '#444' : '#111',
+            color: '#fff',
+            border: '1px solid #555',
+            padding: '5px 15px',
+            borderRadius: '4px',
+            cursor: 'pointer'
+          }}
           onClick={() => setActiveTab('notebook')}
         >
           Wave Notebook
@@ -52,13 +71,16 @@ export const MainApp = () => {
               <WarpBlock key={i} command={b.command} stdout={b.stdout} stderr={b.stderr} />
             ))}
           </div>
-          <GhostTextInput onExecute={executeCommand} />
+          <div title="Type your command here. Press Tab for Codex-style AI autocomplete suggestions." style={{borderTop: '1px solid #333', paddingTop: '10px'}}>
+             <GhostTextInput onExecute={executeCommand} />
+          </div>
         </div>
       ) : (
         <div style={{flex: 1, overflow: 'hidden'}}>
           <NotebookView notebookId="1" />
         </div>
       )}
+      <StatusBar />
     </div>
   );
 };
