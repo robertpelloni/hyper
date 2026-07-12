@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Enable pnpm ${{ env.PNPM_VERSION }}
@@ -115,7 +115,7 @@ jobs:
         with:
           name: pr_num
           path: ./pr_num.txt
-      - uses: actions/cache/save@v4
+      - uses: actions/cache/save@v5
         if: github.event_name == 'push'
         with:
           path: ${{ steps.pnpm-store-dir-path.outputs.dir }}
@@ -137,7 +137,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Enable pnpm ${{ env.PNPM_VERSION }}
