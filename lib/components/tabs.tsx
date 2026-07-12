@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 
-import type {TabsProps} from '../../typings/hyper';
+import type {TabsProps} from '../../typings/TormentNexus';
 import {decorate, getTabProps} from '../utils/plugins';
 
 import DropdownButton from './new-tab';

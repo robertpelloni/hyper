@@ -12,21 +12,21 @@ const registryUrl = registryUrlModule();
 // If the user defines XDG_CONFIG_HOME they definitely want their config there,
 // otherwise use the home directory in linux/mac and userdata in windows
 const applicationDirectory = process.env.XDG_CONFIG_HOME
-  ? path.join(process.env.XDG_CONFIG_HOME, 'Hyper')
+  ? path.join(process.env.XDG_CONFIG_HOME, 'TormentNexus')
   : process.platform === 'win32'
-    ? path.join(process.env.APPDATA!, 'Hyper')
-    : path.join(os.homedir(), '.config', 'Hyper');
+    ? path.join(process.env.APPDATA!, 'TormentNexus')
+    : path.join(os.homedir(), '.config', 'TormentNexus');
 
-const devConfigFileName = path.join(__dirname, `../hyper.json`);
+const devConfigFileName = path.join(__dirname, `../TormentNexus.json`);
 
 const fileName =
   process.env.NODE_ENV !== 'production' && fs.existsSync(devConfigFileName)
     ? devConfigFileName
-    : path.join(applicationDirectory, 'hyper.json');
+    : path.join(applicationDirectory, 'TormentNexus.json');
 
 /**
  * We need to make sure the file reading and parsing is lazy so that failure to
- * statically analyze the hyper configuration isn't fatal for all kinds of
+ * statically analyze the TormentNexus configuration isn't fatal for all kinds of
  * subcommands. We can use memoization to make reading and parsing lazy.
  */
 function memoize<T extends (...args: any[]) => any>(fn: T): T {

@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect';
 
-import type {HyperState, HyperDispatch, ITab} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch, ITab} from '../../typings/TormentNexus';
 import {closeTab, changeTab, maximize, openHamburgerMenu, unmaximize, minimize, close} from '../actions/header';
 import {requestTermGroup} from '../actions/term-groups';
 import Header from '../components/header';
@@ -9,10 +9,10 @@ import {connect} from '../utils/plugins';
 
 const isMac = /Mac/.test(navigator.userAgent);
 
-const getSessions = ({sessions}: HyperState) => sessions.sessions;
-const getActiveRootGroup = ({termGroups}: HyperState) => termGroups.activeRootGroup;
-const getActiveSessions = ({termGroups}: HyperState) => termGroups.activeSessions;
-const getActivityMarkers = ({ui}: HyperState) => ui.activityMarkers;
+const getSessions = ({sessions}: TormentNexusState) => sessions.sessions;
+const getActiveRootGroup = ({termGroups}: TormentNexusState) => termGroups.activeRootGroup;
+const getActiveSessions = ({termGroups}: TormentNexusState) => termGroups.activeSessions;
+const getActivityMarkers = ({ui}: TormentNexusState) => ui.activityMarkers;
 const getTabs = createSelector(
   [getSessions, getRootGroups, getActiveSessions, getActiveRootGroup, getActivityMarkers],
   (sessions, rootGroups, activeSessions, activeRootGroup, activityMarkers) =>
@@ -28,7 +28,7 @@ const getTabs = createSelector(
     })
 );
 
-const mapStateToProps = (state: HyperState) => {
+const mapStateToProps = (state: TormentNexusState) => {
   return {
     // active is an index
     isMac,
@@ -45,7 +45,7 @@ const mapStateToProps = (state: HyperState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: HyperDispatch) => {
+const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   return {
     onCloseTab: (i: string) => {
       dispatch(closeTab(i));

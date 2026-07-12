@@ -1,4 +1,4 @@
-import type {HyperState, HyperDispatch} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch} from '../../typings/TormentNexus';
 import {
   resizeSession,
   sendSessionData,
@@ -12,7 +12,7 @@ import Terms from '../components/terms';
 import {getRootGroups} from '../selectors';
 import {connect} from '../utils/plugins';
 
-const mapStateToProps = (state: HyperState) => {
+const mapStateToProps = (state: TormentNexusState) => {
   const {sessions} = state.sessions;
   return {
     sessions,
@@ -58,7 +58,7 @@ const mapStateToProps = (state: HyperState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: HyperDispatch) => {
+const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   return {
     onData(uid: string, data: string) {
       dispatch(sendSessionData(uid, data));

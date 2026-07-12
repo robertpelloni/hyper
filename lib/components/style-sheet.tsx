@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 
-import type {StyleSheetProps} from '../../typings/hyper';
+import type {StyleSheetProps} from '../../typings/TormentNexus';
 
 const StyleSheet = forwardRef<HTMLStyleElement, StyleSheetProps>((props, ref) => {
   const {borderColor} = props;

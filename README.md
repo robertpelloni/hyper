@@ -1,4 +1,4 @@
-![](https://assets.vercel.com/image/upload/v1549723846/repositories/hyper/hyper-3-repo-banner.png)
+![](https://assets.vercel.com/image/upload/v1549723846/repositories/TormentNexus/TormentNexus-3-repo-banner.png)
 
 <p align="center">
   <a aria-label="Vercel logo" href="https://vercel.com">
@@ -6,64 +6,78 @@
   </a>
  </p>
   
-[![Node CI](https://github.com/vercel/hyper/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/hyper/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
+[![Node CI](https://github.com/vercel/TormentNexus/workflows/Node%20CI/badge.svg?event=push)](https://github.com/vercel/TormentNexus/actions?query=workflow%3A%22Node+CI%22+branch%3Acanary+event%3Apush)
 [![Changelog #213](https://img.shields.io/badge/changelog-%23213-lightgrey.svg)](https://changelog.com/213)
 
-For more details, head to: https://hyper.is
+For more details, head to: https://TormentNexus.is
 
-## Project goals
+- **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
+- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction via REST API.
+- **MCP Aggregator:** Centralized hub for Model Context Protocol (MCP) servers.
+- **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
+- **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
+- **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
 
-The goal of the project is to create a beautiful and extensible experience for command-line interface users, built on open web standards. In the beginning, our focus will be primarily around speed, stability and the development of the correct API for extension authors.
+## Setup and Usage
 
-In the future, we anticipate the community will come up with innovative additions to enhance what could be the simplest, most powerful and well-tested interface for productivity.
+### Prerequisites
+- **Go:** 1.25.0 or later
+- **Node.js:** 18.x or later
+- **Yarn:** Latest version
 
-## Usage
+### Building from Source
 
-[Download the latest release!](https://hyper.is/#installation)
+[Download the latest release!](https://TormentNexus.is/#installation)
 
 ### Linux
 #### Arch and derivatives
-Hyper is available in the [AUR](https://aur.archlinux.org/packages/hyper/). Use an AUR [package manager](https://wiki.archlinux.org/index.php/AUR_helpers) e.g. [paru](https://github.com/Morganamilo/paru)
+TormentNexus is available in the [AUR](https://aur.archlinux.org/packages/TormentNexus/). Use an AUR [package manager](https://wiki.archlinux.org/index.php/AUR_helpers) e.g. [paru](https://github.com/Morganamilo/paru)
 
 ```sh
-paru -S hyper
+paru -S TormentNexus
 ```
 
 #### NixOS
-Hyper is available as [Nix package](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/hyper/default.nix), to install the app run this command:
+TormentNexus is available as [Nix package](https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/misc/TormentNexus/default.nix), to install the app run this command:
 
 ```sh
-nix-env -i hyper
+nix-env -i TormentNexus
 ```
 
-### macOS
+## Documentation
+For more detailed information, please refer to:
+- [VISION.md](./VISION.md): The long-term project goal.
+- [ROADMAP.md](./ROADMAP.md): Current progress and future plans.
+- [DEPLOY.md](./DEPLOY.md): Deployment instructions.
+- [MISSION.md](./MISSION.md): Core values and project philosophy.
+- [CHANGELOG.md](./CHANGELOG.md): History of changes and releases.
 
 Use [Homebrew Cask](https://brew.sh) to download the app by running these commands:
 
 ```bash
 brew update
-brew install --cask hyper
+brew install --cask TormentNexus
 ```
 
 ### Windows
 
-Use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/hyper/)):
+Use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/TormentNexus/)):
 
 ```bash
-choco install hyper
+choco install TormentNexus
 ```
 
-**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://hyper.is/#installation) if that's the case.
+**Note:** The version available on [Homebrew Cask](https://brew.sh), [Chocolatey](https://chocolatey.org), [Snapcraft](https://snapcraft.io/store) or the [AUR](https://aur.archlinux.org) may not be the latest. Please consider downloading it from [here](https://TormentNexus.is/#installation) if that's the case.
 
 ## Contribute
 
-Regardless of the platform you are working on, you will need to have Yarn installed. If you have never installed Yarn before, you can find out how at: https://yarnpkg.com/en/docs/install.
+Regardless of the platform you are working on, you will need to have pnpm available. The recommended way is to enable it with Corepack: `corepack enable pnpm`.
 
 1. Install necessary packages:
   * Windows
-    - Be sure to run  `yarn global add windows-build-tools` from an elevated prompt (as an administrator) to install `windows-build-tools`.
+    - Be sure to run `pnpm add --global windows-build-tools` from an elevated prompt (as an administrator) to install `windows-build-tools`.
   * macOS
-    - Once you have installed Yarn, you can skip this section!
+    - Once you have enabled pnpm, you can skip this section!
   * Linux (You can see [here](https://en.wikipedia.org/wiki/List_of_Linux_distributions) what your Linux is based on.)
     - RPM-based
         + `GraphicsMagick`
@@ -74,17 +88,17 @@ Regardless of the platform you are working on, you will need to have Yarn instal
         + `icnsutils`
         + `xz-utils`
 2. [Fork](https://help.github.com/articles/fork-a-repo/) this repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository/) it to your local device
-3. Install the dependencies: `yarn`
-4. Build the code and watch for changes: `yarn run dev`
-5. To run `hyper`
-  * `yarn run app` from another terminal tab/window/pane
-  * If you are using **Visual Studio Code**, select `Launch Hyper` in debugger configuration to launch a new Hyper instance with debugger attached.
-  * If you interrupt `yarn run dev`, you'll need to relaunch it each time you want to test something. Webpack will watch changes and will rebuild renderer code when needed (and only what have changed). You'll just have to relaunch electron by using yarn run app or VSCode launch task.
+3. Install the dependencies: `pnpm install`
+4. Build the code and watch for changes: `pnpm run dev`
+5. To run `TormentNexus`
+  * `pnpm run app` from another terminal tab/window/pane
+  * If you are using **Visual Studio Code**, select `Launch TormentNexus` in debugger configuration to launch a new TormentNexus instance with debugger attached.
+  * If you interrupt `pnpm run dev`, you'll need to relaunch it each time you want to test something. Webpack will watch changes and will rebuild renderer code when needed (and only what have changed). You'll just have to relaunch electron by using `pnpm run app` or VSCode launch task.
 
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
 ```bash
-yarn run dist
+pnpm run dist
 ```
 
 After that, you will see the binary in the `./dist` folder!
@@ -94,23 +108,23 @@ After that, you will see the binary in the `./dist` folder!
 ##### Error building `node-pty`
 
 If after building during development you get an alert dialog related to `node-pty` issues,
-make sure its build process is working correctly by running `yarn run rebuild-node-pty`.
+make sure its build process is working correctly by running `pnpm run rebuild-node-pty`.
 
 If you are on macOS, this typically is related to Xcode issues (like not having agreed
 to the Terms of Service by running `sudo xcodebuild` after a fresh Xcode installation).
 
-##### Error with `C++` on macOS when running `yarn`
+##### Error with `C++` on macOS when running `pnpm install`
 
-If you are getting compiler errors when running `yarn` add the environment variable `export CXX=clang++`
+If you are getting compiler errors when running `pnpm install` add the environment variable `export CXX=clang++`
 
-##### Error with `codesign` on macOS when running `yarn run dist`
+##### Error with `codesign` on macOS when running `pnpm run dist`
 
-If you have issues in the `codesign` step when running `yarn run dist` on macOS, you can temporarily disable code signing locally by setting
+If you have issues in the `codesign` step when running `pnpm run dist` on macOS, you can temporarily disable code signing locally by setting
 `export CSC_IDENTITY_AUTO_DISCOVERY=false` for the current terminal session.
 
 ## Related Repositories
 
-- [Website](https://github.com/vercel/hyper-site)
-- [Sample Extension](https://github.com/vercel/hyperpower)
-- [Sample Theme](https://github.com/vercel/hyperyellow)
-- [Awesome Hyper](https://github.com/bnb/awesome-hyper)
+- [Website](https://github.com/vercel/TormentNexus-site)
+- [Sample Extension](https://github.com/vercel/TormentNexuspower)
+- [Sample Theme](https://github.com/vercel/TormentNexusyellow)
+- [Awesome TormentNexus](https://github.com/bnb/awesome-TormentNexus)

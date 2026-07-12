@@ -24,7 +24,7 @@ import {
   UI_CONTEXTMENU_OPEN,
   UI_COMMAND_EXEC
 } from '../../typings/constants/ui';
-import type {HyperState, HyperDispatch, HyperActions, ITermGroups} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions, ITermGroups} from '../../typings/TormentNexus';
 import rpc from '../rpc';
 import {getRootGroups} from '../selectors';
 import {isExecutable} from '../utils/file';
@@ -35,7 +35,7 @@ import {requestSession, sendSessionData, setActiveSession} from './sessions';
 import {setActiveGroup} from './term-groups';
 
 export function openContextMenu(uid: string, selection: string) {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: UI_CONTEXTMENU_OPEN,
       uid,
@@ -51,7 +51,7 @@ export function openContextMenu(uid: string, selection: string) {
 }
 
 export function increaseFontSize() {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: UI_FONT_SIZE_INCR,
       effect() {
@@ -68,7 +68,7 @@ export function increaseFontSize() {
 }
 
 export function decreaseFontSize() {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: UI_FONT_SIZE_DECR,
       effect() {
@@ -85,14 +85,14 @@ export function decreaseFontSize() {
   };
 }
 
-export function resetFontSize(): HyperActions {
+export function resetFontSize(): TormentNexusActions {
   return {
     type: UI_FONT_SIZE_RESET
   };
 }
 
 export function setFontSmoothing() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     setTimeout(() => {
       const devicePixelRatio = window.devicePixelRatio;
       const fontSmoothing = devicePixelRatio < 2 ? 'subpixel-antialiased' : 'antialiased';
@@ -105,7 +105,7 @@ export function setFontSmoothing() {
   };
 }
 
-export function windowGeometryUpdated({isMaximized}: {isMaximized: boolean}): HyperActions {
+export function windowGeometryUpdated({isMaximized}: {isMaximized: boolean}): TormentNexusActions {
   return {
     type: UI_WINDOW_GEOMETRY_CHANGED,
     isMaximized
@@ -136,7 +136,7 @@ const getNeighborIndex = (groups: string[], uid: string, type: string) => {
 };
 
 function moveToNeighborPane(type: typeof UI_MOVE_NEXT_PANE | typeof UI_MOVE_PREV_PANE) {
-  return () => (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return () => (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type,
       effect() {
@@ -151,20 +151,20 @@ function moveToNeighborPane(type: typeof UI_MOVE_NEXT_PANE | typeof UI_MOVE_PREV
           dispatch(setActiveSession(sessionUid!));
         }
       }
-    } as HyperActions);
+    } as TormentNexusActions);
   };
 }
 
 export const moveToNextPane = moveToNeighborPane(UI_MOVE_NEXT_PANE);
 export const moveToPreviousPane = moveToNeighborPane(UI_MOVE_PREV_PANE);
 
-const getGroupUids = (state: HyperState) => {
+const getGroupUids = (state: TormentNexusState) => {
   const rootGroups = getRootGroups(state);
   return rootGroups.map(({uid}) => uid);
 };
 
 export function moveLeft() {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: UI_MOVE_LEFT,
       effect() {
@@ -184,7 +184,7 @@ export function moveLeft() {
 }
 
 export function moveRight() {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     dispatch({
       type: UI_MOVE_RIGHT,
       effect() {
@@ -204,7 +204,7 @@ export function moveRight() {
 }
 
 export function moveTo(i: number | 'last') {
-  return (dispatch: HyperDispatch, getState: () => HyperState) => {
+  return (dispatch: TormentNexusDispatch, getState: () => TormentNexusState) => {
     if (i === 'last') {
       // Finding last tab index
       const {termGroups} = getState().termGroups;
@@ -233,7 +233,7 @@ export function moveTo(i: number | 'last') {
 }
 
 export function windowMove(window: any) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_MOVE,
       window,
@@ -245,7 +245,7 @@ export function windowMove(window: any) {
 }
 
 export function windowGeometryChange() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_MOVE,
       effect() {
@@ -256,7 +256,7 @@ export function windowGeometryChange() {
 }
 
 export function openFile(path: string) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_OPEN_FILE,
       effect() {
@@ -283,20 +283,20 @@ export function openFile(path: string) {
   };
 }
 
-export function enterFullScreen(): HyperActions {
+export function enterFullScreen(): TormentNexusActions {
   return {
     type: UI_ENTER_FULLSCREEN
   };
 }
 
-export function leaveFullScreen(): HyperActions {
+export function leaveFullScreen(): TormentNexusActions {
   return {
     type: UI_LEAVE_FULLSCREEN
   };
 }
 
 export function openSSH(parsedUrl: ReturnType<typeof parseUrl>) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_OPEN_SSH_URL,
       effect() {
@@ -318,8 +318,8 @@ export function openSSH(parsedUrl: ReturnType<typeof parseUrl>) {
   };
 }
 
-export function execCommand(command: string, fn: (e: any, dispatch: HyperDispatch) => void, e: any) {
-  return (dispatch: HyperDispatch) =>
+export function execCommand(command: string, fn: (e: any, dispatch: TormentNexusDispatch) => void, e: any) {
+  return (dispatch: TormentNexusDispatch) =>
     dispatch({
       type: UI_COMMAND_EXEC,
       command,

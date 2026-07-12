@@ -9,12 +9,13 @@ import type {configOptions} from '../typings/config';
 
 import {loadConfig, reloadConfig} from './actions/config';
 import init from './actions/index';
+import {executeAgentCommand} from './utils/go-core';
 import {addNotificationMessage} from './actions/notifications';
 import * as sessionActions from './actions/sessions';
 import * as termGroupActions from './actions/term-groups';
 import * as uiActions from './actions/ui';
 import * as updaterActions from './actions/updater';
-import HyperContainer from './containers/hyper';
+import TormentNexusContainer from './containers/TormentNexus';
 import rpc from './rpc';
 import configureStore from './store/configure-store';
 import * as config from './utils/config';
@@ -237,10 +238,20 @@ const root = createRoot(document.getElementById('mount')!);
 
 root.render(
   <Provider store={store_}>
-    <HyperContainer />
+    <TormentNexusContainer />
   </Provider>
 );
 
 rpc.on('reload', () => {
   plugins.reload();
+});
+
+rpc.on('agent check req', () => {
+  executeAgentCommand('status')
+    .then((resp) => {
+      store_.dispatch(addNotificationMessage(`Agent Status: ${resp.response}`, null, true));
+    })
+    .catch((err) => {
+      store_.dispatch(addNotificationMessage(`Agent Error: ${err.message}`, null, true));
+    });
 });

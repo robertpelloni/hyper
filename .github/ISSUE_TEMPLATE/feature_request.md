@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea/feature for Hyper
+about: Suggest an idea/feature for TormentNexus
 title: ''
 labels: ''
 assignees: ''

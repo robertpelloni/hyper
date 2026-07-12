@@ -1,6 +1,6 @@
 import React, {forwardRef, useState} from 'react';
 
-import type {HeaderProps} from '../../typings/hyper';
+import type {HeaderProps} from '../../typings/TormentNexus';
 import {decorate, getTabsProps} from '../utils/plugins';
 
 import Tabs_ from './tabs';
@@ -78,7 +78,7 @@ const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
 
   const {isMac} = props;
   const {borderColor} = props;
-  let title = 'Hyper';
+  let title = 'TormentNexus';
   if (props.tabs.length === 1 && props.tabs[0].title) {
     // if there's only one tab we use its title as the window title
     title = props.tabs[0].title;

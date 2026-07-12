@@ -6,13 +6,13 @@ import {
   UI_WINDOW_MINIMIZE,
   UI_WINDOW_CLOSE
 } from '../../typings/constants/ui';
-import type {HyperDispatch} from '../../typings/hyper';
+import type {TormentNexusDispatch} from '../../typings/TormentNexus';
 import rpc from '../rpc';
 
 import {userExitTermGroup, setActiveGroup} from './term-groups';
 
 export function closeTab(uid: string) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: CLOSE_TAB,
       uid,
@@ -24,7 +24,7 @@ export function closeTab(uid: string) {
 }
 
 export function changeTab(uid: string) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: CHANGE_TAB,
       uid,
@@ -36,7 +36,7 @@ export function changeTab(uid: string) {
 }
 
 export function maximize() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_MAXIMIZE,
       effect() {
@@ -47,7 +47,7 @@ export function maximize() {
 }
 
 export function unmaximize() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_UNMAXIMIZE,
       effect() {
@@ -58,7 +58,7 @@ export function unmaximize() {
 }
 
 export function openHamburgerMenu(coordinates: {x: number; y: number}) {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_OPEN_HAMBURGER_MENU,
       effect() {
@@ -69,7 +69,7 @@ export function openHamburgerMenu(coordinates: {x: number; y: number}) {
 }
 
 export function minimize() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_MINIMIZE,
       effect() {
@@ -80,7 +80,7 @@ export function minimize() {
 }
 
 export function close() {
-  return (dispatch: HyperDispatch) => {
+  return (dispatch: TormentNexusDispatch) => {
     dispatch({
       type: UI_WINDOW_CLOSE,
       effect() {
