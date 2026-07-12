@@ -567,12 +567,12 @@ parse-path@^7.0.0:
   dependencies:
     protocols "^2.0.0"
 
-parse-url@8.1.0:
-  version "8.1.0"
-  resolved "https://registry.npmjs.org/parse-url/-/parse-url-8.1.0.tgz#972e0827ed4b57fc85f0ea6b0d839f0d8a57a57d"
-  integrity sha512-xDvOoLU5XRrcOZvnI6b8zA6n9O9ejNk/GExuz1yBuWUGn9KA97GI6HTs6u02wKara1CeVmZhH+0TZFdWScR89w==
+parse-url@11.1.0:
+  version "11.1.0"
+  resolved "https://registry.npmjs.org/parse-url/-/parse-url-11.1.0.tgz#0f1edd8a18c4830562721dbe452c27e11b259393"
+  integrity sha512-UYn/lNb1bmkYiM6UaqEbHl9T/VIYreM2Vm79MGZ2soUOXOoOq7qxoTwx8C8p9V4Ko2DLcsVnEhRJzhxsF2kssg==
   dependencies:
-    parse-path "^7.0.0"
+    parse-path "^7.1.0"
 
 path-exists@^3.0.0:
   version "3.0.0"
