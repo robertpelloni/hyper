@@ -2,14 +2,14 @@ import {createStore, applyMiddleware} from 'redux';
 import _thunk from 'redux-thunk';
 import type {ThunkMiddleware} from 'redux-thunk';
 
-import type {HyperState, HyperActions} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusActions} from '../../typings/TormentNexus';
 import rootReducer from '../reducers/index';
 import effects from '../utils/effects';
 import * as plugins from '../utils/plugins';
 
 import writeMiddleware from './write-middleware';
 
-const thunk: ThunkMiddleware<HyperState, HyperActions> = _thunk;
+const thunk: ThunkMiddleware<TormentNexusState, TormentNexusActions> = _thunk;
 
 const configureStoreForProd = () =>
   createStore(rootReducer, applyMiddleware(thunk, plugins.middleware, thunk, writeMiddleware, effects));

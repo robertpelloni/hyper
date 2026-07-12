@@ -40,12 +40,12 @@ export function newWindow(
     minHeight: 190,
     backgroundColor: toElectronBackgroundColor(cfg.backgroundColor || '#000'),
     titleBarStyle: 'hiddenInset',
-    title: 'Hyper.app',
+    title: 'TormentNexus.app',
     // we want to go frameless on Windows and Linux
     frame: process.platform === 'darwin',
     transparent: process.platform === 'darwin',
     icon,
-    show: Boolean(process.env.HYPER_DEBUG || process.env.HYPERTERM_DEBUG || isDev),
+    show: Boolean(process.env.TormentNexus_DEBUG || process.env.TormentNexusTERM_DEBUG || isDev),
     acceptFirstMouse: true,
     webPreferences: {
       nodeIntegration: true,

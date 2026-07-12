@@ -15,9 +15,18 @@ const toolsMenu = (
         }
       },
       {
-        label: 'Install Hyper CLI command in PATH',
+        label: 'Install TormentNexus CLI command in PATH',
         click() {
           execCommand('cli:install');
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Run Agent Health Check',
+        click() {
+          execCommand('agent:check');
         }
       },
       {
@@ -26,13 +35,13 @@ const toolsMenu = (
       ...(process.platform === 'win32'
         ? <MenuItemConstructorOptions[]>[
             {
-              label: 'Add Hyper to system context menu',
+              label: 'Add TormentNexus to system context menu',
               click() {
                 execCommand('systemContextMenu:add');
               }
             },
             {
-              label: 'Remove Hyper from system context menu',
+              label: 'Remove TormentNexus from system context menu',
               click() {
                 execCommand('systemContextMenu:remove');
               }

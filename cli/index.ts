@@ -31,7 +31,7 @@ const checkConfig = () => {
     return true;
   }
   let msg = chalk.red(`Error! Config file not found: ${api.configPath}\n`);
-  msg += 'Please launch Hyper and retry.';
+  msg += 'Please launch TormentNexus and retry.';
   console.error(msg);
   process.exit(1);
 };
@@ -103,7 +103,7 @@ const lsRemote = (pattern?: string) => {
   // note that no errors are catched by this function
   const URL = `https://api.npms.io/v2/search?q=${
     (pattern && `${pattern}+`) || ''
-  }keywords:hyper-plugin,hyper-theme&size=250`;
+  }keywords:TormentNexus-plugin,TormentNexus-theme&size=250`;
   type npmResult = {package: {name: string; description: string}};
   return got(URL)
     .then((response) => JSON.parse(response.body).results as npmResult[])
@@ -127,7 +127,7 @@ args.command(
         if (entries.length === 0) {
           spinner.fail();
           console.error(chalk.red(`Your search '${query}' did not match any plugins`));
-          console.error(`${chalk.red('Try')} ${chalk.green('hyper ls-remote')}`);
+          console.error(`${chalk.red('Try')} ${chalk.green('TormentNexus ls-remote')}`);
           process.exit(1);
         } else {
           const msg = columnify(entries);
@@ -177,7 +177,7 @@ args.command(
 
 args.command(
   'version',
-  'Show the version of hyper',
+  'Show the version of TormentNexus',
   () => {
     console.log(version);
     process.exit(0);
@@ -185,13 +185,13 @@ args.command(
   []
 );
 
-args.command('<default>', 'Launch Hyper');
+args.command('<default>', 'Launch TormentNexus');
 
 args.option(['v', 'verbose'], 'Verbose mode', false);
 
 const main = (argv: string[]) => {
   const flags = args.parse(argv, {
-    name: 'hyper',
+    name: 'TormentNexus',
     version: false,
     mri: {
       boolean: ['v', 'verbose']
@@ -205,8 +205,8 @@ const main = (argv: string[]) => {
   }
 
   const env = Object.assign({}, process.env, {
-    // this will signal Hyper that it was spawned from this module
-    HYPER_CLI: '1',
+    // this will signal TormentNexus that it was spawned from this module
+    TormentNexus_CLI: '1',
     ELECTRON_NO_ATTACH_CONSOLE: '1'
   });
 
@@ -233,12 +233,12 @@ const main = (argv: string[]) => {
   if (!flags.verbose) {
     options['stdio'] = 'ignore';
     if (process.platform === 'darwin') {
-      //Use `open` to prevent multiple Hyper process
-      const cmd = `open -b co.zeit.hyper ${args_}`;
-      const opts = {
-        env
-      };
-      return promisify(exec)(cmd, opts);
+      //Use `open` to prevent multiple TormentNexus process
+      const cmd = 'open';
+      const child_args = ['-b', 'com.tormentnexus.app', ...args_];
+      const child = spawn(cmd, child_args, { env, detached: true, stdio: 'ignore' });
+      child.unref();
+      return Promise.resolve();
     }
   }
 

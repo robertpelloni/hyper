@@ -1,13 +1,13 @@
 // eslint-disable-next-line import/order
 import {cfgPath} from './config/paths';
 
-// Print diagnostic information for a few arguments instead of running Hyper.
+// Print diagnostic information for a few arguments instead of running TormentNexus.
 if (['--help', '-v', '--version'].includes(process.argv[1])) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const {version} = require('./package');
-  console.log(`Hyper version ${version}`);
-  console.log('Hyper does not accept any command line arguments. Please modify the config file instead.');
-  console.log(`Hyper configuration file located at: ${cfgPath}`);
+  console.log(`TormentNexus version ${version}`);
+  console.log('TormentNexus does not accept any command line arguments. Please modify the config file instead.');
+  console.log(`TormentNexus configuration file located at: ${cfgPath}`);
   process.exit();
 }
 
@@ -22,7 +22,7 @@ import * as config from './config';
 config.setup();
 
 // Native
-import {resolve} from 'path';
+import {resolve, dirname} from 'path';
 
 // Packages
 import {app, BrowserWindow, Menu, screen} from 'electron';
@@ -36,8 +36,30 @@ import * as plugins from './plugins';
 import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
+import {spawn} from 'child_process';
 
 const windowSet = new Set<BrowserWindow>([]);
+
+let goCoreProcess: any;
+
+function startGoCore() {
+  const binaryPath = resolve(
+    isDev ? __dirname : dirname(app.getPath('exe')),
+    'resources/bin/tormentnexus' + (process.platform === 'win32' ? '.exe' : '')
+  );
+  console.log('Starting TormentNexus Go Core:', binaryPath);
+  goCoreProcess = spawn(binaryPath, [], {
+    env: {...process.env, TORMENTNEXUS_PORT: '9876'}
+  });
+
+  goCoreProcess.stdout.on('data', (data: any) => {
+    console.log(`Go Core: ${data}`);
+  });
+
+  goCoreProcess.stderr.on('data', (data: any) => {
+    console.error(`Go Core Error: ${data}`);
+  });
+}
 
 // expose to plugins
 app.config = config;
@@ -152,6 +174,9 @@ app.on('ready', () =>
         return hwin;
       }
 
+      // Start Go Core foundation
+      startGoCore();
+
       // when opening create a new window
       createWindow();
 
@@ -168,6 +193,9 @@ app.on('ready', () =>
       });
 
       app.on('window-all-closed', () => {
+        if (goCoreProcess) {
+          goCoreProcess.kill();
+        }
         if (process.platform !== 'darwin') {
           app.quit();
         }
@@ -199,10 +227,10 @@ app.on('ready', () =>
       if (!isDev) {
         // check if should be set/removed as default ssh protocol client
         if (config.getConfig().defaultSSHApp && !app.isDefaultProtocolClient('ssh')) {
-          console.log('Setting Hyper as default client for ssh:// protocol');
+          console.log('Setting TormentNexus as default client for ssh:// protocol');
           app.setAsDefaultProtocolClient('ssh');
         } else if (!config.getConfig().defaultSSHApp && app.isDefaultProtocolClient('ssh')) {
-          console.log('Removing Hyper from default client for ssh:// protocol');
+          console.log('Removing TormentNexus from default client for ssh:// protocol');
           app.removeAsDefaultProtocolClient('ssh');
         }
         void installCLI(false);

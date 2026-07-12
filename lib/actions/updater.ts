@@ -1,8 +1,8 @@
 import {UPDATE_INSTALL, UPDATE_AVAILABLE} from '../../typings/constants/updater';
-import type {HyperActions} from '../../typings/hyper';
+import type {TormentNexusActions} from '../../typings/TormentNexus';
 import rpc from '../rpc';
 
-export function installUpdate(): HyperActions {
+export function installUpdate(): TormentNexusActions {
   return {
     type: UPDATE_INSTALL,
     effect: () => {
@@ -11,7 +11,7 @@ export function installUpdate(): HyperActions {
   };
 }
 
-export function updateAvailable(version: string, notes: string, releaseUrl: string, canInstall: boolean): HyperActions {
+export function updateAvailable(version: string, notes: string, releaseUrl: string, canInstall: boolean): TormentNexusActions {
   return {
     type: UPDATE_AVAILABLE,
     version,

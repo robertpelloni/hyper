@@ -7,7 +7,7 @@ import {app} from 'electron';
 
 import isDev from 'electron-is-dev';
 
-const cfgFile = 'hyper.json';
+const cfgFile = 'TormentNexus.json';
 const defaultCfgFile = 'config-default.json';
 const schemaFile = 'schema.json';
 const homeDirectory = homedir();
@@ -15,18 +15,18 @@ const homeDirectory = homedir();
 // If the user defines XDG_CONFIG_HOME they definitely want their config there,
 // otherwise use the home directory in linux/mac and userdata in windows
 let cfgDir = process.env.XDG_CONFIG_HOME
-  ? join(process.env.XDG_CONFIG_HOME, 'Hyper')
+  ? join(process.env.XDG_CONFIG_HOME, 'TormentNexus')
   : process.platform === 'win32'
     ? app.getPath('userData')
-    : join(homeDirectory, '.config', 'Hyper');
+    : join(homeDirectory, '.config', 'TormentNexus');
 
 const legacyCfgPath = join(
   process.env.XDG_CONFIG_HOME !== undefined
-    ? join(process.env.XDG_CONFIG_HOME, 'hyper')
+    ? join(process.env.XDG_CONFIG_HOME, 'TormentNexus')
     : process.platform == 'win32'
       ? app.getPath('userData')
       : homedir(),
-  '.hyper.js'
+  '.TormentNexus.js'
 );
 
 let cfgPath = join(cfgDir, cfgFile);
@@ -55,8 +55,8 @@ const plugs = {
   cache: resolve(plugins, 'cache')
 };
 const yarn = resolve(__dirname, '../../bin/yarn-standalone.js');
-const cliScriptPath = resolve(__dirname, '../../bin/hyper');
-const cliLinkPath = '/usr/local/bin/hyper';
+const cliScriptPath = resolve(__dirname, '../../bin/TormentNexus');
+const cliLinkPath = '/usr/local/bin/TormentNexus';
 
 const icon = resolve(__dirname, '../static/icon96x96.png');
 

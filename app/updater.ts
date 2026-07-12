@@ -40,7 +40,7 @@ let canaryUpdates = false;
 const buildFeedUrl = (canary: boolean, currentVersion: string) => {
   const updatePrefix = canary ? 'releases-canary' : 'releases';
   const archSuffix = process.arch === 'arm64' || app.runningUnderARM64Translation ? '_arm64' : '';
-  return `https://${updatePrefix}.hyper.is/update/${isLinux ? 'deb' : platform}${archSuffix}/${currentVersion}`;
+  return `https://${updatePrefix}.TormentNexus.is/update/${isLinux ? 'deb' : platform}${archSuffix}/${currentVersion}`;
 };
 
 const isCanary = (updateChannel: string) => updateChannel === 'canary';
@@ -80,7 +80,7 @@ const updater = (win: BrowserWindow) => {
   const {rpc} = win;
 
   const onupdate = (ev: Event, releaseNotes: string, releaseName: string, date: Date, updateUrl: string) => {
-    const releaseUrl = updateUrl || `https://github.com/vercel/hyper/releases/tag/${releaseName}`;
+    const releaseUrl = updateUrl || `https://github.com/vercel/TormentNexus/releases/tag/${releaseName}`;
     rpc.emit('update available', {releaseNotes, releaseName, releaseUrl, canInstall: !isLinux});
   };
 

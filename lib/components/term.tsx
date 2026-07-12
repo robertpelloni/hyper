@@ -16,7 +16,7 @@ import {Unicode11Addon} from 'xterm-addon-unicode11';
 import {WebLinksAddon} from 'xterm-addon-web-links';
 import {WebglAddon} from 'xterm-addon-webgl';
 
-import type {TermProps} from '../../typings/hyper';
+import type {TermProps} from '../../typings/TormentNexus';
 import terms from '../terms';
 import processClipboard from '../utils/paste';
 import {decorate} from '../utils/plugins';
@@ -198,7 +198,7 @@ export default class Term extends React.PureComponent<
         } else if (!isWebgl2Supported()) {
           console.warn('WebGL2 is not supported on your machine. Falling back to canvas-based rendering.');
         } else {
-          // Experimental WebGL renderer needs some more glue-code to make it work on Hyper.
+          // Experimental WebGL renderer needs some more glue-code to make it work on TormentNexus.
           // If you're working on enabling back WebGL, you will also need to look into `xterm-addon-ligatures` support for that renderer.
           useWebGL = true;
         }
@@ -325,7 +325,7 @@ export default class Term extends React.PureComponent<
 
   getTermDocument() {
     console.warn(
-      'The underlying terminal engine of Hyper no longer ' +
+      'The underlying terminal engine of TormentNexus no longer ' +
         'uses iframes with individual `document` objects for each ' +
         'terminal instance. This method call is retained for ' +
         "backwards compatibility reasons. It's ok to attach directly" +

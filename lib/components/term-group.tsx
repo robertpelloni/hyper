@@ -2,7 +2,7 @@ import React from 'react';
 
 import {connect} from 'react-redux';
 
-import type {HyperState, HyperDispatch, TermGroupProps, TermGroupOwnProps} from '../../typings/hyper';
+import type {TormentNexusState, TormentNexusDispatch, TermGroupProps, TermGroupOwnProps} from '../../typings/TormentNexus';
 import {resizeTermGroup} from '../actions/term-groups';
 import {decorate, getTermProps, getTermGroupProps} from '../utils/plugins';
 
@@ -139,11 +139,11 @@ class TermGroup_ extends React.PureComponent<TermGroupProps> {
   }
 }
 
-const mapStateToProps = (state: HyperState, ownProps: TermGroupOwnProps) => ({
+const mapStateToProps = (state: TormentNexusState, ownProps: TermGroupOwnProps) => ({
   childGroups: ownProps.termGroup.children.map((uid) => state.termGroups.termGroups[uid])
 });
 
-const mapDispatchToProps = (dispatch: HyperDispatch, ownProps: TermGroupOwnProps) => ({
+const mapDispatchToProps = (dispatch: TormentNexusDispatch, ownProps: TermGroupOwnProps) => ({
   onTermGroupResize(splitSizes: number[]) {
     dispatch(resizeTermGroup(ownProps.termGroup.uid, splitSizes));
   }

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.schema.json",
+  "name": "TormentNexus",
+  "outputfilename": "tormentnexus",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:server": "npm run dev-server",
+  "author": {
+    "name": "TormentNexus Team"
+  }
+}

@@ -10,7 +10,7 @@ const isProd = nodeEnv === 'production';
 const config: webpack.Configuration[] = [
   {
     mode: 'none',
-    name: 'hyper-app',
+    name: 'TormentNexus-app',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },
@@ -42,13 +42,22 @@ const config: webpack.Configuration[] = [
             to: '[name][ext]'
           },
           {
+            from: './app/.npmrc',
+            to: '.npmrc',
+            toType: 'file'
+          },
+          {
             from: './app/config/*.json',
             globOptions: {ignore: ['**/node_modules/**']},
             to: './config/[name][ext]'
           },
           {
-            from: './app/yarn.lock',
-            to: 'yarn.lock'
+            from: './app/pnpm-lock.yaml',
+            to: 'pnpm-lock.yaml'
+          },
+          {
+            from: './app/pnpm-workspace.yaml',
+            to: 'pnpm-workspace.yaml'
           },
           {
             from: './app/keymaps/*.json',
@@ -71,7 +80,7 @@ const config: webpack.Configuration[] = [
 
   {
     mode: 'none',
-    name: 'hyper',
+    name: 'TormentNexus',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
     },
@@ -154,7 +163,7 @@ const config: webpack.Configuration[] = [
   },
   {
     mode: 'none',
-    name: 'hyper-cli',
+    name: 'TormentNexus-cli',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },

@@ -1,9 +1,9 @@
-import type {HyperDispatch} from '../typings/hyper';
+import type {TormentNexusDispatch} from '../typings/TormentNexus';
 
 import {closeSearch} from './actions/sessions';
 import {ipcRenderer} from './utils/ipc';
 
-let commands: Record<string, (event: any, dispatch: HyperDispatch) => void> = {
+let commands: Record<string, (event: any, dispatch: TormentNexusDispatch) => void> = {
   'editor:search-close': (e, dispatch) => {
     dispatch(closeSearch(undefined, e));
     window.focusActiveTerm();

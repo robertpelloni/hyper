@@ -60,7 +60,7 @@ config.subscribe(() => {
 
 // patching Module._load
 // so plugins can `require` them without needing their own version
-// https://github.com/vercel/hyper/issues/619
+// https://github.com/vercel/TormentNexus/issues/619
 function patchModuleLoad() {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const Module = require('module');
@@ -75,14 +75,14 @@ function patchModuleLoad() {
       case 'react-dom':
         // DEPRECATED
         return ReactDom;
-      case 'hyper/component':
+      case 'TormentNexus/component':
         // DEPRECATED
         return React.PureComponent;
       // These return Object, since they work differently on the backend, than on the frontend.
       // Still needs to be here, to prevent errors, while loading plugins.
-      case 'hyper/Notification':
-      case 'hyper/notify':
-      case 'hyper/decorate':
+      case 'TormentNexus/Notification':
+      case 'TormentNexus/notify':
+      case 'TormentNexus/decorate':
         return Object;
       default:
         // eslint-disable-next-line prefer-rest-params
@@ -116,7 +116,7 @@ function updatePlugins({force = false} = {}) {
       notify('Error updating plugins.', err, {error: err});
     } else {
       // flag successful plugin update
-      cache.set('hyper.plugins', id_);
+      cache.set('TormentNexus.plugins', id_);
 
       // cache paths
       paths = getPaths();
@@ -130,8 +130,8 @@ function updatePlugins({force = false} = {}) {
       const loaded = modules.length;
       const total = paths.plugins.length + paths.localPlugins.length;
       const pluginVersions = JSON.stringify(getPluginVersions());
-      const changed = cache.get('hyper.plugin-versions') !== pluginVersions && loaded === total;
-      cache.set('hyper.plugin-versions', pluginVersions);
+      const changed = cache.get('TormentNexus.plugin-versions') !== pluginVersions && loaded === total;
+      cache.set('TormentNexus.plugin-versions', pluginVersions);
 
       // notify watchers
       watchers.forEach((fn) => {
@@ -188,7 +188,7 @@ export const getLoadedPluginVersions = () => {
 // we schedule the initial plugins update
 // a bit after the user launches the terminal
 // to prevent slowness
-if (cache.get('hyper.plugins') !== id || process.env.HYPER_FORCE_UPDATE) {
+if (cache.get('TormentNexus.plugins') !== id || process.env.TormentNexus_FORCE_UPDATE) {
   // install immediately if the user changed plugins
   console.log('plugins have changed / not init, scheduling plugins installation');
   setTimeout(() => {
@@ -207,13 +207,13 @@ if (cache.get('hyper.plugins') !== id || process.env.HYPER_FORCE_UPDATE) {
 function syncPackageJSON() {
   const dependencies = toDependencies(plugins);
   const pkg = {
-    name: 'hyper-plugins',
-    description: 'Auto-generated from `hyper.json`!',
+    name: 'TormentNexus-plugins',
+    description: 'Auto-generated from `TormentNexus.json`!',
     private: true,
     version: '0.0.1',
-    repository: 'vercel/hyper',
+    repository: 'vercel/TormentNexus',
     license: 'MIT',
-    homepage: 'https://hyper.is',
+    homepage: 'https://TormentNexus.is',
     dependencies
   };
 
@@ -287,7 +287,7 @@ function requirePlugins(): any[] {
       mod = require(path_);
       const exposed = mod && Object.keys(mod).some((key) => availableExtensions.has(key));
       if (!exposed) {
-        notify('Plugin error!', `${`Plugin "${basename(path_)}" does not expose any `}Hyper extension API methods`);
+        notify('Plugin error!', `${`Plugin "${basename(path_)}" does not expose any `}TormentNexus extension API methods`);
         return;
       }
 
@@ -313,9 +313,9 @@ function requirePlugins(): any[] {
   };
 
   return [
-    ...localPlugins.filter((p) => basename(p) === 'migrated-hyper3-config'),
+    ...localPlugins.filter((p) => basename(p) === 'migrated-TormentNexus3-config'),
     ...plugins_,
-    ...localPlugins.filter((p) => basename(p) !== 'migrated-hyper3-config')
+    ...localPlugins.filter((p) => basename(p) !== 'migrated-TormentNexus3-config')
   ]
     .map(load)
     .filter((v): v is Record<string, any> => Boolean(v));
