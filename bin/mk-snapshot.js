@@ -42,10 +42,9 @@ async function main() {
   }
 
   console.log(`Generating startup blob in "${outputBlobPath}"`);
-  const mksnapshotBin = path.join(baseDirPath, 'node_modules', '.bin', 'mksnapshot' + (process.platform === 'win32' ? '.cmd' : ''));
   childProcess.execFileSync(
-    mksnapshotBin,
-    [path.resolve(snapshotScriptPath), '--output_dir', path.resolve(outputBlobPath)]
+    path.resolve(__dirname, '..', 'node_modules', '.bin', 'mksnapshot' + (process.platform === 'win32' ? '.cmd' : '')),
+    [snapshotScriptPath, '--output_dir', outputBlobPath]
   );
 }
 

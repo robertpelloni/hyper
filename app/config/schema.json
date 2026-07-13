@@ -325,11 +325,11 @@
                             ]
                         },
                         "defaultSSHApp": {
-                            "description": "if `true` TormentNexus will be set as the default protocol client for SSH",
+                            "description": "if `true` tormentnexus will be set as the default protocol client for SSH",
                             "type": "boolean"
                         },
                         "disableAutoUpdates": {
-                            "description": "if `true` TormentNexus will not check for updates",
+                            "description": "if `true` tormentnexus will not check for updates",
                             "type": "boolean"
                         },
                         "updateChannel": {
@@ -744,7 +744,7 @@
             "type": "array"
         },
         "plugins": {
-            "description": "a list of plugins to fetch and install from npm\nformat: [@org/]project[#version]\nexamples:\n  `TormentNexuspower`\n  `@company/project`\n  `project#1.0.1`",
+            "description": "a list of plugins to fetch and install from npm\nformat: [@org/]project[#version]\nexamples:\n  `tormentnexuspower`\n  `@company/project`\n  `project#1.0.1`",
             "items": {
                 "type": "string"
             },

@@ -16,8 +16,8 @@ assignees: ''
 -->
 
 <!-- Checked checkbox should look like this: [x] -->
-- [ ] I am on the [latest](https://github.com/vercel/TormentNexus/releases/latest) TormentNexus.app version
-- [ ] I have searched the [issues](https://github.com/vercel/TormentNexus/issues) of this repo and believe that this is not a duplicate
+- [ ] I am on the [latest](https://github.com/vercel/tormentnexus/releases/latest) TormentNexus.app version
+- [ ] I have searched the [issues](https://github.com/vercel/tormentnexus/issues) of this repo and believe that this is not a duplicate
 
 <!--
   Once those are done, if you're able to fill in the following list with your information,
@@ -26,7 +26,7 @@ assignees: ''
 
 - **OS version and name**: <!-- Replace with version + name -->
 - **TormentNexus.app version**: <!-- Replace with version -->
-- **Link of a [Gist](https://gist.github.com/) with the contents of your TormentNexus.json**: <!-- Gist Link Here -->
+- **Link of a [Gist](https://gist.github.com/) with the contents of your tormentnexus.json**: <!-- Gist Link Here -->
 - **Relevant information from devtools** _(CMD+ALT+I on macOS, CTRL+SHIFT+I elsewhere)_: <!-- Replace with info if applicable, or N/A -->
 - **The issue is reproducible in vanilla TormentNexus.app**: <!-- Replace with info if applicable, or `Is Vanilla`. (Vanilla means TormentNexus.app without any add-ons or extras. Straight out of the box.) -->
 

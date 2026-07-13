@@ -1,5 +1,5 @@
 import {NOTIFICATION_MESSAGE, NOTIFICATION_DISMISS} from '../../typings/constants/notifications';
-import type {TormentNexusActions} from '../../typings/TormentNexus';
+import type {TormentNexusActions} from '../../typings/tormentnexus';
 
 export function dismissNotification(id: string): TormentNexusActions {
   return {

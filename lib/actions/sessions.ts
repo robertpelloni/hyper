@@ -11,9 +11,10 @@ import {
   SESSION_CLEAR_ACTIVE,
   SESSION_USER_DATA,
   SESSION_SET_XTERM_TITLE,
-  SESSION_SEARCH
+  SESSION_SEARCH,
+  SESSION_SET_COMMAND_BLOCKS
 } from '../../typings/constants/sessions';
-import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/TormentNexus';
+import type {TormentNexusState, TormentNexusDispatch, TormentNexusActions} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 import {keys} from '../utils/object';
 import findBySession from '../utils/term-groups';
@@ -34,6 +35,14 @@ export function addSession({uid, shell, pid, cols = null, rows = null, splitDire
       now,
       profile
     });
+  };
+}
+
+export function setCommandBlocks(uid: string, blocks: any[]) {
+  return {
+    type: SESSION_SET_COMMAND_BLOCKS,
+    uid,
+    blocks
   };
 }
 

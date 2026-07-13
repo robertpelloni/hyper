@@ -25,9 +25,9 @@ type rootConfigOptions = {
    * you can also set it to a custom time e.g. `1d` or `2h`
    */
   autoUpdatePlugins: boolean | string;
-  /** if `true` TormentNexus will be set as the default protocol client for SSH */
+  /** if `true` tormentnexus will be set as the default protocol client for SSH */
   defaultSSHApp: boolean;
-  /** if `true` TormentNexus will not check for updates */
+  /** if `true` tormentnexus will not check for updates */
   disableAutoUpdates: boolean;
   /** choose either `'stable'` for receiving highly polished, or `'canary'` for less polished but more frequent updates */
   updateChannel: 'stable' | 'canary';
@@ -216,7 +216,7 @@ export type rawConfig = {
    * a list of plugins to fetch and install from npm
    * format: [@org/]project[#version]
    * examples:
-   *   `TormentNexuspower`
+   *   `tormentnexuspower`
    *   `@company/project`
    *   `project#1.0.1`
    */

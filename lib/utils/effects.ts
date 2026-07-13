@@ -1,6 +1,6 @@
 import type {Dispatch, Middleware} from 'redux';
 
-import type {TormentNexusActions, TormentNexusState} from '../../typings/TormentNexus';
+import type {TormentNexusActions, TormentNexusState} from '../../typings/tormentnexus';
 /**
  * Simple redux middleware that executes
  * the `effect` field if provided in an action

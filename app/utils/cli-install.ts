@@ -80,10 +80,10 @@ const addBinToUserPath = () => {
     try {
       const envKey = Registry.openKey(Registry.HKCU, 'Environment', Registry.Access.ALL_ACCESS)!;
 
-      // C:\Users\<user>\AppData\Local\Programs\TormentNexus\resources\bin
+      // C:\Users\<user>\AppData\Local\Programs\tormentnexus\resources\bin
       const binPath = path.dirname(cliScriptPath);
-      // C:\Users\<user>\AppData\Local\TormentNexus
-      const oldPath = path.resolve(process.env.LOCALAPPDATA!, 'TormentNexus');
+      // C:\Users\<user>\AppData\Local\tormentnexus
+      const oldPath = path.resolve(process.env.LOCALAPPDATA!, 'tormentnexus');
 
       const items = Registry.enumValueNames(envKey);
       const pathItem = items.find((item) => item.toUpperCase() === 'PATH');

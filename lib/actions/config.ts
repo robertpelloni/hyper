@@ -1,6 +1,6 @@
 import type {configOptions} from '../../typings/config';
 import {CONFIG_LOAD, CONFIG_RELOAD} from '../../typings/constants/config';
-import type {TormentNexusActions} from '../../typings/TormentNexus';
+import type {TormentNexusActions} from '../../typings/tormentnexus';
 
 export function loadConfig(config: configOptions): TormentNexusActions {
   return {

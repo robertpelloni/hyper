@@ -21,4 +21,4 @@ plugins
 .vscode/*
 !.vscode/launch.json
 .idea
-bin/tormentnexus*
+bin/tormentnexus

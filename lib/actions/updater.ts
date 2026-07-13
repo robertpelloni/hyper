@@ -1,5 +1,5 @@
 import {UPDATE_INSTALL, UPDATE_AVAILABLE} from '../../typings/constants/updater';
-import type {TormentNexusActions} from '../../typings/TormentNexus';
+import type {TormentNexusActions} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 
 export function installUpdate(): TormentNexusActions {

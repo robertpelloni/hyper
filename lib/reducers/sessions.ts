@@ -10,9 +10,10 @@ import {
   SESSION_RESIZE,
   SESSION_SET_XTERM_TITLE,
   SESSION_SET_CWD,
-  SESSION_SEARCH
+  SESSION_SEARCH,
+  SESSION_SET_COMMAND_BLOCKS
 } from '../../typings/constants/sessions';
-import type {sessionState, session, Mutable, ISessionReducer} from '../../typings/TormentNexus';
+import type {sessionState, session, Mutable, ISessionReducer} from '../../typings/tormentnexus';
 import {decorateSessionsReducer} from '../utils/plugins';
 
 const initialState: sessionState = Immutable<Mutable<sessionState>>({
@@ -28,6 +29,7 @@ function Session(obj: Immutable.DeepPartial<session>) {
     rows: null,
     cleared: false,
     search: false,
+    blocks: [],
     shell: '',
     pid: null,
     profile: ''
@@ -126,6 +128,9 @@ const reducer: ISessionReducer = (state = initialState, action) => {
         return state.setIn(['sessions', state.activeUid, 'cwd'], action.cwd);
       }
       return state;
+
+    case SESSION_SET_COMMAND_BLOCKS:
+      return state.setIn(['sessions', action.uid, 'blocks'], action.blocks);
 
     default:
       return state;

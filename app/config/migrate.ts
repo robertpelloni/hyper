@@ -161,7 +161,7 @@ export const migrateTormentNexus3Config = () => {
   }
 
   // Migrate
-  copySync(resolve(dirname(legacyCfgPath), '.TormentNexus_plugins', 'local'), plugs.local);
+  copySync(resolve(dirname(legacyCfgPath), '.tormentnexus_plugins', 'local'), plugs.local);
 
   const defaultCfgData = JSON.parse(readFileSync(defaultCfg, 'utf8'));
   let newCfgData;
@@ -172,8 +172,8 @@ export const migrateTormentNexus3Config = () => {
 
     const pluginCode = configToPlugin(legacyCfgRaw);
     if (pluginCode) {
-      const pluginPath = resolve(plugs.local, 'migrated-TormentNexus3-config.js');
-      newCfgData.localPlugins = ['migrated-TormentNexus3-config', ...(newCfgData.localPlugins || [])];
+      const pluginPath = resolve(plugs.local, 'migrated-tormentnexus3-config.js');
+      newCfgData.localPlugins = ['migrated-tormentnexus3-config', ...(newCfgData.localPlugins || [])];
       _write(pluginPath, pluginCode);
     }
   } catch (e) {

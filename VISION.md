@@ -1,22 +1,21 @@
-# VISION: TormentNexus - The Ultimate LLM Harness
+# TORMENTNEXUS VISION
 
-TormentNexus is a high-performance terminal and autonomous agent harness built with a Go-based core and an Electron frontend. Our mission is to integrate the most powerful features from top-tier AI-powered terminals into a unified, extensible platform for the next generation of software engineering.
+## The Goal
+To create the **Ultimate LLM Harness**—a seamless, high-performance interface that bridges the gap between the traditional terminal and modern autonomous AI agents. TormentNexus is designed to be the primary workspace for software engineers who require the speed of native PTY management combined with the multi-step reasoning capabilities of advanced LLMs.
 
-## Core Foundational Concepts
+## Core Pillars
 
-### 1. Go-powered Performance
-We leverage Go for critical backend tasks, including PTY management, SSH protocols, and high-frequency agent loops. This ensures the terminal remains responsive even during heavy LLM-driven workloads.
+### 1. Hybrid Performance
+By offloading core terminal logic (PTY, SSH, Buffer management) to a Go-based sidecar, we achieve sub-millisecond latency for complex operations that would otherwise be throttled by the Electron main thread.
 
-### 2. Universal Agent Harness
-TormentNexus is designed to be the primary interface for autonomous coding agents. With a built-in REST API and future support for gRPC, agents can interact with the system, manipulate files, and execute commands with granular control.
+### 2. Autonomous Integration
+AI is not a plugin; it's a first-class citizen. Features like Warp-style command blocks and Tabby-compatible completions are natively implemented in the Go core to provide immediate, context-aware assistance without the overhead of heavy client-side scripts.
 
-### 3. Model Context Protocol (MCP) Hub
-Acting as a centralized aggregator, TormentNexus allows for seamless discovery and integration of local and remote MCP servers, providing agents with a rich set of tools and data sources.
+### 3. Hardened Security
+TormentNexus prioritizes secure remote management. By implementing strict host key verification and local-only sidecar binding, we ensure that your LLM-augmented workflow remains private and protected from man-in-the-middle attacks.
 
-### 4. Semantic UI
-Our frontend goes beyond the traditional character stream. By implementing command blocks and rich metadata rendering, we provide a visual structure for AI interactions that feels natural and productive.
+### 4. Extensible Ecosystem
+Maintaining compatibility with the legacy TormentNexus plugin system while introducing the Model Context Protocol (MCP) allows TormentNexus to aggregate a vast array of tools and data sources, from local filesystems to remote cloud APIs.
 
-## User-Satisfaction Design
-- **Frictionless Onboarding:** Reusing the TormentNexus plugin ecosystem while offering deep AI primitives.
-- **Visual Clarity:** Interactive UI for agentic actions and command outputs.
-- **Stability:** A robust, type-safe architecture spanning Go and TypeScript.
+## The Future
+TormentNexus will evolve into a multi-agent orchestration platform, where the terminal doesn't just execute commands—it observes, learns, and anticipates your next move.

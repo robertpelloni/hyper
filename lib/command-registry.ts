@@ -1,4 +1,4 @@
-import type {TormentNexusDispatch} from '../typings/TormentNexus';
+import type {TormentNexusDispatch} from '../typings/tormentnexus';
 
 import {closeSearch} from './actions/sessions';
 import {ipcRenderer} from './utils/ipc';

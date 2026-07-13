@@ -1,6 +1,6 @@
 import React, {forwardRef, useState} from 'react';
 
-import type {HeaderProps} from '../../typings/TormentNexus';
+import type {HeaderProps} from '../../typings/tormentnexus';
 import {decorate, getTabsProps} from '../utils/plugins';
 
 import Tabs_ from './tabs';

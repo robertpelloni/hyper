@@ -10,7 +10,7 @@ const isProd = nodeEnv === 'production';
 const config: webpack.Configuration[] = [
   {
     mode: 'none',
-    name: 'TormentNexus-app',
+    name: 'tormentnexus-app',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },
@@ -80,7 +80,7 @@ const config: webpack.Configuration[] = [
 
   {
     mode: 'none',
-    name: 'TormentNexus',
+    name: 'tormentnexus',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
     },
@@ -163,7 +163,7 @@ const config: webpack.Configuration[] = [
   },
   {
     mode: 'none',
-    name: 'TormentNexus-cli',
+    name: 'tormentnexus-cli',
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.json']
     },

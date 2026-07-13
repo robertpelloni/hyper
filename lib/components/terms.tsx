@@ -1,6 +1,6 @@
 import React from 'react';
 
-import type {TermsProps, TormentNexusDispatch} from '../../typings/TormentNexus';
+import type {TermsProps, TormentNexusDispatch} from '../../typings/tormentnexus';
 import {registerCommandHandlers} from '../command-registry';
 import {ObjectTypedKeys} from '../utils/object';
 import {decorate, getTermGroupProps} from '../utils/plugins';

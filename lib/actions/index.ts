@@ -1,5 +1,5 @@
 import {INIT} from '../../typings/constants';
-import type {TormentNexusDispatch} from '../../typings/TormentNexus';
+import type {TormentNexusDispatch} from '../../typings/tormentnexus';
 import rpc from '../rpc';
 
 export default function init() {

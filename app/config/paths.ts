@@ -22,11 +22,11 @@ let cfgDir = process.env.XDG_CONFIG_HOME
 
 const legacyCfgPath = join(
   process.env.XDG_CONFIG_HOME !== undefined
-    ? join(process.env.XDG_CONFIG_HOME, 'TormentNexus')
+    ? join(process.env.XDG_CONFIG_HOME, 'tormentnexus')
     : process.platform == 'win32'
       ? app.getPath('userData')
       : homedir(),
-  '.TormentNexus.js'
+  '.tormentnexus.js'
 );
 
 let cfgPath = join(cfgDir, cfgFile);
@@ -55,8 +55,8 @@ const plugs = {
   cache: resolve(plugins, 'cache')
 };
 const yarn = resolve(__dirname, '../../bin/yarn-standalone.js');
-const cliScriptPath = resolve(__dirname, '../../bin/TormentNexus');
-const cliLinkPath = '/usr/local/bin/TormentNexus';
+const cliScriptPath = resolve(__dirname, '../../bin/tormentnexus');
+const cliLinkPath = '/usr/local/bin/tormentnexus';
 
 const icon = resolve(__dirname, '../static/icon96x96.png');
 
