@@ -1,6 +1,6 @@
 # TormentNexus v1.0.0: Final Release Summary
 
-TormentNexus is the evolution of the Hyper terminal into a comprehensive Go-powered LLM harness.
+TormentNexus is the evolution of the TormentNexus terminal into a comprehensive Go-powered LLM harness.
 
 ## Key Components
 
@@ -15,7 +15,7 @@ TormentNexus is the evolution of the Hyper terminal into a comprehensive Go-powe
 
 ### 2. Electron Frontend (Integrated)
 - **Location:** `app/`, `lib/`
-- **Rebranding:** Full migration from "Hyper" to "TormentNexus".
+- **Rebranding:** Full migration from "TormentNexus" to "TormentNexus".
 - **Bridge:** A TypeScript utility (`lib/utils/go-core.ts`) provides a REST-based interface.
 - **UI Integration:** Added "Agent Health Check" to the Tools menu, allowing real-time status probing of the Go Agent Harness.
 

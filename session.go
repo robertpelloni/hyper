@@ -10,8 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/creack/pty"
+	"github.com/google/uuid"
 )
 
 // Session represents a single PTY session
@@ -108,11 +108,11 @@ func (sm *SessionManager) CreateSession(shell string, args []string, cwd string,
 	go sm.watchExit(sess)
 
 	result := map[string]interface{}{
-		"uid":   id,
-		"shell": shell,
-		"pid":   cmd.Process.Pid,
-		"rows":  rows,
-		"cols":  cols,
+		"uid":     id,
+		"shell":   shell,
+		"pid":     cmd.Process.Pid,
+		"rows":    rows,
+		"cols":    cols,
 		"profile": profile,
 	}
 

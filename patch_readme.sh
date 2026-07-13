@@ -1,0 +1,1 @@
+sed -i '/- \*\*Sidecar Integration:\*\* Seamless communication between the Electron UI and the Go-based terminal backend./a \- \*\*Semantic UI:\*\* Warp-like interactive command blocks, Codex-style inline autocomplete, and Wave-like notebook capabilities integrated natively.' README.md

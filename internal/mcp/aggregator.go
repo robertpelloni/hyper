@@ -1,8 +1,8 @@
 package mcp
 
 import (
-	"net/http"
 	"encoding/json"
+	"net/http"
 )
 
 func (s *Server) ListAggregatedTools(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,7 @@ func (s *Server) ServeTelemetry(w http.ResponseWriter, r *http.Request) {
 	// Telemetry for the dashboard
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
-		"status": "active",
+		"status":       "active",
 		"active_tools": len(s.tools),
 	})
 }

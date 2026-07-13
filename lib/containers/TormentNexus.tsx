@@ -160,7 +160,10 @@ const mapDispatchToProps = (dispatch: TormentNexusDispatch) => {
   };
 };
 
-const TormentNexusContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(TormentNexus, 'TormentNexus');
+const TormentNexusContainer = connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(
+  TormentNexus,
+  'TormentNexus'
+);
 
 export default TormentNexusContainer;
 

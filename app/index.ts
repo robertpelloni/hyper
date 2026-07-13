@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/order
 import {cfgPath} from './config/paths';
 
 // Print diagnostic information for a few arguments instead of running TormentNexus.
@@ -36,6 +35,7 @@ import * as plugins from './plugins';
 import {newWindow} from './ui/window';
 import {installCLI} from './utils/cli-install';
 import * as windowUtils from './utils/window-utils';
+
 import {spawn} from 'child_process';
 
 const windowSet = new Set<BrowserWindow>([]);
@@ -53,7 +53,17 @@ function startGoCore() {
   });
 
   goCoreProcess.stdout.on('data', (data: any) => {
-    console.log(`Go Core: ${data}`);
+    const str = data.toString();
+    if (str.includes("PTY_BLOCK:")) {
+      try {
+        const block = JSON.parse(str.replace("PTY_BLOCK: ", "").trim());
+        // In a full implementation, emit to all windows via IPC
+        if (windowSet.size > 0) {
+          Array.from(windowSet)[0].webContents.send("pty-block", block);
+        }
+      } catch (e) { console.error("Error parsing block", e); }
+    }
+    console.log(`Go Core: ${str}`);
   });
 
   goCoreProcess.stderr.on('data', (data: any) => {

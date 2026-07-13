@@ -2,6 +2,7 @@ package terminal
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -16,10 +17,10 @@ type PTYManager struct {
 }
 
 type PTYInstance struct {
-	ID    string
-	Pty   *os.File
-	Cmd   *exec.Cmd
-	done  chan struct{}
+	ID   string
+	Pty  *os.File
+	Cmd  *exec.Cmd
+	done chan struct{}
 }
 
 func NewPTYManager() *PTYManager {
@@ -51,13 +52,26 @@ func (m *PTYManager) Start(id, shell string, args []string, rows, cols uint16) e
 	return nil
 }
 
+type CommandBlockData struct {
+	ID   string `json:"id"`
+	Type string `json:"type"`
+	Data string `json:"data"` // base64 encoded
+}
+
 func (i *PTYInstance) readLoop() {
 	buf := make([]byte, 32*1024)
 	for {
 		n, err := i.Pty.Read(buf)
 		if n > 0 {
 			// In a real implementation, we'd send this to the frontend
-			_ = base64.StdEncoding.EncodeToString(buf[:n])
+			strData := base64.StdEncoding.EncodeToString(buf[:n])
+			block := CommandBlockData{
+				ID:   i.ID,
+				Type: "output",
+				Data: strData,
+			}
+			blockJson, _ := json.Marshal(block)
+			fmt.Println("PTY_BLOCK:", string(blockJson))
 			// Data would be transmitted via callback or channel
 		}
 		if err != nil {
