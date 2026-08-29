@@ -2,6 +2,8 @@ import type React from "react";
 import { useEffect, useRef, useCallback, useState } from "react";
 import type { SessionInfo, AppConfig } from "../types";
 import * as api from "../api";
+import type { CommandBlock } from "../types/CommandBlock";
+import CommandBlock from "./CommandBlock";
 
 interface TermProps {
 	uid: string;
@@ -22,6 +24,7 @@ export default function Term({
 }: TermProps) {
 	const terminalRef = useRef<HTMLDivElement>(null);
 	const termInstanceRef = useRef<any>(null);
+	const [blocks, setBlocks] = useState<CommandBlock[]>([]);
 	const fitAddonRef = useRef<any>(null);
 	const searchAddonRef = useRef<any>(null);
 	const webglAddonRef = useRef<any>(null);
@@ -242,7 +245,19 @@ export default function Term({
 		};
 
 		window.addEventListener("tn:session-data", handler);
-		return () => window.removeEventListener("tn:session-data", handler);
+
+		const blockHandler = (e: Event) => {
+			const { sessionId, block } = (e as CustomEvent).detail;
+			if (sessionId === uid) {
+				setBlocks((prev) => [...prev, block]);
+			}
+		};
+		window.addEventListener("tn:session-block", blockHandler);
+
+		return () => {
+			window.removeEventListener("tn:session-data", handler);
+			window.removeEventListener("tn:session-block", blockHandler);
+		};
 	}, [uid]);
 
 	// Handle clear buffer
@@ -380,12 +395,13 @@ export default function Term({
 	const padding = config.padding || "12px 14px";
 
 	return (
-		<div style={{ width: "100%", height: "100%", position: "relative" }}>
+		<div style={{ width: "100%", height: "100%", position: "relative", display: "flex" }}>
 			<div
 				ref={terminalRef}
 				className="tn_term_container"
-				style={{ padding }}
+				style={{ padding, flex: 1 }}
 			/>
+			<CommandBlock blocks={blocks} onClear={() => setBlocks([])} />
 			{searchVisible && (
 				<div className="tn_search_box">
 					<input

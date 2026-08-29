@@ -70,3 +70,4 @@ To bypass code signing locally:
 export CSC_IDENTITY_AUTO_DISCOVERY=false
 yarn run dist
 ```
+Alternatively, if you want to bypass code signing entirely during the build process, you can set `CSC_IDENTITY_AUTO_DISCOVERY=false` and run `pnpm run dist`.

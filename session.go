@@ -14,6 +14,18 @@ import (
 	"github.com/creack/pty"
 )
 
+// CommandBlock represents a parsed block of terminal execution
+type CommandBlock struct {
+	ID            string   `json:"id"`
+	Command       string   `json:"command"`
+	Output        string   `json:"output"`
+	ExitCode      int      `json:"exitCode"`
+	Success       bool     `json:"success"`
+	Timestamp     string   `json:"timestamp"`
+	DurationMs    int64    `json:"durationMs,omitempty"`
+	AIAnnotations []string `json:"aiAnnotations,omitempty"`
+}
+
 // Session represents a single PTY session
 type Session struct {
 	ID        string `json:"id"`
@@ -309,6 +321,50 @@ func dedupeEnv(env []string) []string {
 		}
 	}
 	return result
+}
+
+// RegisterCommandBlock allows the frontend or agent to manually register a block
+func (sm *SessionManager) RegisterCommandBlock(id string, block CommandBlock) error {
+	sm.mu.RLock()
+	sess, ok := sm.sessions[id]
+	sm.mu.RUnlock()
+
+	if !ok {
+		return fmt.Errorf("session not found: %s", id)
+	}
+
+	if sm.runtime != nil {
+		sm.runtime.EmitEvent("session:block:"+sess.ID, block)
+	}
+	return nil
+}
+
+// ExecuteNotebookCell handles execution of an isolated notebook command block
+func (sm *SessionManager) ExecuteNotebookCell(command string, cwd string) (CommandBlock, error) {
+	shell := getDefaultShell()
+	cmd := exec.Command(shell, "-c", command)
+	cmd.Dir = cwd
+
+	output, err := cmd.CombinedOutput()
+	success := err == nil
+
+	exitCode := 0
+	if err != nil {
+		if exitError, ok := err.(*exec.ExitError); ok {
+			exitCode = exitError.ExitCode()
+		} else {
+			exitCode = 1
+		}
+	}
+
+	return CommandBlock{
+		ID:        uuid.New().String(),
+		Command:   command,
+		Output:    string(output),
+		ExitCode:  exitCode,
+		Success:   success,
+		Timestamp: time.Now().Format(time.RFC3339),
+	}, nil
 }
 
 // WaitUntilExit waits for session to exit (for cleanup)

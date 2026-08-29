@@ -63,6 +63,11 @@ export async function listSessions(): Promise<SessionInfo[]> {
 	return SessionBindings.ListSessions() as Promise<SessionInfo[]>;
 }
 
+export async function executeNotebookCell(command: string, cwd: string = ""): Promise<any> {
+	// @ts-ignore - dynamic bindings may not have been re-generated for tsc yet
+	return SessionBindings.ExecuteNotebookCell(command, cwd);
+}
+
 // ===== Configuration =====
 export async function getConfig(): Promise<AppConfig> {
 	return ConfigBindings.GetConfig() as Promise<AppConfig>;
@@ -135,6 +140,16 @@ export async function agentGetStatus(): Promise<AgentStatus> {
 
 export async function agentHealthCheck(): Promise<AgentStatus> {
 	return AgentBindings.HealthCheck() as Promise<AgentStatus>;
+}
+
+export async function agentSearchCodex(query: string): Promise<string[]> {
+	// @ts-ignore - dynamic bindings may not have been re-generated for tsc yet
+	return AgentBindings.SearchCodex(query);
+}
+
+export async function agentGetCommandContext(command: string): Promise<string> {
+	// @ts-ignore - dynamic bindings may not have been re-generated for tsc yet
+	return AgentBindings.GetCommandContext(command);
 }
 
 // ===== MCP =====

@@ -1,3 +1,18 @@
+# TormentNexus — ALPHA STATE
+
+> **Note:** This project is currently in Alpha state. Expect active development and bugs.
+>
+> **Implemented Features:**
+> - Go Core Foundation (PTY management, Agent Harness, MCP Aggregator).
+> - Initial Tabby compatibility layer.
+> - Warp-like command blocks.
+> - Codex Desktop features integration.
+>
+> **Limitations for Early Testers:**
+> - Features are still under development and subject to change.
+> - Wave-like notebook terminal capabilities are pending.
+> - Advanced Agent Capabilities are pending.
+
 ![](https://assets.vercel.com/image/upload/v1549723846/repositories/TormentNexus/TormentNexus-3-repo-banner.png)
 
 <p align="center">

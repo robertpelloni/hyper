@@ -26,8 +26,8 @@ func (a *App) startup(ctx context.Context) {
 	a.sessions = NewSessionManager()
 	a.sessions.SetRuntime(a)
 	a.config = NewConfigManager()
-	a.agent = NewAgentHarness()
 	a.mcp = NewMCPAggregator()
+	a.agent = NewAgentHarness(a.mcp)
 }
 
 func (a *App) shutdown(ctx context.Context) {

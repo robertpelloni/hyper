@@ -23,10 +23,10 @@ func main() {
 	sessions := NewSessionManager()
 	// Initialize config
 	cfg := NewConfigManager()
-	// Initialize agent harness
-	agent := NewAgentHarness()
 	// Initialize MCP aggregator
 	mcp := NewMCPAggregator()
+	// Initialize agent harness
+	agent := NewAgentHarness(mcp)
 
 	// Create application with options
 	application := wails.Run(&options.App{

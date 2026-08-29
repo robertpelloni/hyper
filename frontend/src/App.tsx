@@ -5,6 +5,9 @@ import Header from "./components/Header";
 import Terms from "./components/Terms";
 import StatusBar from "./components/StatusBar";
 import Notifications from "./components/Notifications";
+import NotebookView from "./components/NotebookView";
+import type { Notebook } from "./types/Notebook";
+import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_COLORS: TermColors = {
 	black: "#000000",
@@ -66,6 +69,9 @@ export interface AppState {
 	notifications: Notification[];
 	agentRunning: boolean;
 	agentStatus: string;
+	notebooks: Notebook[];
+	activeNotebookId: string | null;
+	viewMode: "terminal" | "notebook";
 }
 
 export default function App() {
@@ -80,6 +86,21 @@ export default function App() {
 		notifications: [],
 		agentRunning: false,
 		agentStatus: "idle",
+		notebooks: [
+			{
+				id: "default-notebook",
+				title: "Untitled Notebook",
+				cells: [
+					{
+						id: uuidv4(),
+						type: "markdown",
+						content: "# Welcome to TormentNexus Wave Notebook\n\nRun commands in isolated cells below.",
+					},
+				],
+			},
+		],
+		activeNotebookId: "default-notebook",
+		viewMode: "terminal",
 	});
 
 	const sessionsRef = useRef(state.sessions);
@@ -174,6 +195,14 @@ export default function App() {
 					);
 				});
 
+				api.onEvent(`session:block:${newSession.uid}`, (block: any) => {
+					window.dispatchEvent(
+						new CustomEvent("tn:session-block", {
+							detail: { sessionId: newSession.uid, block },
+						}),
+					);
+				});
+
 				api.onEvent(`session:exit:${newSession.uid}`, () => {
 					setState((prev) => {
 						const newSessions = { ...prev.sessions };
@@ -207,6 +236,7 @@ export default function App() {
 			try {
 				await api.closeSession(uid);
 				api.offEvent(`session:data:${uid}`);
+				api.offEvent(`session:block:${uid}`);
 				api.offEvent(`session:exit:${uid}`);
 
 				setState((prev) => {
@@ -298,6 +328,23 @@ export default function App() {
 		} catch (err) {
 			addNotification(`Agent Error: ${err}`);
 		}
+	}, []);
+
+	// Periodically poll agent status to update the status bar
+	useEffect(() => {
+		const interval = setInterval(async () => {
+			try {
+				const status = await api.agentGetStatus();
+				setState((prev) => ({
+					...prev,
+					agentStatus: status.status || "idle",
+					agentRunning: status.running || false,
+				}));
+			} catch (err) {
+				// Ignore polling errors
+			}
+		}, 3000);
+		return () => clearInterval(interval);
 	}, []);
 
 	const addNotification = useCallback(
@@ -517,14 +564,45 @@ export default function App() {
 				onOpenConfig={handleOpenConfig}
 				onAgentCheck={handleAgentHealthCheck}
 			/>
-			<Terms
-				sessions={sessions}
-				activeSessionId={activeSessionId}
-				config={config}
-				onActive={setActiveSession}
-				onTitle={setSessionTitle}
-				onToggleSearch={toggleSearch}
-			/>
+
+			<div style={{ display: "flex", gap: "10px", padding: "5px", backgroundColor: "#222" }}>
+				<button
+					onClick={() => setState(s => ({ ...s, viewMode: "terminal" }))}
+					style={{ padding: "4px 8px", backgroundColor: state.viewMode === "terminal" ? "#0e639c" : "#333", color: "#fff", border: "none", borderRadius: "3px", cursor: "pointer" }}
+				>
+					Classic Terminal
+				</button>
+				<button
+					onClick={() => setState(s => ({ ...s, viewMode: "notebook" }))}
+					style={{ padding: "4px 8px", backgroundColor: state.viewMode === "notebook" ? "#0e639c" : "#333", color: "#fff", border: "none", borderRadius: "3px", cursor: "pointer" }}
+				>
+					Notebook View (Wave)
+				</button>
+			</div>
+
+			<div style={{ flex: 1, position: "relative" }}>
+				{state.viewMode === "terminal" ? (
+					<Terms
+						sessions={sessions}
+						activeSessionId={activeSessionId}
+						config={config}
+						onActive={setActiveSession}
+						onTitle={setSessionTitle}
+						onToggleSearch={toggleSearch}
+					/>
+				) : (
+					<NotebookView
+						notebook={state.notebooks.find(n => n.id === state.activeNotebookId) || state.notebooks[0]}
+						onUpdate={(updatedNb) => {
+							setState(s => ({
+								...s,
+								notebooks: s.notebooks.map(n => n.id === updatedNb.id ? updatedNb : n)
+							}));
+						}}
+					/>
+				)}
+			</div>
+
 			<StatusBar sessions={sessionList} agentStatus={state.agentStatus} />
 			<Notifications
 				notifications={notifications}

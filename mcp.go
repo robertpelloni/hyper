@@ -106,6 +106,76 @@ func NewMCPAggregator() *MCPAggregator {
 		},
 	})
 
+	// Claude Code CLI Integration
+	ag.RegisterTool(MCPTool{
+		Name:        "claude_code",
+		Description: "Execute a command via the Claude Code CLI",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"prompt": map[string]interface{}{
+					"type":        "string",
+					"description": "The prompt to send to Claude",
+				},
+				"directory": map[string]interface{}{
+					"type":        "string",
+					"description": "The working directory for the command",
+				},
+			},
+			"required": []string{"prompt"},
+		},
+	})
+
+	// Gemini CLI Integration
+	ag.RegisterTool(MCPTool{
+		Name:        "gemini_cli",
+		Description: "Execute a command via the Gemini CLI",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"prompt": map[string]interface{}{
+					"type":        "string",
+					"description": "The prompt to send to Gemini",
+				},
+			},
+			"required": []string{"prompt"},
+		},
+	})
+
+	// Agentic Git Management
+	ag.RegisterTool(MCPTool{
+		Name:        "git_status",
+		Description: "Get the current git status of the workspace",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"directory": map[string]interface{}{
+					"type":        "string",
+					"description": "The directory to check git status in",
+				},
+			},
+		},
+	})
+
+	ag.RegisterTool(MCPTool{
+		Name:        "git_commit",
+		Description: "Commit changes to the git repository",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"message": map[string]interface{}{
+					"type":        "string",
+					"description": "The commit message",
+				},
+				"directory": map[string]interface{}{
+					"type":        "string",
+					"description": "The directory containing the git repository",
+				},
+			},
+			"required": []string{"message"},
+		},
+	})
+
 	return ag
 }
 
