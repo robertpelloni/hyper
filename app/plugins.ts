@@ -287,7 +287,10 @@ function requirePlugins(): any[] {
       mod = require(path_);
       const exposed = mod && Object.keys(mod).some((key) => availableExtensions.has(key));
       if (!exposed) {
-        notify('Plugin error!', `${`Plugin "${basename(path_)}" does not expose any `}TormentNexus extension API methods`);
+        notify(
+          'Plugin error!',
+          `${`Plugin "${basename(path_)}" does not expose any `}TormentNexus extension API methods`
+        );
         return;
       }
 

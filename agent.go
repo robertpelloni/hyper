@@ -94,11 +94,11 @@ func (ah *AgentHarness) HealthCheck() map[string]interface{} {
 	defer ah.mu.RUnlock()
 
 	return map[string]interface{}{
-		"status":    "active",
-		"running":   ah.running,
-		"uptime":    time.Now().UnixMilli(),
-		"messages":  len(ah.messages),
-		"version":   "1.0.0",
+		"status":   "active",
+		"running":  ah.running,
+		"uptime":   time.Now().UnixMilli(),
+		"messages": len(ah.messages),
+		"version":  "1.0.0",
 	}
 }
 

@@ -9,14 +9,15 @@ import type {TormentNexusActions, TormentNexusState} from '../../typings/Torment
  * defer or add to existing side effects at will
  * as the result of an action being triggered.
  */
-const effectsMiddleware: Middleware<{}, TormentNexusState, Dispatch<TormentNexusActions>> = () => (next) => (action) => {
-  const ret = next(action);
-  if (action.effect) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    action.effect();
-    delete action.effect;
-  }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return ret;
-};
+const effectsMiddleware: Middleware<{}, TormentNexusState, Dispatch<TormentNexusActions>> =
+  () => (next) => (action) => {
+    const ret = next(action);
+    if (action.effect) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      action.effect();
+      delete action.effect;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return ret;
+  };
 export default effectsMiddleware;

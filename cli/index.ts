@@ -236,7 +236,7 @@ const main = (argv: string[]) => {
       //Use `open` to prevent multiple TormentNexus process
       const cmd = 'open';
       const child_args = ['-b', 'com.tormentnexus.app', ...args_];
-      const child = spawn(cmd, child_args, { env, detached: true, stdio: 'ignore' });
+      const child = spawn(cmd, child_args, {env, detached: true, stdio: 'ignore'});
       child.unref();
       return Promise.resolve();
     }

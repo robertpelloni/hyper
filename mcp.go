@@ -15,9 +15,9 @@ type MCPTool struct {
 
 // MCPAggregator manages MCP tools and server aggregation
 type MCPAggregator struct {
-	tools       []MCPTool
-	servers     []map[string]interface{}
-	mu          sync.RWMutex
+	tools   []MCPTool
+	servers []map[string]interface{}
+	mu      sync.RWMutex
 }
 
 func NewMCPAggregator() *MCPAggregator {
