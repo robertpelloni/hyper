@@ -109,6 +109,7 @@ export interface AgentStatus {
 	running: boolean;
 	messages: number;
 	timestamp?: number;
+	response?: string;
 }
 
 export interface MCPTool {
@@ -121,5 +122,15 @@ export interface MCPTelemetry {
 	status: string;
 	active_tools: number;
 	servers: number;
+	version: string;
+}
+
+export interface ServerStatus {
+	mcpServerRunning: boolean;
+	mcpServerPort: number;
+	agentRunning: boolean;
+	trayEnabled: boolean;
+	activeSessions: number;
+	uptimeSeconds: number;
 	version: string;
 }

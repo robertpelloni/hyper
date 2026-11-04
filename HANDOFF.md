@@ -1,18 +1,22 @@
-# TormentNexus v1.0.0: Final Session Handoff
+# TormentNexus v1.1.0: Session Handoff
 
-## Final Accomplishments
-- **Hybrid Architecture:** Fully integrated Go sidecar (v1.25.0) for PTY and Agentic logic.
-- **UI Wiring:** Connected the "Agent Health Check" tool in the UI to the Go backend via RPC.
-- **E2E Stability:** Expanded Playwright suite to cover Go connectivity and RPC-based UI updates.
-- **Production Packaging:** Fixed binary path resolution for packaged AppImage/deb/snap distributions.
-- **Documentation:** Established a complete 11-file documentation suite covering all aspects of the project.
+## Overview of Accomplishments
+1. **Unified Mission Control Dashboard:**
+   - Redesigned and consolidated all application functions (Autonomous Agent Control, MCP Aggregator & Runner, Terminal Session Manager, Server Lifecycle, and Quick Config) into one singular, non-fragmented page (`frontend/src/components/Dashboard.tsx`).
+   - Integrated contextual tooltip markers (`Tooltip.tsx`) across all controls, metric badges, and forms for maximum clarity and guidance.
+   - Updated `Header.tsx`, `StatusBar.tsx`, and `App.tsx` with seamless toggling between Terminal and Mission Control (`Ctrl+Shift+D` shortcut).
 
-## Technical Notes
-- **Communication:** Frontend uses `lib/utils/go-core.ts` for REST and `lib/index.tsx` for handling RPC triggers from the main process.
-- **Go Version:** Strictly requires v1.25.0.
-- **Port:** Defaults to 9876, configurable via `TORMENTNEXUS_PORT`.
+2. **System Tray & Server Lifecycle Management:**
+   - Implemented server lifecycle controls (`StartMCPServer`, `StopMCPServer`, `RestartServers`, `StopServers`, `GetServerStatus`, `ToggleSystemTray`, `QuitApp`) in `app_core.go`.
+   - Wired desktop application menu and tray actions in `main.go`.
+   - Updated MCP server (`internal/mcp/server.go`) to support interactive HTTP `POST /call` with JSON payload decoding and formatted execution responses.
 
-## Future Roadmap (Phase 2)
-- Port Warp-like command blocks to the Go core and React UI.
-- Implement full Tabby LSP compatibility in the agent harness.
-- Secure SSH host key verification logic.
+3. **Script Governance & Sanitization:**
+   - Removed unresolvable `$schema` key from `wails.json`.
+   - Archived legacy `start.bat` non-destructively into `archive/start.bat.bak`.
+   - Sanitized `build.bat` and `start.bat` to eliminate legacy branding.
+   - Created modern cross-platform executable scripts `build.sh` and `start.sh`.
+
+4. **Testing and Verification:**
+   - Added unit test suite in `app_core_test.go` covering AgentHarness, MCPAggregator, and App server/tray status.
+   - Verified that `go test ./...` passes cleanly and all frontend/Go builds succeed.
