@@ -1,37 +1,42 @@
-# TormentNexus: Usage Guide
+# TormentNexus Usage Guide
 
 ## Getting Started
 
-TormentNexus is more than just a terminal. It's an AI-integrated environment.
+### 1. Launching TormentNexus
+To build and launch the application:
+```bash
+./build.sh
+./bin/tormentnexus
+```
 
-### 1. Launching
-After installing or building, launch the application. You will see a familiar terminal interface, but with enhanced capabilities.
+To run the standalone MCP Hub server independently:
+```bash
+./start.sh
+# Server starts on http://localhost:8080
+```
 
-### 2. Autonomous Agent (Agentic Mode)
-TormentNexus features a built-in autonomous loop. To trigger agent actions:
-- Use the command palette (Cmd/Ctrl + Shift + P) and search for "Agent: Execute".
-- Or use the Go Core REST API directly for automation:
-  ```bash
-  curl -X POST http://localhost:9876/agent/execute -d '{"command": "summarize this directory"}'
-  ```
+## Mission Control Dashboard
 
-### 3. MCP (Model Context Protocol)
-TormentNexus acts as an MCP Aggregator. You can connect various MCP servers to provide the terminal with extra tools (e.g., file system access, database querying).
-- List active MCP servers:
-  ```bash
-  curl http://localhost:9876/mcp/servers
-  ```
+TormentNexus features a consolidated, singular Mission Control page providing complete visibility and control over all subsystems without page fragmentation.
 
-### 4. Interactive Command Blocks
-Inspired by Warp, TormentNexus organizes output into logical blocks.
-- Each block has its own context.
-- You can copy, share, or ask the AI about a specific block's output.
+- **Toggle Mission Control:** Press `Ctrl+Shift+D` or click the **⚡ Dashboard** button in the top header.
+- **Return to Terminal:** Click **Return to Terminal ⏎** or press the dashboard button again.
 
-### 5. Configuration
-Configuration is managed via `TormentNexus.json`.
-- Located at: `~/.config/TormentNexus/TormentNexus.json` (Linux/macOS)
-- You can customize themes, keymaps, and Go core settings here.
+### Key Mission Control Capabilities:
+1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.
+2. **Autonomous Agent Control Panel:** Start or stop the Think-Act-Observe background agent cycle, perform diagnostic health checks, and dispatch manual instructions.
+3. **Model Context Protocol (MCP) Aggregator:** Select any registered tool (`shell_execute`, `file_read`, `file_write`, `agent_status`, etc.), provide a JSON argument object, and click **⚡ Run Tool** to execute immediately.
+4. **Terminal Session Orchestration:** View all active shell processes (Shell type, PID, UID), focus on a selected terminal tab, or safely terminate sessions.
+5. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.
+6. **Universal Tooltips:** Hover over any `?` marker for contextual guidance.
 
-## Tips and Tricks
-- Use `ssh://` links to open remote sessions managed by the Go core's secure SSH module.
-- Check the status bar for real-time AI processing indicators.
+## Keyboard Shortcuts
+
+- `Ctrl+Shift+D`: Toggle Mission Control Dashboard
+- `Ctrl+Shift+T`: New Terminal Tab
+- `Ctrl+Shift+W`: Close Current Tab
+- `Ctrl+Tab` / `Ctrl+Shift+Tab`: Next / Previous Tab
+- `Ctrl+Shift+F`: In-Terminal Search
+- `Ctrl+Shift+K`: Clear Active Terminal Buffer
+- `Ctrl+,`: Open Configuration Editor
+- `F11`: Toggle Fullscreen

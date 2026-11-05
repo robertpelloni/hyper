@@ -1,37 +1,17 @@
-# TormentNexus v1.0.0: Final Release Summary
+# TormentNexus Summary
 
-TormentNexus is the evolution of the Hyper terminal into a comprehensive Go-powered LLM harness.
+TormentNexus is a unified LLM harness and terminal combining a compiled Go backend (PTY orchestration, agent loop, and MCP server) with an ergonomic web dashboard.
 
-## Key Components
+## Key Subsystems
 
-### 1. High-Performance Go Core
-- **Location:** `cmd/tormentnexus/main.go`, `internal/`
-- **Features:**
-    - PTY management via `creack/pty`.
-    - SSH remote session support.
-    - Autonomous agent execution loop.
-    - Model Context Protocol (MCP) server aggregator.
-- **Integration:** Runs as a sidecar process (port 9876) managed by the Electron main process.
+- **Core PTY Engine:** High-performance Go PTY manager based on `creack/pty`, managing concurrent shell sessions.
+- **Mission Control Dashboard:** Single-page control center consolidating Autonomous Agent management, MCP tool execution, terminal process oversight, server lifecycle controls, and preferences.
+- **MCP Hub & Tool Aggregator:** Embedded HTTP server on `:8080` implementing `/tools` discovery and `/call` execution endpoints conforming to Model Context Protocol standards.
+- **Autonomous Agent Harness:** Think-Act-Observe background loop for autonomous coding workflows.
+- **Contextual Tooltip Architecture:** Contextual hover guidance across all UI controls and telemetry indicators.
 
-### 2. Electron Frontend (Integrated)
-- **Location:** `app/`, `lib/`
-- **Rebranding:** Full migration from "Hyper" to "TormentNexus".
-- **Bridge:** A TypeScript utility (`lib/utils/go-core.ts`) provides a REST-based interface.
-- **UI Integration:** Added "Agent Health Check" to the Tools menu, allowing real-time status probing of the Go Agent Harness.
-
-### 3. Modernized CI/CD
-- **Location:** `.github/workflows/nodejs.yml`
-- **Capabilities:** Multi-platform builds (Linux, macOS, Windows) with ARM64 support.
-
-### 4. Documentation Suite
-- **README.md:** Setup and usage guide.
-- **VISION.md & MISSION.md:** Philosophical and architectural roadmap.
-- **USAGE.md:** Detailed user guide for Agentic Mode.
-- **DEPLOY.md:** Release instructions.
-
-## End-to-End Verification
-Comprehensive E2E integration tests confirm:
-1. Electron main process correctly spawns and manages the Go core sidecar.
-2. Frontend successfully communicates with Go Core via REST API.
-3. RPC events (e.g., Agent Health Check) correctly trigger backend logic and update the UI with notifications.
-4. Production binary resolution handles both dev and packaged environments.
+## Project Structure
+- `cmd/tormentnexus/`: Entry point for standalone MCP server.
+- `internal/`: Core packages for agent, mcp, intelligence, session, terminal, and config.
+- `frontend/`: Single-page React/TypeScript UI built with Vite and xterm.js.
+- `app_core.go` / `main.go`: Wails runtime integration, server lifecycle, and desktop tray controls.
