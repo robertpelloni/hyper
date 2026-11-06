@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry } from "../types";
+import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord } from "../types";
 import * as api from "../api";
 import Tooltip from "./Tooltip";
 
@@ -45,6 +45,7 @@ export default function Dashboard({
 	const [selectedTool, setSelectedTool] = useState<string>("shell_execute");
 	const [toolArgs, setToolArgs] = useState('{"command": "echo Hello from TormentNexus"}');
 	const [toolOutput, setToolOutput] = useState<string>("");
+	const [executionHistory, setExecutionHistory] = useState<ToolExecutionRecord[]>([]);
 
 	const [telemetry, setTelemetry] = useState<MCPTelemetry>({
 		status: "active",
@@ -58,7 +59,7 @@ export default function Dashboard({
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
 	const [cursorShape, setCursorShape] = useState<string>(config.cursorShape || "BLOCK");
 
-	// Refresh system metrics
+	// Refresh system metrics & tool execution history
 	const refreshStatus = useCallback(async () => {
 		try {
 			const st = await api.getServerStatus();
@@ -70,6 +71,9 @@ export default function Dashboard({
 
 			const tel = await api.mcpGetTelemetry();
 			setTelemetry(tel);
+
+			const hist = await api.mcpGetToolExecutionHistory();
+			setExecutionHistory(hist);
 		} catch (err) {
 			console.warn("Failed to refresh status:", err);
 		}
@@ -142,6 +146,7 @@ export default function Dashboard({
 			const result = await api.mcpCallTool(selectedTool, parsed);
 			setToolOutput(JSON.stringify(result, null, 2));
 			onNotification(`Executed tool: ${selectedTool}`);
+			refreshStatus();
 		} catch (err: any) {
 			setToolOutput(`Execution failed: ${err.message || err}`);
 		}
@@ -150,7 +155,7 @@ export default function Dashboard({
 	// Server Controls
 	const handleRestartServers = async () => {
 		try {
-			const res = await api.restartServers();
+			await api.restartServers();
 			onNotification("Servers restarted successfully");
 			refreshStatus();
 		} catch (err) {
@@ -351,35 +356,93 @@ export default function Dashboard({
 						</div>
 					</div>
 
-					{/* SECTION 2: Model Context Protocol (MCP) Hub & Tool Runner */}
+					{/* SECTION 2: Model Context Protocol (MCP) Hub & Tool Runner with Real-Time Performance Monitor */}
 					<div className="tn_dashboard_panel">
 						<div className="tn_panel_header">
 							<div className="tn_panel_title">
-								🔌 Model Context Protocol (MCP) Aggregator
-								<Tooltip text="Centralized tool discovery and interactive tool invocation harness." />
+								🔌 Model Context Protocol (MCP) Tool Monitor
+								<Tooltip text="Real-time tool performance monitoring, latency tracking, status codes, and execution harness." />
 							</div>
 							<span className="tn_panel_badge">
-								{mcpTools.length} Tools Registered
+								{mcpTools.length} Tools Loaded
 							</span>
 						</div>
 
 						<div className="tn_panel_body">
-							<div className="tn_form_group">
+							{/* Real-time Tool Performance Cards */}
+							<div className="tn_tool_metrics_grid">
+								{mcpTools.map((t) => {
+									const toolName = t.Name || t.name;
+									const records = executionHistory.filter((h) => h.tool === toolName);
+									const latest = records[records.length - 1];
+									const avgLatency =
+										records.length > 0
+											? Math.round(
+													records.reduce((acc, cur) => acc + cur.durationMs, 0) /
+														records.length,
+											  )
+											: null;
+
+									return (
+										<div
+											key={toolName}
+											className={`tn_tool_card ${
+												toolName === selectedTool ? "tn_session_active" : ""
+											}`}
+											onClick={() => setSelectedTool(toolName)}
+											style={{ cursor: "pointer" }}
+										>
+											<div className="tn_tool_card_top">
+												<span className="tn_tool_name" title={toolName}>
+													{toolName}
+												</span>
+												<span
+													className={`tn_tool_status_pill ${
+														latest
+															? latest.statusCode === 200
+																? "tn_status_ok"
+																: "tn_status_err"
+															: "tn_status_idle"
+													}`}
+												>
+													{latest ? `${latest.statusCode} OK` : "READY"}
+												</span>
+											</div>
+											<div className="tn_tool_card_bottom">
+												<span>Avg: {avgLatency !== null ? `${avgLatency}ms` : "<1ms"}</span>
+												<span className="tn_latency_badge">
+													{latest ? `${latest.durationMs}ms` : "idle"}
+												</span>
+											</div>
+											{/* Small latency bar graph */}
+											<div className="tn_exec_graph_container">
+												{(records.length > 0 ? records.slice(-8) : [1, 2, 3]).map(
+													(rec: any, idx) => (
+														<div
+															key={idx}
+															className={`tn_exec_graph_bar ${
+																rec.statusCode && rec.statusCode !== 200 ? "err" : ""
+															}`}
+															style={{
+																height: `${Math.min(
+																	100,
+																	Math.max(25, (rec.durationMs || 10) * 3),
+																)}%`,
+															}}
+														/>
+													),
+												)}
+											</div>
+										</div>
+									);
+								})}
+							</div>
+
+							<div className="tn_form_group" style={{ marginTop: "10px" }}>
 								<label className="tn_label">
-									Select Tool:
-									<Tooltip text="Choose a registered tool to inspect its schema or execute it immediately." />
+									Selected Tool: <strong style={{ color: "#fff", marginLeft: "4px" }}>{selectedTool}</strong>
+									<Tooltip text="Selected tool for manual execution and testing." />
 								</label>
-								<select
-									className="tn_select"
-									value={selectedTool}
-									onChange={(e) => setSelectedTool(e.target.value)}
-								>
-									{mcpTools.map((t) => (
-										<option key={t.Name || t.name} value={t.Name || t.name}>
-											{t.Name || t.name} - {t.Description || t.description}
-										</option>
-									))}
-								</select>
 							</div>
 
 							<div className="tn_form_group">
@@ -389,7 +452,7 @@ export default function Dashboard({
 								</label>
 								<textarea
 									className="tn_textarea"
-									rows={3}
+									rows={2}
 									value={toolArgs}
 									onChange={(e) => setToolArgs(e.target.value)}
 								/>

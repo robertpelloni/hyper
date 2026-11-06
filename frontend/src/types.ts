@@ -134,3 +134,12 @@ export interface ServerStatus {
 	uptimeSeconds: number;
 	version: string;
 }
+
+export interface ToolExecutionRecord {
+	tool: string;
+	statusCode: number;
+	durationMs: number;
+	timestamp: number;
+	success: boolean;
+	status: string;
+}

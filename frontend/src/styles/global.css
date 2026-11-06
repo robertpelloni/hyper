@@ -986,3 +986,111 @@ body,
 .tn_status_link:hover {
 	text-decoration: underline;
 }
+
+/* ---- Tool Metrics and Execution History ---- */
+.tn_tool_metrics_grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.tn_tool_card {
+	background: #1c1c1c;
+	border: 1px solid #2e2e2e;
+	border-radius: 6px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	transition: border-color 0.15s ease;
+}
+
+.tn_tool_card:hover {
+	border-color: #444;
+}
+
+.tn_tool_card_top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tn_tool_name {
+	font-weight: 600;
+	font-size: 11px;
+	color: #fff;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tn_tool_status_pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 10px;
+	padding: 2px 6px;
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+.tn_status_ok {
+	background: rgba(76, 175, 80, 0.2);
+	color: #4caf50;
+	border: 1px solid #4caf50;
+}
+
+.tn_status_warn {
+	background: rgba(255, 152, 0, 0.2);
+	color: #ff9800;
+	border: 1px solid #ff9800;
+}
+
+.tn_status_err {
+	background: rgba(244, 67, 54, 0.2);
+	color: #f44336;
+	border: 1px solid #f44336;
+}
+
+.tn_status_idle {
+	background: rgba(255, 255, 255, 0.08);
+	color: #888;
+	border: 1px solid #333;
+}
+
+.tn_tool_card_bottom {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 10px;
+	color: #888;
+}
+
+.tn_latency_badge {
+	color: #00bcd4;
+	font-family: var(--tn-term-font);
+}
+
+.tn_exec_graph_container {
+	margin-top: 6px;
+	display: flex;
+	align-items: flex-end;
+	gap: 2px;
+	height: 18px;
+	background: #111;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+.tn_exec_graph_bar {
+	flex: 1;
+	min-width: 3px;
+	background: #4caf50;
+	border-radius: 1px;
+	transition: height 0.2s ease;
+}
+
+.tn_exec_graph_bar.err {
+	background: #f44336;
+}

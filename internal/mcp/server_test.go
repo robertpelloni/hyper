@@ -62,6 +62,9 @@ func TestServerEndpoints(t *testing.T) {
 	if callResp["status"] != "executed" || callResp["tool"] != "unit_test_tool" {
 		t.Fatalf("unexpected call response: %+v", callResp)
 	}
+	if callResp["statusCode"].(float64) != 200 {
+		t.Errorf("expected statusCode 200, got %v", callResp["statusCode"])
+	}
 
 	// 4. Test POST /call with non-existent tool
 	missingPayload := []byte(`{"name": "unknown_tool", "arguments": {}}`)
@@ -81,5 +84,22 @@ func TestServerEndpoints(t *testing.T) {
 
 	if rrBad.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400 Bad Request for bad JSON, got %d", rrBad.Code)
+	}
+
+	// 6. Test GET /history endpoint
+	reqHist, _ := http.NewRequest(http.MethodGet, "/history", nil)
+	rrHist := httptest.NewRecorder()
+	mux.ServeHTTP(rrHist, reqHist)
+
+	if rrHist.Code != http.StatusOK {
+		t.Fatalf("expected 200 OK from /history, got %d", rrHist.Code)
+	}
+
+	var histResp map[string][]ToolExecutionRecord
+	if err := json.Unmarshal(rrHist.Body.Bytes(), &histResp); err != nil {
+		t.Fatalf("failed to decode /history response: %v", err)
+	}
+	if len(histResp["history"]) < 3 {
+		t.Errorf("expected at least 3 execution records, got %d", len(histResp["history"]))
 	}
 }

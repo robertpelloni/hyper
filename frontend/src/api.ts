@@ -247,3 +247,18 @@ export function getAppName(): string {
 export function openURL(url: string): void {
 	WailsRuntime.BrowserOpenURL(url);
 }
+
+export async function mcpGetToolExecutionHistory(): Promise<ToolExecutionRecord[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.MCPAggregator && (window as any).go.main.MCPAggregator.GetToolExecutionHistory) {
+		return (window as any).go.main.MCPAggregator.GetToolExecutionHistory();
+	}
+	// Fallback fetch from HTTP endpoint if running
+	try {
+		const res = await fetch("http://localhost:8080/history");
+		if (res.ok) {
+			const data = await res.json();
+			return data.history || [];
+		}
+	} catch {}
+	return [];
+}
