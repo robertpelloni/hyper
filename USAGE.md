@@ -25,7 +25,10 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 ### Key Mission Control Capabilities:
 1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.
 2. **Autonomous Agent Control Panel:** Start or stop the Think-Act-Observe background agent cycle, perform diagnostic health checks, execute preset autonomous workflows (`⚡ Scan Sessions`, `⚙ Inspect Config`, `📊 Query Status`), or dispatch freeform directives with live reasoning step telemetry streaming.
-3. **Model Context Protocol (MCP) Tool Monitor:** Inspect per-tool performance telemetry with average latency metrics, HTTP status codes (`200 OK`), mini execution bar graphs, and an interactive test harness (with `Ctrl+Enter` execution support).
+3. **Model Context Protocol (MCP) Tool Monitor:** Inspect per-tool performance telemetry with average latency metrics, HTTP status codes (`200 OK`), mini execution bar graphs, and an interactive test harness:
+   - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template (e.g. `{"command": "echo Hello"}` for `shell_execute`, `{"path": "VERSION.md"}` for `file_read`).
+   - **Keyboard Trigger:** Execute tools instantly via `Ctrl+Enter`.
+   - **Interactive Piping:** Use the **🤖 Send to Agent Directive** button to forward invocation results directly into the Autonomous Agent harness for automated analysis.
 4. **Terminal Session Orchestration:** View all active shell processes (Shell type, PID, UID), focus on a selected terminal tab, or safely terminate sessions.
 5. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.
 6. **Universal Tooltips:** Hover over any `?` marker for contextual guidance and tips across all inputs and telemetry cards.

@@ -526,14 +526,40 @@ export default function Dashboard({
 											  )
 											: null;
 
+									const defaultTemplates: Record<string, string> = {
+										shell_execute: '{"command": "echo Hello from TormentNexus"}',
+										file_read: '{"path": "VERSION.md"}',
+										file_write: '{"path": "tmp_test.txt", "content": "Hello World"}',
+										agent_status: '{}',
+										session_list: '{}',
+									};
+
+									const handleSelect = () => {
+										setSelectedTool(toolName);
+										if (defaultTemplates[toolName]) {
+											setToolArgs(defaultTemplates[toolName]);
+										} else {
+											setToolArgs('{}');
+										}
+										showFeedback(`Selected tool: ${toolName}`, "info");
+									};
+
 									return (
 										<div
 											key={toolName}
 											className={`tn_tool_card ${
 												toolName === selectedTool ? "tn_session_active" : ""
 											}`}
-											onClick={() => setSelectedTool(toolName)}
+											onClick={handleSelect}
 											style={{ cursor: "pointer" }}
+											role="button"
+											tabIndex={0}
+											onKeyDown={(e) => {
+												if (e.key === "Enter" || e.key === " ") {
+													handleSelect();
+												}
+											}}
+											aria-label={`Select tool ${toolName}`}
 										>
 											<div className="tn_tool_card_top">
 												<span className="tn_tool_name" title={toolName}>
