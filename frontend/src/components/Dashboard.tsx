@@ -60,6 +60,17 @@ export default function Dashboard({
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
 	const [cursorShape, setCursorShape] = useState<string>(config.cursorShape || "BLOCK");
 
+	// Inline toast banner for feedback
+	const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
+
+	const showFeedback = useCallback((message: string, type: "success" | "error" | "info" = "info") => {
+		setFeedbackToast({ message, type });
+		onNotification(message);
+		setTimeout(() => {
+			setFeedbackToast((current) => (current?.message === message ? null : current));
+		}, 3500);
+	}, [onNotification]);
+
 	// Refresh system metrics & tool execution history & agent steps
 	const refreshStatus = useCallback(async () => {
 		try {
@@ -119,10 +130,11 @@ export default function Dashboard({
 			const res = await api.agentExecuteCommand("start");
 			setAgentRunning(true);
 			setAgentLogs((prev) => [...prev, `[START] ${res.response || "Agent loop running"}`]);
-			onNotification("Autonomous Agent Loop started");
+			showFeedback("Autonomous Agent Loop started", "success");
 			refreshStatus();
 		} catch (err) {
 			setAgentLogs((prev) => [...prev, `[ERROR] ${err}`]);
+			showFeedback(`Agent start failed: ${err}`, "error");
 		}
 	};
 
@@ -131,10 +143,11 @@ export default function Dashboard({
 			const res = await api.agentExecuteCommand("stop");
 			setAgentRunning(false);
 			setAgentLogs((prev) => [...prev, `[STOP] ${res.response || "Agent loop stopped"}`]);
-			onNotification("Autonomous Agent Loop stopped");
+			showFeedback("Autonomous Agent Loop stopped", "info");
 			refreshStatus();
 		} catch (err) {
 			setAgentLogs((prev) => [...prev, `[ERROR] ${err}`]);
+			showFeedback(`Agent stop failed: ${err}`, "error");
 		}
 	};
 
@@ -174,10 +187,11 @@ export default function Dashboard({
 			}
 			const result = await api.mcpCallTool(selectedTool, parsed);
 			setToolOutput(JSON.stringify(result, null, 2));
-			onNotification(`Executed tool: ${selectedTool}`);
+			showFeedback(`Successfully executed tool: ${selectedTool}`, "success");
 			refreshStatus();
 		} catch (err: any) {
 			setToolOutput(`Execution failed: ${err.message || err}`);
+			showFeedback(`Tool execution failed: ${err.message || err}`, "error");
 		}
 	};
 
@@ -185,20 +199,20 @@ export default function Dashboard({
 	const handleRestartServers = async () => {
 		try {
 			await api.restartServers();
-			onNotification("Servers restarted successfully");
+			showFeedback("Servers restarted successfully", "success");
 			refreshStatus();
 		} catch (err) {
-			onNotification(`Failed to restart servers: ${err}`);
+			showFeedback(`Failed to restart servers: ${err}`, "error");
 		}
 	};
 
 	const handleStopServers = async () => {
 		try {
 			await api.stopServers();
-			onNotification("Backend servers stopped");
+			showFeedback("Backend servers stopped", "info");
 			refreshStatus();
 		} catch (err) {
-			onNotification(`Error stopping servers: ${err}`);
+			showFeedback(`Error stopping servers: ${err}`, "error");
 		}
 	};
 
@@ -235,6 +249,30 @@ export default function Dashboard({
 	return (
 		<div className="tn_dashboard_overlay">
 			<div className="tn_dashboard_container">
+				{/* Feedback Toast Notification */}
+				{feedbackToast && (
+					<div
+						className={`tn_toast_banner ${
+							feedbackToast.type === "error"
+								? "tn_toast_error"
+								: feedbackToast.type === "success"
+								? "tn_toast_success"
+								: "tn_toast_info"
+						}`}
+						role="alert"
+					>
+						<span>{feedbackToast.type === "error" ? "❌" : feedbackToast.type === "success" ? "✓" : "ℹ"}</span>
+						<span>{feedbackToast.message}</span>
+						<button
+							onClick={() => setFeedbackToast(null)}
+							className="tn_toast_close"
+							aria-label="Dismiss notification"
+						>
+							✕
+						</button>
+					</div>
+				)}
+
 				{/* Top Bar / Header */}
 				<div className="tn_dashboard_header">
 					<div className="tn_dashboard_title_group">

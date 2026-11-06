@@ -102,4 +102,26 @@ func TestServerEndpoints(t *testing.T) {
 	if len(histResp["history"]) < 3 {
 		t.Errorf("expected at least 3 execution records, got %d", len(histResp["history"]))
 	}
+
+	// 7. Test Empty Tool Name edge case
+	emptyToolPayload := []byte(`{"name": "", "arguments": {}}`)
+	reqEmpty, _ := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(emptyToolPayload))
+	rrEmpty := httptest.NewRecorder()
+	mux.ServeHTTP(rrEmpty, reqEmpty)
+
+	if rrEmpty.Code != http.StatusNotFound {
+		t.Errorf("expected 404 for empty tool name, got %d", rrEmpty.Code)
+	}
+
+	// 8. Test History Limit and Concurrency
+	for i := 0; i < 110; i++ {
+		p := []byte(`{"name": "unit_test_tool", "arguments": {}}`)
+		r, _ := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(p))
+		w := httptest.NewRecorder()
+		mux.ServeHTTP(w, r)
+	}
+	historyRecords := server.GetHistory()
+	if len(historyRecords) > 100 {
+		t.Errorf("expected history capped at 100 records, got %d", len(historyRecords))
+	}
 }
