@@ -143,3 +143,14 @@ export interface ToolExecutionRecord {
 	success: boolean;
 	status: string;
 }
+
+export interface AgentExecutionStep {
+	id: string;
+	phase: "THINK" | "ACT" | "OBSERVE";
+	tool?: string;
+	thought: string;
+	input?: Record<string, any>;
+	result?: string;
+	durationMs: number;
+	timestamp: number;
+}

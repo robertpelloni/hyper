@@ -52,6 +52,10 @@ func (a *App) startup(ctx context.Context) {
 	a.agent = NewAgentHarness()
 	a.mcp = NewMCPAggregator()
 
+	// Connect Agent Harness to MCP Aggregator and Runtime
+	a.agent.SetMCPAggregator(a.mcp)
+	a.agent.SetRuntime(a)
+
 	// Start integrated MCP server on :8080 in background
 	go func() {
 		_ = a.StartMCPServer(8080)
@@ -206,7 +210,7 @@ func (a *App) GetServerStatus() ServerStatus {
 		TrayEnabled:      a.trayVisible,
 		ActiveSessions:   sessionsCount,
 		UptimeSeconds:    uptime,
-		Version:          "1.0.0",
+		Version:          "1.1.0",
 	}
 }
 
@@ -379,7 +383,7 @@ func (a *App) MessageDialog(title, message string) {
 // ---- App Info ----
 
 func (a *App) GetAppVersion() string {
-	return "1.0.0"
+	return "1.1.0"
 }
 
 func (a *App) GetAppName() string {

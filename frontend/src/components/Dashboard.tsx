@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord } from "../types";
+import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord, AgentExecutionStep } from "../types";
 import * as api from "../api";
 import Tooltip from "./Tooltip";
 
@@ -32,7 +32,7 @@ export default function Dashboard({
 		trayEnabled: true,
 		activeSessions: Object.keys(sessions).length,
 		uptimeSeconds: 0,
-		version: "1.0.0",
+		version: "1.1.0",
 	});
 
 	const [agentCommand, setAgentCommand] = useState("");
@@ -40,6 +40,7 @@ export default function Dashboard({
 		"Agent Harness initialized in idle state.",
 	]);
 	const [agentRunning, setAgentRunning] = useState(false);
+	const [agentSteps, setAgentSteps] = useState<AgentExecutionStep[]>([]);
 
 	const [mcpTools, setMcpTools] = useState<MCPTool[]>([]);
 	const [selectedTool, setSelectedTool] = useState<string>("shell_execute");
@@ -51,7 +52,7 @@ export default function Dashboard({
 		status: "active",
 		active_tools: 0,
 		servers: 1,
-		version: "1.0.0",
+		version: "1.1.0",
 	});
 
 	// Quick Settings state
@@ -59,7 +60,7 @@ export default function Dashboard({
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
 	const [cursorShape, setCursorShape] = useState<string>(config.cursorShape || "BLOCK");
 
-	// Refresh system metrics & tool execution history
+	// Refresh system metrics & tool execution history & agent steps
 	const refreshStatus = useCallback(async () => {
 		try {
 			const st = await api.getServerStatus();
@@ -74,6 +75,11 @@ export default function Dashboard({
 
 			const hist = await api.mcpGetToolExecutionHistory();
 			setExecutionHistory(hist);
+
+			const steps = await api.agentGetExecutionSteps();
+			if (steps && steps.length > 0) {
+				setAgentSteps(steps);
+			}
 		} catch (err) {
 			console.warn("Failed to refresh status:", err);
 		}
@@ -82,7 +88,16 @@ export default function Dashboard({
 	useEffect(() => {
 		refreshStatus();
 		const interval = setInterval(refreshStatus, 3000);
-		return () => clearInterval(interval);
+
+		// Real-time step listener
+		api.onEvent("agent:step", (step: AgentExecutionStep) => {
+			setAgentSteps((prev) => [...prev.slice(-30), step]);
+		});
+
+		return () => {
+			clearInterval(interval);
+			api.offEvent("agent:step");
+		};
 	}, [refreshStatus]);
 
 	// Agent Controls
@@ -123,14 +138,15 @@ export default function Dashboard({
 		}
 	};
 
-	const handleAgentExec = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (!agentCommand.trim()) return;
+	const handleAgentExec = async (cmdToRun?: string) => {
+		const targetCmd = cmdToRun || agentCommand;
+		if (!targetCmd.trim()) return;
 		try {
-			setAgentLogs((prev) => [...prev, `> ${agentCommand}`]);
-			const res = await api.agentExecuteCommand(agentCommand);
+			setAgentLogs((prev) => [...prev, `> ${targetCmd}`]);
+			const res = await api.agentExecuteCommand(targetCmd);
 			setAgentLogs((prev) => [...prev, `< ${res.response || JSON.stringify(res)}`]);
-			setAgentCommand("");
+			if (!cmdToRun) setAgentCommand("");
+			refreshStatus();
 		} catch (err) {
 			setAgentLogs((prev) => [...prev, `[EXEC ERROR] ${err}`]);
 		}
@@ -297,7 +313,7 @@ export default function Dashboard({
 
 				{/* Consolidated Dashboard Grid (Single Page Architecture) */}
 				<div className="tn_dashboard_grid">
-					{/* SECTION 1: Autonomous Agent Control Panel */}
+					{/* SECTION 1: Autonomous Agent Control Panel with Reasoning Step Feed */}
 					<div className="tn_dashboard_panel">
 						<div className="tn_panel_header">
 							<div className="tn_panel_title">
@@ -333,19 +349,88 @@ export default function Dashboard({
 						</div>
 
 						<div className="tn_panel_body">
-							<div className="tn_log_terminal">
-								{agentLogs.map((log, idx) => (
+							{/* Quick Autonomous Workflow Presets */}
+							<div className="tn_agent_presets_row">
+								<span style={{ fontSize: "10px", color: "#888", display: "flex", alignItems: "center" }}>
+									Presets:
+								</span>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("scan_sessions")}
+									title="Dispatch directive to query active terminals"
+								>
+									⚡ Scan Sessions
+								</button>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("check_config")}
+									title="Dispatch directive to inspect configuration"
+								>
+									⚙ Inspect Config
+								</button>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("status")}
+									title="Query agent status"
+								>
+									📊 Query Status
+								</button>
+							</div>
+
+							{/* Think-Act-Observe Step Feed */}
+							<div className="tn_steps_container">
+								{agentSteps.map((s) => (
+									<div key={s.id} className="tn_step_item">
+										<div className="tn_step_header">
+											<span
+												className={`tn_phase_badge ${
+													s.phase === "THINK"
+														? "tn_phase_think"
+														: s.phase === "ACT"
+														? "tn_phase_act"
+														: "tn_phase_observe"
+												}`}
+											>
+												{s.phase}
+											</span>
+											{s.tool && (
+												<span style={{ fontSize: "10px", color: "#64b5f6" }}>
+													tool: {s.tool}
+												</span>
+											)}
+											{s.durationMs > 0 && (
+												<span style={{ fontSize: "9px", color: "#00bcd4" }}>
+													{s.durationMs}ms
+												</span>
+											)}
+										</div>
+										<div className="tn_step_thought">{s.thought}</div>
+										{s.result && (
+											<div className="tn_step_result">{s.result}</div>
+										)}
+									</div>
+								))}
+							</div>
+
+							<div className="tn_log_terminal" style={{ height: "80px" }}>
+								{agentLogs.slice(-6).map((log, idx) => (
 									<div key={idx} className="tn_log_entry">
 										{log}
 									</div>
 								))}
 							</div>
 
-							<form onSubmit={handleAgentExec} className="tn_agent_input_form">
+							<form
+								onSubmit={(e) => {
+									e.preventDefault();
+									handleAgentExec();
+								}}
+								className="tn_agent_input_form"
+							>
 								<input
 									type="text"
 									className="tn_input tn_flex_1"
-									placeholder="Dispatch command to agent (e.g., status, start, inspect)..."
+									placeholder="Dispatch directive to autonomous agent (e.g., scan_sessions, check_config)..."
 									value={agentCommand}
 									onChange={(e) => setAgentCommand(e.target.value)}
 								/>

@@ -1094,3 +1094,100 @@ body,
 .tn_exec_graph_bar.err {
 	background: #f44336;
 }
+
+/* ---- Autonomous Reasoning Steps & Workflows ---- */
+.tn_agent_presets_row {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.tn_btn_preset {
+	background: #1e1e1e;
+	border: 1px solid #333;
+	border-radius: 4px;
+	color: #bbb;
+	font-size: 10px;
+	padding: 3px 8px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.tn_btn_preset:hover {
+	background: rgba(248, 28, 229, 0.15);
+	border-color: var(--tn-accent);
+	color: #fff;
+}
+
+.tn_steps_container {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-height: 180px;
+	overflow-y: auto;
+	background: #0d0d0d;
+	border: 1px solid #222;
+	border-radius: 4px;
+	padding: 8px;
+}
+
+.tn_step_item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	background: #141414;
+	border: 1px solid #262626;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-size: 11px;
+}
+
+.tn_step_header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tn_phase_badge {
+	font-weight: bold;
+	font-size: 9px;
+	padding: 1px 5px;
+	border-radius: 3px;
+	text-transform: uppercase;
+}
+
+.tn_phase_think {
+	background: rgba(156, 39, 176, 0.2);
+	color: #ba68c8;
+	border: 1px solid #ba68c8;
+}
+
+.tn_phase_act {
+	background: rgba(33, 150, 243, 0.2);
+	color: #64b5f6;
+	border: 1px solid #64b5f6;
+}
+
+.tn_phase_observe {
+	background: rgba(76, 175, 80, 0.2);
+	color: #81c784;
+	border: 1px solid #81c784;
+}
+
+.tn_step_thought {
+	color: #ddd;
+	font-size: 11px;
+}
+
+.tn_step_result {
+	color: #888;
+	font-family: var(--tn-term-font);
+	font-size: 10px;
+	white-space: pre-wrap;
+	word-break: break-all;
+	margin-top: 2px;
+	background: #080808;
+	padding: 4px 6px;
+	border-radius: 3px;
+}

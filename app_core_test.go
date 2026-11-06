@@ -39,6 +39,35 @@ func TestAgentHarnessLifecycle(t *testing.T) {
 	}
 }
 
+func TestAgentAutonomousMCPToolUse(t *testing.T) {
+	agent := NewAgentHarness()
+	mcp := NewMCPAggregator()
+	agent.SetMCPAggregator(mcp)
+
+	// Dispatch an autonomous command requiring MCP tool use
+	res := agent.ExecuteCommand("scan_sessions")
+	if res["status"] == "" {
+		t.Error("expected non-empty status")
+	}
+
+	time.Sleep(50 * time.Millisecond)
+	steps := agent.GetExecutionSteps()
+	if len(steps) < 3 {
+		t.Fatalf("expected at least 3 steps (Think, Act, Observe), got %d", len(steps))
+	}
+
+	foundAct := false
+	for _, s := range steps {
+		if s.Phase == "ACT" && s.Tool == "session_list" {
+			foundAct = true
+			break
+		}
+	}
+	if !foundAct {
+		t.Error("expected ACT step with session_list tool")
+	}
+}
+
 func TestMCPAggregatorTools(t *testing.T) {
 	agg := NewMCPAggregator()
 	if agg == nil {
@@ -78,8 +107,8 @@ func TestAppServerStatusAndTray(t *testing.T) {
 	app.sessions = NewSessionManager()
 
 	status := app.GetServerStatus()
-	if status.Version != "1.0.0" {
-		t.Errorf("expected version 1.0.0, got: %s", status.Version)
+	if status.Version != "1.1.0" {
+		t.Errorf("expected version 1.1.0, got: %s", status.Version)
 	}
 	if status.MCPServerPort != 8080 {
 		t.Errorf("expected port 8080, got: %d", status.MCPServerPort)

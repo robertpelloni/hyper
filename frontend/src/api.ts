@@ -262,3 +262,10 @@ export async function mcpGetToolExecutionHistory(): Promise<ToolExecutionRecord[
 	} catch {}
 	return [];
 }
+
+export async function agentGetExecutionSteps(): Promise<AgentExecutionStep[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.GetExecutionSteps) {
+		return (window as any).go.main.AgentHarness.GetExecutionSteps();
+	}
+	return [];
+}

@@ -28,7 +28,7 @@ if (typeof window !== "undefined") {
 						trayEnabled: true,
 						activeSessions: 1,
 						uptimeSeconds: 42,
-						version: "1.0.0",
+						version: "1.1.0",
 					}),
 					RestartServers: async () => ({ status: "success", error: "" }),
 					StopServers: async () => ({ status: "stopped", error: "" }),
@@ -72,6 +72,32 @@ if (typeof window !== "undefined") {
 					}),
 					GetStatus: async () => ({ status: "idle", running: false, messages: 0 }),
 					HealthCheck: async () => ({ status: "active", running: false, messages: 0 }),
+					GetExecutionSteps: async () => [
+						{
+							id: "step-1",
+							phase: "THINK",
+							thought: "Analyzing environment: scanning registered MCP tools and sessions.",
+							durationMs: 0,
+							timestamp: Date.now() - 3000,
+						},
+						{
+							id: "step-2",
+							phase: "ACT",
+							tool: "session_list",
+							thought: "Querying active terminal sessions from Go core.",
+							durationMs: 0,
+							timestamp: Date.now() - 2000,
+						},
+						{
+							id: "step-3",
+							phase: "OBSERVE",
+							tool: "session_list",
+							thought: "Observed 1 active PTY session. Terminal state healthy.",
+							result: "{count: 1, shell: '/bin/bash'}",
+							durationMs: 8,
+							timestamp: Date.now() - 1000,
+						},
+					],
 				},
 				MCPAggregator: {
 					ListTools: async () => [
@@ -89,7 +115,7 @@ if (typeof window !== "undefined") {
 						args,
 						result: "Executed successfully in TormentNexus",
 					}),
-					GetTelemetry: async () => ({ status: "active", active_tools: 5, servers: 1, version: "1.0.0" }),
+					GetTelemetry: async () => ({ status: "active", active_tools: 5, servers: 1, version: "1.1.0" }),
 					GetToolExecutionHistory: async () => [
 						{ tool: "shell_execute", statusCode: 200, durationMs: 18, timestamp: Date.now() - 5000, success: true, status: "executed" },
 						{ tool: "file_read", statusCode: 200, durationMs: 12, timestamp: Date.now() - 4000, success: true, status: "executed" },
