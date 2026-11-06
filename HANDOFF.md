@@ -17,6 +17,12 @@
    - Sanitized `build.bat` and `start.bat` to eliminate legacy branding.
    - Created modern cross-platform executable scripts `build.sh` and `start.sh`.
 
-4. **Testing and Verification:**
-   - Added unit test suite in `app_core_test.go` covering AgentHarness, MCPAggregator, and App server/tray status.
-   - Verified that `go test ./...` passes cleanly and all frontend/Go builds succeed.
+4. **Autonomous Agent Workflows & Real-Time Monitoring:**
+   - Connected `AgentHarness` directly to `MCPAggregator` to execute Think-Act-Observe reasoning loops.
+   - Streamed reasoning step telemetry (`AgentExecutionStep`) in real-time to the dashboard via `agent:step` events.
+   - Implemented real-time MCP Tool Monitor displaying per-tool status pills (`200 OK`), average latencies, and mini history bar charts.
+   - Added keyboard navigation shortcuts (`Esc` to return to terminal, `Ctrl+Enter` to run tools, `Enter` to dispatch directives).
+
+5. **Testing and Verification:**
+   - Added unit test suite in `app_core_test.go` covering AgentHarness, MCPAggregator, App server/tray status, and autonomous tool invocation.
+   - Verified that `go test ./...` passes cleanly, the frontend builds successfully in ~4s, and full UI screenshots confirm flawless rendering.

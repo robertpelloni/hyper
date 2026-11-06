@@ -100,6 +100,19 @@ export default function Dashboard({
 		};
 	}, [refreshStatus]);
 
+	// Global keyboard shortcuts (Escape to close dashboard)
+	useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === "Escape") {
+				onCloseDashboard();
+			}
+		};
+		window.addEventListener("keydown", handleKeyDown);
+		return () => {
+			window.removeEventListener("keydown", handleKeyDown);
+		};
+	}, [onCloseDashboard]);
+
 	// Agent Controls
 	const handleAgentStart = async () => {
 		try {
@@ -233,9 +246,10 @@ export default function Dashboard({
 						<button
 							className="tn_btn tn_btn_primary"
 							onClick={onCloseDashboard}
-							title="Return to full-screen terminal"
+							title="Return to full-screen terminal (Esc)"
+							aria-label="Return to full-screen terminal"
 						>
-							Return to Terminal ⏎
+							Return to Terminal ⏎ <span style={{ opacity: 0.7, fontSize: "11px", marginLeft: "4px" }}>(Esc)</span>
 						</button>
 					</div>
 				</div>
@@ -426,6 +440,7 @@ export default function Dashboard({
 									handleAgentExec();
 								}}
 								className="tn_agent_input_form"
+								aria-label="Autonomous agent directive dispatch form"
 							>
 								<input
 									type="text"
@@ -433,11 +448,16 @@ export default function Dashboard({
 									placeholder="Dispatch directive to autonomous agent (e.g., scan_sessions, check_config)..."
 									value={agentCommand}
 									onChange={(e) => setAgentCommand(e.target.value)}
+									aria-label="Agent directive command"
 								/>
-								<button type="submit" className="tn_btn tn_btn_primary">
-									Dispatch
+								<button type="submit" className="tn_btn tn_btn_primary" aria-label="Dispatch directive">
+									Dispatch ⏎
 								</button>
 							</form>
+							<div style={{ fontSize: "10px", color: "#666", marginTop: "4px", display: "flex", justifyContent: "space-between" }}>
+								<span>💡 Tip: Press Enter to dispatch. Select presets above for instant agent workflows.</span>
+								<span>Autopilot Mode: {agentRunning ? "ACTIVE" : "STANDBY"}</span>
+							</div>
 						</div>
 					</div>
 
@@ -533,13 +553,20 @@ export default function Dashboard({
 							<div className="tn_form_group">
 								<label className="tn_label">
 									Arguments (JSON):
-									<Tooltip text="JSON payload conforming to the tool's input schema." />
+									<Tooltip text="JSON payload conforming to the tool's input schema. Press Ctrl+Enter to execute." />
 								</label>
 								<textarea
 									className="tn_textarea"
 									rows={2}
 									value={toolArgs}
 									onChange={(e) => setToolArgs(e.target.value)}
+									onKeyDown={(e) => {
+										if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+											e.preventDefault();
+											handleRunTool();
+										}
+									}}
+									aria-label="Tool Arguments JSON"
 								/>
 							</div>
 
@@ -547,9 +574,10 @@ export default function Dashboard({
 								<button
 									className="tn_btn tn_btn_primary"
 									onClick={handleRunTool}
-									title="Invoke tool via MCP backend"
+									title="Invoke tool via MCP backend (Ctrl+Enter)"
+									aria-label="Run MCP Tool"
 								>
-									⚡ Run Tool
+									⚡ Run Tool <span style={{ opacity: 0.7, fontSize: "11px", marginLeft: "4px" }}>(Ctrl+Enter)</span>
 								</button>
 							</div>
 
