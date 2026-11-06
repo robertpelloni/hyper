@@ -23,14 +23,15 @@ type AgentExecutionStep struct {
 
 // AgentHarness implements the autonomous agent execution loop with MCP tool use
 type AgentHarness struct {
-	messages []string
-	steps    []AgentExecutionStep
-	status   string
-	mu       sync.RWMutex
-	running  bool
-	cancel   context.CancelFunc
-	mcp      *MCPAggregator
-	runtime  *App
+	messages   []string
+	steps      []AgentExecutionStep
+	status     string
+	iterations int64
+	mu         sync.RWMutex
+	running    bool
+	cancel     context.CancelFunc
+	mcp        *MCPAggregator
+	runtime    *App
 }
 
 func NewAgentHarness() *AgentHarness {
@@ -63,11 +64,12 @@ func (ah *AgentHarness) ExecuteCommand(command string) map[string]interface{} {
 		ah.mu.RLock()
 		defer ah.mu.RUnlock()
 		return map[string]interface{}{
-			"status":    ah.status,
-			"messages":  len(ah.messages),
-			"steps":     len(ah.steps),
-			"running":   ah.running,
-			"timestamp": time.Now().UnixMilli(),
+			"status":     ah.status,
+			"messages":   len(ah.messages),
+			"steps":      len(ah.steps),
+			"running":    ah.running,
+			"iterations": ah.iterations,
+			"timestamp":  time.Now().UnixMilli(),
 		}
 	case "start":
 		ah.mu.Lock()
@@ -117,6 +119,9 @@ func (ah *AgentHarness) ExecuteCommand(command string) map[string]interface{} {
 
 func (ah *AgentHarness) executeDirective(directive string) {
 	startTime := time.Now()
+	ah.mu.Lock()
+	ah.iterations++
+	ah.mu.Unlock()
 
 	// 1. THINK
 	thinkStep := AgentExecutionStep{
@@ -204,10 +209,11 @@ func (ah *AgentHarness) GetStatus() map[string]interface{} {
 	defer ah.mu.RUnlock()
 
 	return map[string]interface{}{
-		"status":   ah.status,
-		"running":  ah.running,
-		"messages": len(ah.messages),
-		"steps":    len(ah.steps),
+		"status":     ah.status,
+		"running":    ah.running,
+		"messages":   len(ah.messages),
+		"steps":      len(ah.steps),
+		"iterations": ah.iterations,
 	}
 }
 
@@ -217,12 +223,13 @@ func (ah *AgentHarness) HealthCheck() map[string]interface{} {
 	defer ah.mu.RUnlock()
 
 	return map[string]interface{}{
-		"status":   "active",
-		"running":  ah.running,
-		"uptime":   time.Now().UnixMilli(),
-		"messages": len(ah.messages),
-		"steps":    len(ah.steps),
-		"version":  "1.1.0",
+		"status":     "active",
+		"running":    ah.running,
+		"uptime":     time.Now().UnixMilli(),
+		"messages":   len(ah.messages),
+		"steps":      len(ah.steps),
+		"iterations": ah.iterations,
+		"version":    "1.1.0",
 	}
 }
 

@@ -621,7 +621,20 @@ export default function Dashboard({
 
 							{toolOutput && (
 								<div className="tn_tool_output">
-									<div className="tn_output_header">Invocation Result:</div>
+									<div className="tn_output_header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+										<span>Invocation Result:</span>
+										<button
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={() => {
+												setAgentCommand(`Analyze MCP tool result for '${selectedTool}': ${toolOutput.slice(0, 150)}`);
+												showFeedback("Piped tool result to Agent directive input", "info");
+											}}
+											title="Pipe this output into autonomous agent directive input"
+											aria-label="Send result to autonomous agent"
+										>
+											🤖 Send to Agent Directive
+										</button>
+									</div>
 									<pre className="tn_output_pre">{toolOutput}</pre>
 								</div>
 							)}
