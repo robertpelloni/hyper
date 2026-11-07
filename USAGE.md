@@ -28,21 +28,36 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 
 ### Key Mission Control Capabilities:
 1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.
-2. **Autonomous Agent Control Panel:** Start or stop the Think-Act-Observe background agent cycle, perform diagnostic health checks, execute preset autonomous workflows (`⚡ Scan Sessions`, `⚙ Inspect Config`, `📊 Query Status`), or dispatch freeform directives with live reasoning step telemetry streaming.
+2. **Autonomous Agent Control Panel:**
+   - **Real-Time Status Indicator:** Displays pulsating real-time status (`● RUNNING` in emerald green or `○ IDLE` in muted grey).
+   - **Preset Autonomous Workflows:** One-click shortcuts for `⚡ Scan Sessions`, `⚙ Inspect Config`, and `📊 Query Status`.
+   - **Think-Act-Observe Step Feed:** Streams color-coded reasoning step badges (`PLAN` in indigo, `THINK` in purple, `ACT` in blue, `OBSERVE` in green, `REFLECT` in amber) with per-step latency and tool identifiers.
+   - **Autonomous Task Queue:** Queue sequential directives via the **➕ Queue Task** action. Review pending tasks as badges and remove individual items on demand with the inline `✕` button or clear all with **Clear Queue**.
 3. **Model Context Protocol (MCP) Tool Monitor:** Inspect per-tool performance telemetry with average latency metrics, HTTP status codes (`200 OK`), mini execution bar graphs, and an interactive test harness:
-   - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template (e.g. `{"command": "echo Hello"}` for `shell_execute`, `{"path": "VERSION.md"}` for `file_read`).
-   - **Keyboard Trigger:** Execute tools instantly via `Ctrl+Enter`.
+   - **Real-Time Search & Filtering:** Search tools by name or description using the live search filter box.
+   - **Status Tabs:** Filter the tool list by status: **All**, **Success** (`200 OK`), or **Error** (`500 / 4xx`).
+   - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template with inline description hints.
+   - **Client-Side Syntax Validation:** Real-time JSON validation with red border highlighting and actionable error alerts when syntax is invalid.
+   - **Utility Actions:** **✨ Format JSON** to clean indentation and **↺ Reset Template** to restore default parameters.
+   - **Structured Error Recovery:** If an invocation fails or returns an error (such as `TOOL_NOT_FOUND`, `INVALID_ARGUMENTS`, or `PAYLOAD_TOO_LARGE`), a structured error callout appears displaying the error code badge, with one-click **📋 Copy Error** and **🔄 Reset & Retry** controls.
    - **Interactive Piping:** Use the **🤖 Send to Agent Directive** button to forward invocation results directly into the Autonomous Agent harness for automated analysis.
 4. **Terminal Session Orchestration:** View all active shell processes (Shell type, PID, UID), focus on a selected terminal tab, or safely terminate sessions.
 5. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.
 6. **Universal Tooltips:** Hover over any `?` marker for contextual guidance and tips across all inputs and telemetry cards.
+7. **Quick-Access Shortcuts Footer:** At the bottom of Mission Control, access the persistent keyboard shortcuts bar:
+   - `Esc`: Return to Shell
+   - `Ctrl+Shift+D`: Toggle Dashboard
+   - `Ctrl+Enter`: Run Selected Tool
+   - `Enter`: Dispatch Agent Directive
 
-## Autonomous Agent Workflows (Think-Act-Observe)
+## Autonomous Agent Workflows (Multi-Phase Reasoning)
 
-The Autonomous Agent Harness operates a structured reasoning loop:
-- **THINK:** Analyzes incoming directives, scans available environment resources, and determines optimal actions.
-- **ACT:** Invokes registered MCP tools (such as `scan_sessions`, `session_list`, `config_get`, or `shell_execute`) with specific structured arguments.
-- **OBSERVE:** Ingests tool execution results, measures elapsed duration, updates internal state, and streams step telemetry via `agent:step` events.
+The Autonomous Agent Harness operates a structured 5-phase cognitive loop:
+- **PLAN:** Synthesizes high-level strategy and objective decomposition.
+- **THINK:** Analyzes environmental context, registered MCP tools, and argument parameters.
+- **ACT:** Dispatches execution to the target tool (`shell_execute`, `session_list`, `config_get`, etc.).
+- **OBSERVE:** Ingests output payload, computes duration, and checks output validity.
+- **REFLECT:** Confirms goal resolution and evaluates whether follow-up tasks are required.
 
 ### Preset Workflow Directives:
 - `scan_sessions`: Dispatches an autonomous query to inspect all active PTY terminal sessions and tab contexts.
