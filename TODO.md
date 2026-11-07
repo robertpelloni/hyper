@@ -10,6 +10,9 @@
 - [x] Stream real-time `agent:step` telemetry and display phase badges in Dashboard.
 - [x] Implement MCP tool performance cards with latency tracking and mini history bar charts.
 - [x] Add one-click argument template pre-population and "Send to Agent Directive" result piping.
+- [x] Add real-time client-side JSON syntax validation and inline error display for tool runner.
+- [x] Implement Format JSON and Reset Template utility actions in Mission Control.
+- [x] Harden Go MCP server with 1MB payload limits and structured error codes (413, 400, 404).
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

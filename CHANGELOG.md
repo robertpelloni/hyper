@@ -12,6 +12,8 @@
 - **Autonomous Agent Think-Act-Observe Workflows:** Autonomous MCP tool invocation and reasoning step streaming (`agent:step`) in real-time.
 - **Real-Time MCP Tool Monitor:** Per-tool performance cards tracking average latency, HTTP status codes (`200 OK`), and execution history bar graphs.
 - **Enhanced Ergonomics & Keyboard Navigation:** Support for `Esc` dashboard toggle, `Ctrl+Enter` tool execution, and informative inline workflow tips.
+- **Client-Side JSON Validation & Formatting:** Real-time syntax checking on tool argument payloads with inline error highlighting, disabled run state on invalid syntax, 'Format JSON', and 'Reset Template' convenience actions.
+- **MCP Server Hardening & Structured Errors:** 1MB body limit enforcement on POST `/call` requests (`PAYLOAD_TOO_LARGE` 413), non-empty tool validation (`EMPTY_TOOL_NAME` 400), `TOOL_NOT_FOUND` (404), and `INVALID_ARGUMENTS` (400) structured JSON responses.
 
 ## [1.0.0] - 2026-06-05
 ### Added

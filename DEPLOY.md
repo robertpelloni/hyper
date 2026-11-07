@@ -45,10 +45,10 @@ go build -o bin/tormentnexus-mcp ./cmd/tormentnexus
 ## System Tray & Server Control
 - **Mission Control UI:** Click the `⚡ Dashboard` button in the header or `Ctrl+Shift+D` to open Mission Control.
 - **Server Shutdown:** Use the "Stop All Servers" or "Clean Shutdown & Exit" buttons in Mission Control, or the desktop application menu.
-- **HTTP Endpoints:**
-  - `GET http://localhost:8080/tools` - List registered MCP tools.
-  - `POST http://localhost:8080/call` - Execute a tool with `{ "name": "...", "arguments": { ... } }`.
-  - `GET http://localhost:8080/history` - Retrieve execution history buffer and latency metrics.
+- **HTTP Endpoints & Resilience:**
+  - `GET http://localhost:8080/tools` - List registered MCP tools and JSON schemas.
+  - `POST http://localhost:8080/call` - Execute a tool with `{ "name": "...", "arguments": { ... } }`. Incoming requests are capped at 1MB to prevent memory exhaustion; returns structured error codes (`PAYLOAD_TOO_LARGE`, `INVALID_ARGUMENTS`, `EMPTY_TOOL_NAME`, `TOOL_NOT_FOUND`).
+  - `GET http://localhost:8080/history` - Retrieve execution history buffer and latency metrics (last 100 entries).
 
 ## Onboarding & First-Run Diagnostics
 On initial launch, Mission Control displays the interactive **Quick-Start & Onboarding Guide** banner. Users can verify their environment in three automated steps:

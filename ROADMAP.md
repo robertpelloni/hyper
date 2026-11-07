@@ -17,6 +17,7 @@
 - [x] Autonomous Think-Act-Observe reasoning loop with live `agent:step` telemetry.
 - [x] Real-time MCP tool performance monitoring (latency, 200 OK status, mini history bar charts).
 - [x] Interactive argument templates and "Send to Agent Directive" result piping.
+- [x] Robust MCP error handling, client-side real-time syntax checking, and 1MB request limits.
 
 ## Phase 3: Autonomous Agent Extensions & Multi-Language Swarm (In Progress)
 - [ ] Multi-language core parity across 5 languages (TypeScript, Rust, Go, C#, Java).

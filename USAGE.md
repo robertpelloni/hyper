@@ -54,14 +54,51 @@ The Autonomous Agent Harness operates a structured reasoning loop:
 ### 1. Interactive Tool Result Piping
 You can chain MCP tool execution results directly into the Autonomous Agent loop. After executing any tool in the MCP Tool Monitor, click **🤖 Send to Agent Directive** in the output panel. This automatically populates the agent directive with the tool output, prompting the LLM harness to analyze, format, or take autonomous follow-up actions.
 
-### 2. Standalone MCP Server Execution
+### 2. MCP Tool Validation & Error Handling
+To prevent invalid tool invocations and provide robust error handling:
+- **Client-Side Real-Time Syntax Validation:** As you edit JSON arguments in Mission Control, syntax is validated in real time. If a syntax error is introduced (e.g. missing comma or unclosed brace), the input highlights in red and displays an explanatory warning box with the parser error. The **⚡ Run Tool** button is disabled until valid JSON is restored.
+- **✨ Format JSON Utility:** Automatically formats and indents the JSON arguments for readability.
+- **↺ Reset Template Utility:** Instantly restores the default argument schema for the currently selected tool.
+- **Execution Safety Timeout:** Client-side tool invocations include a 15-second timeout guard to prevent UI lockup in the event of unresponsive external tools.
+
+### 3. Standalone MCP Server Execution & API Reference
 The Go core backend can be run as a lightweight standalone Model Context Protocol server over HTTP:
 ```bash
 ./start.sh
-# Endpoints available:
-# GET  http://localhost:8080/tools   - List registered tools
-# POST http://localhost:8080/call    - Invoke tool with JSON payload {"name": "...", "arguments": {...}}
-# GET  http://localhost:8080/history - Retrieve execution metrics and response latencies
+# Server starts on http://localhost:8080
+```
+
+#### Available Endpoints:
+- `GET http://localhost:8080/tools`: Returns JSON array of all registered MCP tools and schemas.
+- `POST http://localhost:8080/call`: Executes a tool with structured JSON payload:
+  ```json
+  {
+    "name": "shell_execute",
+    "arguments": {
+      "command": "echo Hello from TormentNexus"
+    }
+  }
+  ```
+- `GET http://localhost:8080/history`: Returns execution metrics (capped at the last 100 calls) including duration in milliseconds and HTTP status codes.
+
+#### Structured Error Codes & HTTP Status:
+The Go MCP backend enforces rigorous validation and returns structured JSON error responses:
+| HTTP Status | Error Code | Description |
+|:---|:---|:---|
+| **413 Request Entity Too Large** | `PAYLOAD_TOO_LARGE` | Incoming request payload exceeds the 1MB safety limit. |
+| **400 Bad Request** | `INVALID_ARGUMENTS` | Payload body is malformed or invalid JSON. |
+| **400 Bad Request** | `EMPTY_TOOL_NAME` | The `name` field in the request was empty or omitted. |
+| **404 Not Found** | `TOOL_NOT_FOUND` | The requested tool name is not registered in the MCP Hub. |
+
+Example Error Response:
+```json
+{
+  "error": "Tool not found",
+  "errorCode": "TOOL_NOT_FOUND",
+  "statusCode": 404,
+  "status": "failed",
+  "tool": "unknown_tool"
+}
 ```
 
 ## Keyboard Shortcuts
