@@ -1045,8 +1045,26 @@ body,
 	border: 1px solid #262626;
 	border-radius: 4px;
 	padding: 10px;
-	max-height: 120px;
+	max-height: 140px;
 	overflow-y: auto;
+	transition: border-color 0.2s;
+}
+
+.tn_tool_output_error {
+	background: #1a0f0f;
+	border: 1px solid #7f1d1d;
+}
+
+.tn_err_code_badge {
+	background: #7f1d1d;
+	border: 1px solid #b91c1c;
+	color: #fca5a5;
+	font-size: 9px;
+	font-family: monospace;
+	font-weight: bold;
+	padding: 1px 5px;
+	border-radius: 3px;
+	letter-spacing: 0.5px;
 }
 
 .tn_output_header {

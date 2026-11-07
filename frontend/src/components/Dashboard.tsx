@@ -47,6 +47,7 @@ export default function Dashboard({
 	const [selectedTool, setSelectedTool] = useState<string>("shell_execute");
 	const [toolArgs, setToolArgs] = useState('{"command": "echo Hello from TormentNexus"}');
 	const [toolOutput, setToolOutput] = useState<string>("");
+	const [toolErrorState, setToolErrorState] = useState<{ isError: boolean; errorCode?: string; message?: string } | null>(null);
 	const [executionHistory, setExecutionHistory] = useState<ToolExecutionRecord[]>([]);
 	const [jsonValidationError, setJsonValidationError] = useState<string | null>(null);
 	const [isInvokingTool, setIsInvokingTool] = useState<boolean>(false);
@@ -285,16 +286,22 @@ export default function Dashboard({
 		try {
 			const callPromise = api.mcpCallTool(selectedTool, parsed);
 			const result: any = await Promise.race([callPromise, timeoutPromise]);
-			setToolOutput(JSON.stringify(result, null, 2));
-			if (result && result.error) {
-				showFeedback(`Tool returned error: ${result.error}`, "error");
+			const resStr = JSON.stringify(result, null, 2);
+			setToolOutput(resStr);
+			if (result && (result.error || result.status === "error" || result.statusCode >= 400)) {
+				const code = result.errorCode || (result.statusCode ? `HTTP_${result.statusCode}` : "EXECUTION_ERROR");
+				const msg = result.error || result.message || "Tool execution failed";
+				setToolErrorState({ isError: true, errorCode: code, message: msg });
+				showFeedback(`Tool returned error [${code}]: ${msg}`, "error");
 			} else {
+				setToolErrorState(null);
 				showFeedback(`Successfully executed tool: ${selectedTool}`, "success");
 			}
 			refreshStatus();
 		} catch (err: any) {
 			const errorMsg = err.message || String(err);
 			setToolOutput(`Execution failed:\n${errorMsg}`);
+			setToolErrorState({ isError: true, errorCode: "INVOCATION_EXCEPTION", message: errorMsg });
 			showFeedback(`Tool execution failed: ${errorMsg}`, "error");
 		} finally {
 			setIsInvokingTool(false);
@@ -978,20 +985,50 @@ export default function Dashboard({
 							</div>
 
 							{toolOutput && (
-								<div className="tn_tool_output">
+								<div className={`tn_tool_output ${toolErrorState ? "tn_tool_output_error" : ""}`}>
 									<div className="tn_output_header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-										<span>Invocation Result:</span>
-										<button
-											className="tn_btn tn_btn_small tn_btn_secondary"
-											onClick={() => {
-												setAgentCommand(`Analyze MCP tool result for '${selectedTool}': ${toolOutput.slice(0, 150)}`);
-												showFeedback("Piped tool result to Agent directive input", "info");
-											}}
-											title="Pipe this output into autonomous agent directive input"
-											aria-label="Send result to autonomous agent"
-										>
-											🤖 Send to Agent Directive
-										</button>
+										<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+											<span>Invocation Result:</span>
+											{toolErrorState && (
+												<span className="tn_err_code_badge">
+													{toolErrorState.errorCode || "ERROR"}
+												</span>
+											)}
+										</div>
+										<div style={{ display: "flex", gap: "6px" }}>
+											{toolErrorState && (
+												<>
+													<button
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														onClick={() => {
+															navigator.clipboard?.writeText(toolOutput);
+															showFeedback("Copied error output to clipboard", "info");
+														}}
+														title="Copy error output"
+													>
+														📋 Copy Error
+													</button>
+													<button
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														onClick={handleResetTemplate}
+														title="Reset arguments to default template"
+													>
+														🔄 Reset & Retry
+													</button>
+												</>
+											)}
+											<button
+												className="tn_btn tn_btn_small tn_btn_secondary"
+												onClick={() => {
+													setAgentCommand(`Analyze MCP tool result for '${selectedTool}': ${toolOutput.slice(0, 150)}`);
+													showFeedback("Piped tool result to Agent directive input", "info");
+												}}
+												title="Pipe this output into autonomous agent directive input"
+												aria-label="Send result to autonomous agent"
+											>
+												🤖 Send to Agent Directive
+											</button>
+										</div>
 									</div>
 									<pre className="tn_output_pre">{toolOutput}</pre>
 								</div>
