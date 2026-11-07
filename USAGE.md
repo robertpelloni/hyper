@@ -21,10 +21,10 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 
 - **Toggle Mission Control:** Press `Ctrl+Shift+D` or click the **⚡ Dashboard** button in the top header.
 - **Return to Terminal:** Click **Return to Terminal ⏎**, press `Esc`, or toggle the dashboard button.
-- **Quick-Start Onboarding Guide:** Accessible at the top of Mission Control (or via the **📖 Quick-Start Guide** header button if dismissed). Walk through 3 key steps:
-  1. Triggering autonomous agent presets (`⚡ Scan Sessions`, `⚙ Inspect Config`).
-  2. Executing MCP tools with automatic JSON argument templates.
-  3. Piping tool results directly into autonomous agent directive inputs.
+- **Interactive Quick-Start Onboarding Guide:** Accessible at the top of Mission Control (or via the **📖 Quick-Start Guide** header button if dismissed). Each card is clickable with visual tour guidance:
+  1. **Step 1 (Agent Presets):** Click to pre-fill and focus the directive prompt (`scan_sessions`), then press `Enter` to observe real-time Think-Act-Observe telemetry streaming.
+  2. **Step 2 (MCP Tool Invocation):** Click to select a registered tool (`session_list`, `shell_execute`), pre-populate sample JSON arguments, and press `Ctrl+Enter` to run.
+  3. **Step 3 (Autonomous Result Piping):** Click to pipe any tool output directly into the agent directive field for LLM evaluation and multi-step action.
 
 ### Key Mission Control Capabilities:
 1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.

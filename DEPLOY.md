@@ -56,4 +56,4 @@ On initial launch, Mission Control displays the interactive **Quick-Start & Onbo
 2. Run baseline tool executions (`session_list`, `config_get`, `scan_sessions`) and observe response latency.
 3. Test autonomous Think-Act-Observe workflows using preconfigured agent presets.
 
-The guide banner can be dismissed at any time or reopened via the `ℹ️ Onboarding Guide` button in the header.
+The guide banner can be dismissed at any time or reopened via the `📖 Quick-Start Guide` button in the header. Each step card within the banner is interactive: clicking a step pre-configures presets, tool selections, or result piping directly in the UI with instant visual feedback.

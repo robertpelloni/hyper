@@ -62,6 +62,7 @@ export default function Dashboard({
 
 	// Onboarding Guide banner visibility
 	const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
+	const [activeOnboardingStep, setActiveOnboardingStep] = useState<number | null>(null);
 
 	// Inline toast banner for feedback
 	const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
@@ -327,22 +328,57 @@ export default function Dashboard({
 							</button>
 						</div>
 						<div className="tn_onboarding_steps">
-							<div className="tn_onboarding_step">
+							<div
+								className={`tn_onboarding_step ${activeOnboardingStep === 1 ? "tn_onboarding_step_active" : ""}`}
+								onClick={() => {
+									setActiveOnboardingStep(1);
+									setAgentCommand("scan_sessions");
+									showFeedback("Step 1 Activated: Agent prompt pre-filled with 'scan_sessions'. Click Dispatch to run!", "info");
+								}}
+								style={{ cursor: "pointer" }}
+								title="Click to activate Step 1"
+							>
 								<span className="tn_step_num">1</span>
 								<div className="tn_step_text">
 									<strong>Agent Presets:</strong> Click <code>⚡ Scan Sessions</code> or <code>⚙ Inspect Config</code> to trigger immediate Think-Act-Observe reasoning loops.
+									<div className="tn_step_hint">👉 Click step to pre-fill prompt</div>
 								</div>
 							</div>
-							<div className="tn_onboarding_step">
+							<div
+								className={`tn_onboarding_step ${activeOnboardingStep === 2 ? "tn_onboarding_step_active" : ""}`}
+								onClick={() => {
+									setActiveOnboardingStep(2);
+									setSelectedTool("session_list");
+									setToolArgs("{}");
+									showFeedback("Step 2 Activated: 'session_list' tool selected and arguments initialized.", "info");
+								}}
+								style={{ cursor: "pointer" }}
+								title="Click to activate Step 2"
+							>
 								<span className="tn_step_num">2</span>
 								<div className="tn_step_text">
 									<strong>MCP Tool Invocation:</strong> Click any tool card below to auto-populate arguments, then press <code>Ctrl+Enter</code> or click <strong>⚡ Run Tool</strong>.
+									<div className="tn_step_hint">👉 Click step to select tool</div>
 								</div>
 							</div>
-							<div className="tn_onboarding_step">
+							<div
+								className={`tn_onboarding_step ${activeOnboardingStep === 3 ? "tn_onboarding_step_active" : ""}`}
+								onClick={() => {
+									setActiveOnboardingStep(3);
+									if (toolOutput) {
+										setAgentCommand(`Analyze MCP tool result for '${selectedTool}': ${toolOutput.slice(0, 150)}`);
+										showFeedback(`Piped '${selectedTool}' result into agent directive input!`, "success");
+									} else {
+										showFeedback("Step 3: Run any tool first to pipe results into the Autonomous Agent.", "info");
+									}
+								}}
+								style={{ cursor: "pointer" }}
+								title="Click to activate Step 3"
+							>
 								<span className="tn_step_num">3</span>
 								<div className="tn_step_text">
 									<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze the output.
+									<div className="tn_step_hint">👉 Click step to pipe result</div>
 								</div>
 							</div>
 						</div>

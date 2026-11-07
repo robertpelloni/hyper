@@ -602,6 +602,25 @@ body,
 	display: flex;
 	align-items: flex-start;
 	gap: 10px;
+	transition: all 0.2s ease;
+}
+
+.tn_onboarding_step:hover {
+	border-color: #3498db;
+	background: rgba(52, 152, 219, 0.08);
+}
+
+.tn_onboarding_step_active {
+	border-color: #00e676 !important;
+	background: rgba(0, 230, 118, 0.1) !important;
+	box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+}
+
+.tn_step_hint {
+	margin-top: 4px;
+	font-size: 10px;
+	color: #64b5f6;
+	font-weight: 500;
 }
 
 .tn_step_num {
