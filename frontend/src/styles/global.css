@@ -562,6 +562,80 @@ body,
 	color: #eee;
 }
 
+/* Onboarding Quick-Start Guide Card */
+.tn_onboarding_card {
+	background: linear-gradient(135deg, rgba(30, 30, 45, 0.9), rgba(20, 20, 30, 0.9));
+	border: 1px solid #3d3d5c;
+	border-radius: 8px;
+	padding: 14px 18px;
+	margin-bottom: 16px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tn_onboarding_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.tn_onboarding_title {
+	font-size: 13px;
+	font-weight: 600;
+	color: #64b5f6;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tn_onboarding_steps {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+}
+
+.tn_onboarding_step {
+	background: rgba(0, 0, 0, 0.25);
+	border: 1px solid #2d2d40;
+	border-radius: 6px;
+	padding: 10px 12px;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+}
+
+.tn_step_num {
+	background: #3498db;
+	color: #fff;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 11px;
+	font-weight: bold;
+	flex-shrink: 0;
+}
+
+.tn_step_text {
+	font-size: 11px;
+	line-height: 1.4;
+	color: #ccc;
+}
+
+.tn_step_text strong {
+	color: #fff;
+}
+
+.tn_step_text code {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 1px 4px;
+	border-radius: 3px;
+	color: #64b5f6;
+	font-size: 10px;
+}
+
 /* Toast Feedback Notification Banner */
 .tn_toast_banner {
 	display: flex;

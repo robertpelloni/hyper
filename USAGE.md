@@ -21,6 +21,10 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 
 - **Toggle Mission Control:** Press `Ctrl+Shift+D` or click the **⚡ Dashboard** button in the top header.
 - **Return to Terminal:** Click **Return to Terminal ⏎**, press `Esc`, or toggle the dashboard button.
+- **Quick-Start Onboarding Guide:** Accessible at the top of Mission Control (or via the **📖 Quick-Start Guide** header button if dismissed). Walk through 3 key steps:
+  1. Triggering autonomous agent presets (`⚡ Scan Sessions`, `⚙ Inspect Config`).
+  2. Executing MCP tools with automatic JSON argument templates.
+  3. Piping tool results directly into autonomous agent directive inputs.
 
 ### Key Mission Control Capabilities:
 1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.
@@ -44,6 +48,21 @@ The Autonomous Agent Harness operates a structured reasoning loop:
 - `scan_sessions`: Dispatches an autonomous query to inspect all active PTY terminal sessions and tab contexts.
 - `check_config`: Inspects current configuration options, terminal font sizing, and shell defaults.
 - `status`: Queries the agent harness health and server runtime status.
+
+## Advanced Features & Tool Piping
+
+### 1. Interactive Tool Result Piping
+You can chain MCP tool execution results directly into the Autonomous Agent loop. After executing any tool in the MCP Tool Monitor, click **🤖 Send to Agent Directive** in the output panel. This automatically populates the agent directive with the tool output, prompting the LLM harness to analyze, format, or take autonomous follow-up actions.
+
+### 2. Standalone MCP Server Execution
+The Go core backend can be run as a lightweight standalone Model Context Protocol server over HTTP:
+```bash
+./start.sh
+# Endpoints available:
+# GET  http://localhost:8080/tools   - List registered tools
+# POST http://localhost:8080/call    - Invoke tool with JSON payload {"name": "...", "arguments": {...}}
+# GET  http://localhost:8080/history - Retrieve execution metrics and response latencies
+```
 
 ## Keyboard Shortcuts
 

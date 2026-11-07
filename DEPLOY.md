@@ -48,3 +48,12 @@ go build -o bin/tormentnexus-mcp ./cmd/tormentnexus
 - **HTTP Endpoints:**
   - `GET http://localhost:8080/tools` - List registered MCP tools.
   - `POST http://localhost:8080/call` - Execute a tool with `{ "name": "...", "arguments": { ... } }`.
+  - `GET http://localhost:8080/history` - Retrieve execution history buffer and latency metrics.
+
+## Onboarding & First-Run Diagnostics
+On initial launch, Mission Control displays the interactive **Quick-Start & Onboarding Guide** banner. Users can verify their environment in three automated steps:
+1. Verify MCP Server connectivity and telemetry on port 8080.
+2. Run baseline tool executions (`session_list`, `config_get`, `scan_sessions`) and observe response latency.
+3. Test autonomous Think-Act-Observe workflows using preconfigured agent presets.
+
+The guide banner can be dismissed at any time or reopened via the `ℹ️ Onboarding Guide` button in the header.

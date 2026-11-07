@@ -60,6 +60,9 @@ export default function Dashboard({
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
 	const [cursorShape, setCursorShape] = useState<string>(config.cursorShape || "BLOCK");
 
+	// Onboarding Guide banner visibility
+	const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
+
 	// Inline toast banner for feedback
 	const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
 
@@ -277,10 +280,21 @@ export default function Dashboard({
 				<div className="tn_dashboard_header">
 					<div className="tn_dashboard_title_group">
 						<span className="tn_dashboard_title">TormentNexus Mission Control</span>
-						<span className="tn_version_badge">v{serverStatus.version}</span>
+						<span className="tn_version_badge">v{serverStatus.version || "1.1.0"}</span>
 						<Tooltip text="Unified Mission Control brings together Autonomous Agent management, Model Context Protocol (MCP) tooling, terminal session controls, and server lifecycle in one singular high-value dashboard." />
 					</div>
 					<div className="tn_dashboard_actions">
+						{!showOnboarding && (
+							<button
+								className="tn_btn tn_btn_secondary"
+								onClick={() => setShowOnboarding(true)}
+								style={{ marginRight: "8px" }}
+								title="Show Quick-Start Onboarding Guide"
+								aria-label="Show onboarding guide"
+							>
+								📖 Quick-Start Guide
+							</button>
+						)}
 						<button
 							className="tn_btn tn_btn_primary"
 							onClick={onCloseDashboard}
@@ -291,6 +305,49 @@ export default function Dashboard({
 						</button>
 					</div>
 				</div>
+
+				{/* Quick-Start & Onboarding Guide Card */}
+				{showOnboarding && (
+					<div className="tn_onboarding_card" role="region" aria-label="Quick-Start Onboarding Guide">
+						<div className="tn_onboarding_header">
+							<div className="tn_onboarding_title">
+								🚀 Welcome to TormentNexus — Quick-Start Onboarding Guide
+								<Tooltip text="Follow these 3 simple steps to master autonomous agent operations and MCP tooling." />
+							</div>
+							<button
+								className="tn_toast_close"
+								onClick={() => {
+									setShowOnboarding(false);
+									showFeedback("Onboarding guide dismissed. Click '📖 Quick-Start Guide' in the header anytime to view again.", "info");
+								}}
+								aria-label="Dismiss onboarding guide"
+								title="Dismiss guide"
+							>
+								✕ Dismiss
+							</button>
+						</div>
+						<div className="tn_onboarding_steps">
+							<div className="tn_onboarding_step">
+								<span className="tn_step_num">1</span>
+								<div className="tn_step_text">
+									<strong>Agent Presets:</strong> Click <code>⚡ Scan Sessions</code> or <code>⚙ Inspect Config</code> to trigger immediate Think-Act-Observe reasoning loops.
+								</div>
+							</div>
+							<div className="tn_onboarding_step">
+								<span className="tn_step_num">2</span>
+								<div className="tn_step_text">
+									<strong>MCP Tool Invocation:</strong> Click any tool card below to auto-populate arguments, then press <code>Ctrl+Enter</code> or click <strong>⚡ Run Tool</strong>.
+								</div>
+							</div>
+							<div className="tn_onboarding_step">
+								<span className="tn_step_num">3</span>
+								<div className="tn_step_text">
+									<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze the output.
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 
 				{/* High-Value Telemetry Banner */}
 				<div className="tn_telemetry_banner">
