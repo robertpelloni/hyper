@@ -32,3 +32,52 @@ func TestNewSessionAndWrite(t *testing.T) {
 		t.Fatalf("failed to resize session: %v", err)
 	}
 }
+
+func TestManagerLifecycle(t *testing.T) {
+	sh, err := exec.LookPath("sh")
+	if err != nil {
+		t.Skip("sh not available on system")
+	}
+
+	mgr := NewManager()
+	if mgr.Count() != 0 {
+		t.Errorf("expected 0 sessions initially, got %d", mgr.Count())
+	}
+
+	s1, err := NewSession("sess-1", sh, []string{}, "", 24, 80)
+	if err != nil {
+		t.Fatalf("failed to create session 1: %v", err)
+	}
+	s2, err := NewSession("sess-2", sh, []string{}, "", 24, 80)
+	if err != nil {
+		t.Fatalf("failed to create session 2: %v", err)
+	}
+
+	mgr.AddSession(s1)
+	mgr.AddSession(s2)
+
+	if mgr.Count() != 2 {
+		t.Errorf("expected 2 sessions, got %d", mgr.Count())
+	}
+
+	list := mgr.ListSessions()
+	if len(list) != 2 {
+		t.Errorf("expected 2 session IDs in list, got %d", len(list))
+	}
+
+	retrieved := mgr.GetSession("sess-1")
+	if retrieved == nil || retrieved.ID != "sess-1" {
+		t.Errorf("expected to retrieve sess-1, got %v", retrieved)
+	}
+
+	mgr.RemoveSession("sess-1")
+	_ = s1.Close()
+	if mgr.Count() != 1 {
+		t.Errorf("expected 1 session after removal, got %d", mgr.Count())
+	}
+
+	mgr.CloseAll()
+	if mgr.Count() != 0 {
+		t.Errorf("expected 0 sessions after CloseAll, got %d", mgr.Count())
+	}
+}

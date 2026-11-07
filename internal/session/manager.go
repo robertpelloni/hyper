@@ -71,11 +71,12 @@ func (s *Session) Close() error {
 	s.closed = true
 	s.PTY.Close()
 	if s.Cmd.Process != nil {
-		s.Cmd.Process.Kill()
+		_ = s.Cmd.Process.Kill()
 	}
 	return nil
 }
 
+// Manager orchestrates all local active terminal sessions
 type Manager struct {
 	sessions map[string]*Session
 	mu       sync.RWMutex
@@ -103,4 +104,34 @@ func (m *Manager) RemoveSession(id string) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	delete(m.sessions, id)
+}
+
+// ListSessions returns a slice of all active session IDs
+func (m *Manager) ListSessions() []string {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	res := make([]string, 0, len(m.sessions))
+	for id := range m.sessions {
+		res = append(res, id)
+	}
+	return res
+}
+
+// Count returns the number of active sessions
+func (m *Manager) Count() int {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return len(m.sessions)
+}
+
+// CloseAll terminates all managed sessions safely
+func (m *Manager) CloseAll() {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	for _, sess := range m.sessions {
+		if sess != nil {
+			_ = sess.Close()
+		}
+	}
+	m.sessions = make(map[string]*Session)
 }
