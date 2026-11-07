@@ -974,6 +974,33 @@ body,
 .tn_textarea {
 	font-family: var(--tn-term-font);
 	resize: vertical;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tn_textarea_error {
+	border-color: #f44336 !important;
+	background: #241414 !important;
+	box-shadow: 0 0 6px rgba(244, 67, 54, 0.3);
+}
+
+.tn_validation_error_box {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+	padding: 6px 10px;
+	background: rgba(244, 67, 54, 0.15);
+	border: 1px solid rgba(244, 67, 54, 0.4);
+	border-radius: 4px;
+	color: #ff8a80;
+	font-size: 11px;
+	font-family: monospace;
+}
+
+.tn_btn_disabled {
+	opacity: 0.5;
+	cursor: not-allowed !important;
+	filter: grayscale(0.6);
 }
 
 .tn_flex_1 {

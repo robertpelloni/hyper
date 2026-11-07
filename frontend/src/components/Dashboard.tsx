@@ -47,6 +47,8 @@ export default function Dashboard({
 	const [toolArgs, setToolArgs] = useState('{"command": "echo Hello from TormentNexus"}');
 	const [toolOutput, setToolOutput] = useState<string>("");
 	const [executionHistory, setExecutionHistory] = useState<ToolExecutionRecord[]>([]);
+	const [jsonValidationError, setJsonValidationError] = useState<string | null>(null);
+	const [isInvokingTool, setIsInvokingTool] = useState<boolean>(false);
 
 	const [telemetry, setTelemetry] = useState<MCPTelemetry>({
 		status: "active",
@@ -182,20 +184,88 @@ export default function Dashboard({
 		}
 	};
 
-	// MCP Tool Execution
-	const handleRunTool = async () => {
+	// Real-time JSON validation
+	useEffect(() => {
+		const trimmed = toolArgs.trim();
+		if (!trimmed) {
+			setJsonValidationError(null);
+			return;
+		}
 		try {
-			let parsed = {};
-			if (toolArgs.trim()) {
+			JSON.parse(trimmed);
+			setJsonValidationError(null);
+		} catch (err: any) {
+			setJsonValidationError(err.message || "Invalid JSON syntax");
+		}
+	}, [toolArgs]);
+
+	const defaultTemplates: Record<string, string> = {
+		shell_execute: '{"command": "echo Hello from TormentNexus"}',
+		file_read: '{"path": "VERSION.md"}',
+		file_write: '{"path": "tmp_test.txt", "content": "Hello World"}',
+		agent_status: '{}',
+		session_list: '{}',
+	};
+
+	const handleFormatJson = () => {
+		try {
+			const parsed = JSON.parse(toolArgs.trim() || "{}");
+			setToolArgs(JSON.stringify(parsed, null, 2));
+			setJsonValidationError(null);
+			showFeedback("JSON formatted successfully", "info");
+		} catch (err: any) {
+			showFeedback(`Cannot format: ${err.message}`, "error");
+		}
+	};
+
+	const handleResetTemplate = () => {
+		const tpl = defaultTemplates[selectedTool] || "{}";
+		setToolArgs(tpl);
+		setJsonValidationError(null);
+		showFeedback(`Reset template for '${selectedTool}'`, "info");
+	};
+
+	// MCP Tool Execution with strict validation, timeout, and distinct error states
+	const handleRunTool = async () => {
+		if (jsonValidationError) {
+			showFeedback(`Cannot execute: ${jsonValidationError}`, "error");
+			return;
+		}
+		let parsed = {};
+		if (toolArgs.trim()) {
+			try {
 				parsed = JSON.parse(toolArgs);
+			} catch (err: any) {
+				setJsonValidationError(err.message);
+				showFeedback(`Invalid JSON syntax: ${err.message}`, "error");
+				return;
 			}
-			const result = await api.mcpCallTool(selectedTool, parsed);
+		}
+
+		setIsInvokingTool(true);
+		setToolOutput("Invoking MCP tool, waiting for response...");
+
+		// 15 second client-side safety timeout
+		const timeoutPromise = new Promise((_, reject) => {
+			setTimeout(() => reject(new Error("Tool invocation timed out after 15 seconds")), 15000);
+		});
+
+		try {
+			const callPromise = api.mcpCallTool(selectedTool, parsed);
+			const result: any = await Promise.race([callPromise, timeoutPromise]);
 			setToolOutput(JSON.stringify(result, null, 2));
-			showFeedback(`Successfully executed tool: ${selectedTool}`, "success");
+			if (result && result.error) {
+				showFeedback(`Tool returned error: ${result.error}`, "error");
+			} else {
+				showFeedback(`Successfully executed tool: ${selectedTool}`, "success");
+			}
 			refreshStatus();
 		} catch (err: any) {
-			setToolOutput(`Execution failed: ${err.message || err}`);
-			showFeedback(`Tool execution failed: ${err.message || err}`, "error");
+			const errorMsg = err.message || String(err);
+			setToolOutput(`Execution failed:\n${errorMsg}`);
+			showFeedback(`Tool execution failed: ${errorMsg}`, "error");
+		} finally {
+			setIsInvokingTool(false);
 		}
 	};
 
@@ -708,13 +778,35 @@ export default function Dashboard({
 							</div>
 
 							<div className="tn_form_group">
-								<label className="tn_label">
-									Arguments (JSON):
-									<Tooltip text="JSON payload conforming to the tool's input schema. Press Ctrl+Enter to execute." />
-								</label>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+									<label className="tn_label" style={{ margin: 0 }}>
+										Arguments (JSON):
+										<Tooltip text="JSON payload conforming to the tool's input schema. Press Ctrl+Enter to execute." />
+									</label>
+									<div style={{ display: "flex", gap: "6px" }}>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={handleFormatJson}
+											title="Format JSON payload with indentation"
+											aria-label="Format JSON"
+										>
+											✨ Format JSON
+										</button>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={handleResetTemplate}
+											title="Reset arguments to default template for this tool"
+											aria-label="Reset Template"
+										>
+											↺ Reset Template
+										</button>
+									</div>
+								</div>
 								<textarea
-									className="tn_textarea"
-									rows={2}
+									className={`tn_textarea ${jsonValidationError ? "tn_textarea_error" : ""}`}
+									rows={3}
 									value={toolArgs}
 									onChange={(e) => setToolArgs(e.target.value)}
 									onKeyDown={(e) => {
@@ -724,17 +816,25 @@ export default function Dashboard({
 										}
 									}}
 									aria-label="Tool Arguments JSON"
+									aria-invalid={jsonValidationError ? "true" : "false"}
 								/>
+								{jsonValidationError && (
+									<div className="tn_validation_error_box" role="alert">
+										<span className="tn_error_icon">⚠️</span>
+										<span className="tn_error_text">JSON Syntax Error: {jsonValidationError}</span>
+									</div>
+								)}
 							</div>
 
 							<div className="tn_btn_group">
 								<button
-									className="tn_btn tn_btn_primary"
+									className={`tn_btn tn_btn_primary ${jsonValidationError || isInvokingTool ? "tn_btn_disabled" : ""}`}
 									onClick={handleRunTool}
-									title="Invoke tool via MCP backend (Ctrl+Enter)"
+									disabled={!!jsonValidationError || isInvokingTool}
+									title={jsonValidationError ? "Fix JSON syntax error to run" : "Invoke tool via MCP backend (Ctrl+Enter)"}
 									aria-label="Run MCP Tool"
 								>
-									⚡ Run Tool <span style={{ opacity: 0.7, fontSize: "11px", marginLeft: "4px" }}>(Ctrl+Enter)</span>
+									{isInvokingTool ? "⏳ Invoking..." : "⚡ Run Tool"} <span style={{ opacity: 0.7, fontSize: "11px", marginLeft: "4px" }}>(Ctrl+Enter)</span>
 								</button>
 							</div>
 

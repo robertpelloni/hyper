@@ -2,6 +2,7 @@ package mcp
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"sync"
 	"time"
@@ -68,13 +69,51 @@ func (s *Server) HandleCallTool(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Protect against oversized payloads (limit to 1MB)
+	r.Body = http.MaxBytesReader(w, r.Body, 1048576)
+
 	var req CallToolRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		durationMs := time.Since(startTime).Milliseconds()
-		s.recordExecution("", http.StatusBadRequest, durationMs, false, "bad_request")
+		statusCode := http.StatusBadRequest
+		errorCode := "INVALID_ARGUMENTS"
+		errMsg := "Invalid JSON payload"
+
+		// Check if payload exceeded 1MB limit (*http.MaxBytesError)
+		var maxBytesErr *http.MaxBytesError
+		if errors.As(err, &maxBytesErr) || err.Error() == "http: request body too large" {
+			statusCode = http.StatusRequestEntityTooLarge
+			errorCode = "PAYLOAD_TOO_LARGE"
+			errMsg = "Request payload exceeds 1MB limit"
+		} else {
+			// Also inspect underlying error message if wrapped
+			if errors.Is(err, &http.MaxBytesError{}) || (err != nil && (len(err.Error()) >= 28 && err.Error()[:28] == "http: request body too large")) {
+				statusCode = http.StatusRequestEntityTooLarge
+				errorCode = "PAYLOAD_TOO_LARGE"
+				errMsg = "Request payload exceeds 1MB limit"
+			}
+		}
+
+		s.recordExecution("", statusCode, durationMs, false, errorCode)
+		w.WriteHeader(statusCode)
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"error":      errMsg,
+			"errorCode":  errorCode,
+			"statusCode": statusCode,
+			"status":     "failed",
+		})
+		return
+	}
+
+	if req.Name == "" {
+		durationMs := time.Since(startTime).Milliseconds()
+		s.recordExecution("", http.StatusBadRequest, durationMs, false, "EMPTY_TOOL_NAME")
 		w.WriteHeader(http.StatusBadRequest)
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
-			"error": "Invalid JSON payload",
+			"error":      "Tool name cannot be empty",
+			"errorCode":  "EMPTY_TOOL_NAME",
+			"statusCode": http.StatusBadRequest,
+			"status":     "failed",
 		})
 		return
 	}
@@ -91,12 +130,14 @@ func (s *Server) HandleCallTool(w http.ResponseWriter, r *http.Request) {
 
 	if found == nil {
 		durationMs := time.Since(startTime).Milliseconds()
-		s.recordExecution(req.Name, http.StatusNotFound, durationMs, false, "not_found")
+		s.recordExecution(req.Name, http.StatusNotFound, durationMs, false, "TOOL_NOT_FOUND")
 		w.WriteHeader(http.StatusNotFound)
 		_ = json.NewEncoder(w).Encode(map[string]interface{}{
-			"error":  "Tool not found",
-			"tool":   req.Name,
-			"status": "failed",
+			"error":      "Tool not found",
+			"errorCode":  "TOOL_NOT_FOUND",
+			"tool":       req.Name,
+			"statusCode": http.StatusNotFound,
+			"status":     "failed",
 		})
 		return
 	}

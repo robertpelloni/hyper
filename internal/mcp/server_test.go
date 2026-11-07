@@ -75,6 +75,11 @@ func TestServerEndpoints(t *testing.T) {
 	if rrMissing.Code != http.StatusNotFound {
 		t.Fatalf("expected 404 Not Found for missing tool, got %d", rrMissing.Code)
 	}
+	var missingResp map[string]interface{}
+	_ = json.Unmarshal(rrMissing.Body.Bytes(), &missingResp)
+	if missingResp["errorCode"] != "TOOL_NOT_FOUND" {
+		t.Errorf("expected errorCode TOOL_NOT_FOUND, got %v", missingResp["errorCode"])
+	}
 
 	// 5. Test POST /call with malformed JSON
 	badPayload := []byte(`{invalid-json`)
@@ -84,6 +89,29 @@ func TestServerEndpoints(t *testing.T) {
 
 	if rrBad.Code != http.StatusBadRequest {
 		t.Fatalf("expected 400 Bad Request for bad JSON, got %d", rrBad.Code)
+	}
+	var badResp map[string]interface{}
+	_ = json.Unmarshal(rrBad.Body.Bytes(), &badResp)
+	if badResp["errorCode"] != "INVALID_ARGUMENTS" {
+		t.Errorf("expected errorCode INVALID_ARGUMENTS, got %v", badResp["errorCode"])
+	}
+
+	// 5b. Test POST /call with oversized payload (> 1MB)
+	// Must be valid JSON prefix so JSON decoder reads until exceeding 1MB limit
+	hugePrefix := []byte(`{"name":"unit_test_tool","arguments":{"pad":"`)
+	hugeSuffix := []byte(`"}}`)
+	hugePad := make([]byte, 1048576+100)
+	for i := range hugePad {
+		hugePad[i] = 'a'
+	}
+	hugePayload := append(hugePrefix, hugePad...)
+	hugePayload = append(hugePayload, hugeSuffix...)
+
+	reqHuge, _ := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(hugePayload))
+	rrHuge := httptest.NewRecorder()
+	mux.ServeHTTP(rrHuge, reqHuge)
+	if rrHuge.Code != http.StatusRequestEntityTooLarge {
+		t.Errorf("expected 413 Request Entity Too Large, got %d. Body: %s", rrHuge.Code, rrHuge.Body.String())
 	}
 
 	// 6. Test GET /history endpoint
@@ -109,8 +137,13 @@ func TestServerEndpoints(t *testing.T) {
 	rrEmpty := httptest.NewRecorder()
 	mux.ServeHTTP(rrEmpty, reqEmpty)
 
-	if rrEmpty.Code != http.StatusNotFound {
-		t.Errorf("expected 404 for empty tool name, got %d", rrEmpty.Code)
+	if rrEmpty.Code != http.StatusBadRequest {
+		t.Errorf("expected 400 for empty tool name, got %d", rrEmpty.Code)
+	}
+	var emptyResp map[string]interface{}
+	_ = json.Unmarshal(rrEmpty.Body.Bytes(), &emptyResp)
+	if emptyResp["errorCode"] != "EMPTY_TOOL_NAME" {
+		t.Errorf("expected errorCode EMPTY_TOOL_NAME, got %v", emptyResp["errorCode"])
 	}
 
 	// 8. Test History Limit and Concurrency
