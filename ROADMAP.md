@@ -14,13 +14,17 @@
 - [x] Server lifecycle management (Start, Stop, Restart on :8080).
 - [x] System Tray integration and desktop controls.
 - [x] Comprehensive tooltip and guidance system across all UI elements.
+- [x] Autonomous Think-Act-Observe reasoning loop with live `agent:step` telemetry.
+- [x] Real-time MCP tool performance monitoring (latency, 200 OK status, mini history bar charts).
+- [x] Interactive argument templates and "Send to Agent Directive" result piping.
 
-## Phase 3: Autonomous Agent Extensions & Tool Parity (In Progress)
-- [ ] Port Warp-like semantic command blocks.
-- [ ] Support external MCP server socket connections.
-- [ ] Tabby LSP language server protocol full completion layer.
-- [ ] Multi-language parity (Rust, Go, TypeScript, C#, Java).
-- [ ] Claude Code and Gemini CLI seamless harness execution.
+## Phase 3: Autonomous Agent Extensions & Multi-Language Swarm (In Progress)
+- [ ] Multi-language core parity across 5 languages (TypeScript, Rust, Go, C#, Java).
+- [ ] Multi-agent swarm orchestration and collaborative delegation.
+- [ ] WASM sandboxed tool runtime for secure arbitrary code execution.
+- [ ] Persistent session state replication and SQLite session buffer indexing.
+- [ ] External MCP socket server proxying and SSE streaming support.
+- [ ] Warp-like semantic command blocks and AI code completion layer.
 
 ## Phase 4: Production Deployment & Packaging
 - [ ] Multi-platform CI/CD installer generation.
