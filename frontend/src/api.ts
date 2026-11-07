@@ -209,6 +209,13 @@ export async function agentGetTaskQueue(): Promise<string[]> {
 	return [];
 }
 
+export async function agentRemoveTask(index: number): Promise<string[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.RemoveTask) {
+		return (window as any).go.main.AgentHarness.RemoveTask(index);
+	}
+	return [];
+}
+
 export async function agentClearTaskQueue(): Promise<string[]> {
 	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.ClearTaskQueue) {
 		return (window as any).go.main.AgentHarness.ClearTaskQueue();

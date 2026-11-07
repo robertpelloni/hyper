@@ -1413,6 +1413,40 @@ body,
 	padding: 6px 10px;
 }
 
+.tn_agent_badge {
+	font-size: 9px;
+	font-weight: bold;
+	padding: 2px 6px;
+	border-radius: 3px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.tn_agent_badge.running {
+	background: rgba(34, 197, 94, 0.2);
+	color: #4ade80;
+	border: 1px solid #22c55e;
+	animation: tn_pulse 2s infinite ease-in-out;
+}
+
+.tn_agent_badge.idle {
+	background: rgba(148, 163, 184, 0.1);
+	color: #94a3b8;
+	border: 1px solid #475569;
+}
+
+@keyframes tn_pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
 .tn_queue_item_badge {
 	background: #1e293b;
 	border: 1px solid #334155;
@@ -1421,6 +1455,24 @@ body,
 	padding: 2px 6px;
 	border-radius: 3px;
 	font-family: monospace;
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tn_queue_item_del {
+	background: transparent;
+	border: none;
+	color: #64748b;
+	cursor: pointer;
+	font-size: 9px;
+	padding: 0 2px;
+	line-height: 1;
+	transition: color 0.15s;
+}
+
+.tn_queue_item_del:hover {
+	color: #ef4444;
 }
 
 .tn_step_thought {

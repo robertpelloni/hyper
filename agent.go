@@ -72,6 +72,18 @@ func (ah *AgentHarness) ClearTaskQueue() []string {
 	return ah.queue
 }
 
+// RemoveTask removes a specific task from the queue by index
+func (ah *AgentHarness) RemoveTask(index int) []string {
+	ah.mu.Lock()
+	defer ah.mu.Unlock()
+	if index >= 0 && index < len(ah.queue) {
+		ah.queue = append(ah.queue[:index], ah.queue[index+1:]...)
+	}
+	res := make([]string, len(ah.queue))
+	copy(res, ah.queue)
+	return res
+}
+
 // ProcessNextTask pops and immediately executes the next queued task, returning the task name
 func (ah *AgentHarness) ProcessNextTask() string {
 	ah.mu.Lock()

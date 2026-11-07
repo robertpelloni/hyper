@@ -115,9 +115,24 @@ if (typeof window !== "undefined") {
             timestamp: Date.now() - 2000,
           },
 		],
-        QueueTask: async (task: string) => ({ status: "queued", task, queue: [task] }),
-        GetTaskQueue: async () => ["scan_sessions", "check_config"],
-        ClearTaskQueue: async () => [],
+        _mockQueue: ["scan_sessions", "check_config"],
+        QueueTask: async function(task: string) {
+            this._mockQueue.push(task);
+            return { status: "queued", task, queue: [...this._mockQueue] };
+        },
+        GetTaskQueue: async function() {
+            return [...this._mockQueue];
+        },
+        RemoveTask: async function(index: number) {
+            if (index >= 0 && index < this._mockQueue.length) {
+                this._mockQueue.splice(index, 1);
+            }
+            return [...this._mockQueue];
+        },
+        ClearTaskQueue: async function() {
+            this._mockQueue = [];
+            return [];
+        },
 	};
 
 	const defaultMCPAggregator = {

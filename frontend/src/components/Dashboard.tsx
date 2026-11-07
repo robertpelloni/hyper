@@ -565,6 +565,9 @@ export default function Dashboard({
 						<div className="tn_panel_header">
 							<div className="tn_panel_title">
 								🤖 Autonomous Agent Control Panel
+								<span className={`tn_agent_badge ${agentRunning ? "running" : "idle"}`}>
+									{agentRunning ? "● RUNNING" : "○ IDLE"}
+								</span>
 								<Tooltip text="Manage autonomous agent loops, inspect Think-Act-Observe action logs, and execute commands." />
 							</div>
 							<div className="tn_panel_controls">
@@ -690,7 +693,20 @@ export default function Dashboard({
 									<div className="tn_queue_items" style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
 										{taskQueue.map((item, idx) => (
 											<span key={idx} className="tn_queue_item_badge">
-												#{idx + 1} {item}
+												<span>#{idx + 1} {item}</span>
+												<button
+													type="button"
+													className="tn_queue_item_del"
+													onClick={async (e) => {
+														e.stopPropagation();
+														const updated = await api.agentRemoveTask(idx);
+														setTaskQueue(updated);
+														showFeedback(`Removed task #${idx + 1}`, "info");
+													}}
+													title={`Remove task #${idx + 1}`}
+												>
+													✕
+												</button>
 											</span>
 										))}
 									</div>
