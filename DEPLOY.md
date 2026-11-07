@@ -1,72 +1,59 @@
-# TormentNexus: Deployment and Release Guide
+# TormentNexus: Deployment and Operations Guide
 
 ## Prerequisites
-- **Go:** v1.25.0 (Environment uses this version explicitly)
-- **Node.js:** v18+ (LTS recommended)
-- **Yarn:** v1.22+
-- **Python:** v3.12+ (with `setuptools` for `node-gyp` compatibility)
+- **Go:** v1.25.0+ (standard compiler)
+- **Node.js:** v18+ (LTS or newer)
+- **npm / pnpm:** Package manager
 
-## Build Process
+## Building TormentNexus
 
-### 1. Dependency Installation
-Install all Node.js and Electron dependencies. Use the `--ignore-engines` flag if running on newer Node versions (e.g., Node 22).
+### 1. Unified Automated Build (Recommended)
+On Linux/macOS:
 ```bash
-yarn install --ignore-engines
+./build.sh
+```
+On Windows:
+```cmd
+build.bat
 ```
 
-### 2. Go Core Compilation
-The Go core must be compiled into the `bin/` directory. This is now hooked into the `yarn build` process, but can be done manually:
+This compiles frontend assets with Vite, embeds them into the Go binary, and compiles the Go core (`bin/tormentnexus`) along with the standalone MCP server (`bin/tormentnexus-mcp`).
+
+### 2. Manual Step-by-Step Build
 ```bash
-go build -o bin/tormentnexus ./cmd/tormentnexus/main.go
+# Frontend
+cd frontend
+npm install
+npm run build
+cd ..
+
+# Go Core Backend & MCP Server
+go build -o bin/tormentnexus .
+go build -o bin/tormentnexus-mcp ./cmd/tormentnexus
 ```
 
-### 3. Frontend Production Build
-Compile the TypeScript/React frontend and package assets:
+## Running TormentNexus
 ```bash
-yarn run build
+# Launch Standalone MCP Server on :8080
+./start.sh
+# (or start.bat on Windows)
+
+# Launch Full TormentNexus Application
+./bin/tormentnexus
 ```
 
-### 4. Cross-Platform Packaging
-Generate release-ready installers for the current platform:
-```bash
-yarn run dist
-```
+## System Tray & Server Control
+- **Mission Control UI:** Click the `⚡ Dashboard` button in the header or `Ctrl+Shift+D` to open Mission Control.
+- **Server Shutdown:** Use the "Stop All Servers" or "Clean Shutdown & Exit" buttons in Mission Control, or the desktop application menu.
+- **HTTP Endpoints & Resilience:**
+  - `GET http://localhost:8080/tools` - List registered MCP tools and JSON schemas.
+  - `POST http://localhost:8080/call` - Execute a tool with `{ "name": "...", "arguments": { ... } }`. Incoming requests are capped at 1MB to prevent memory exhaustion; returns structured error codes (`PAYLOAD_TOO_LARGE`, `INVALID_ARGUMENTS`, `EMPTY_TOOL_NAME`, `TOOL_NOT_FOUND`).
+  - `GET http://localhost:8080/history` - Retrieve execution history buffer and latency metrics (last 100 entries).
 
-## Running the Application
+## Onboarding & First-Run Diagnostics
+On initial launch, Mission Control displays the interactive **Quick-Start & Onboarding Guide** banner. Users can verify their environment in three automated steps:
+1. Verify MCP Server connectivity and telemetry on port 8080.
+2. Run baseline tool executions (`session_list`, `config_get`, `scan_sessions`) and observe response latency.
+3. Test autonomous Think-Act-Observe workflows using preconfigured agent presets.
 
-### Development Mode
-```bash
-# Terminal 1: Watch and compile
-yarn run dev
-
-# Terminal 2: Launch Electron app (auto-starts Go sidecar)
-yarn run app
-```
-
-### Production Execution
-Run the generated executable in the `dist/` directory. The Go sidecar will be automatically managed by the main process.
-
-## Continuous Integration
-TormentNexus uses GitHub Actions for automated releases.
-- **Workflow:** `.github/workflows/nodejs.yml`
-- **Supported Platforms:** Ubuntu (x64/ARM), macOS (ARM64), Windows (x64/ARM64).
-- **Artifacts:** Uploaded to GitHub Actions and ready for attachment to Releases.
-
-## Troubleshooting
-
-### node-pty Build Failures
-If `node-pty` fails to build, ensure `python3-setuptools` is installed:
-```bash
-python3 -m pip install setuptools --break-system-packages
-yarn run rebuild-node-pty
-```
-
-### Go Version Mismatch
-Ensure `go version` returns `go1.25.0`. If using a different version, update `go.mod` accordingly.
-
-### Code Signing (macOS)
-To bypass code signing locally:
-```bash
-export CSC_IDENTITY_AUTO_DISCOVERY=false
-yarn run dist
-```
+The guide banner can be dismissed at any time or reopened via the `📖 Quick-Start Guide` button in the header. Each step card within the banner is interactive: clicking a step pre-configures presets, tool selections, or result piping directly in the UI with instant visual feedback.

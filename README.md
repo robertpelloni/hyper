@@ -12,11 +12,11 @@
 For more details, head to: https://TormentNexus.is
 
 - **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
-- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interaction via REST API.
-- **MCP Aggregator:** Centralized hub for Model Context Protocol (MCP) servers.
-- **Modern CI/CD:** Fully automated builds for x64 and ARM64 platforms across Linux, macOS, and Windows.
-- **Extensible Architecture:** Compatible with existing terminal plugins and AI extensions.
-- **Sidecar Integration:** Seamless communication between the Electron UI and the Go-based terminal backend.
+- **Mission Control Dashboard:** Consolidated single-page control center with real-time telemetry, agent dispatch, MCP runner, and server lifecycle controls.
+- **Universal Tooltip System:** Contextual markers across every UI control and metric card.
+- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interactive command dispatch.
+- **MCP Hub & Interactive Runner:** Centralized aggregator for Model Context Protocol servers with HTTP `/tools` and `/call` endpoints.
+- **Server Lifecycle & System Tray:** Clean start, stop, restart, tray toggling, and application shutdown.
 
 ## Setup and Usage
 

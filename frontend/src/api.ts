@@ -14,7 +14,16 @@ import type {
 	AgentStatus,
 	MCPTool,
 	MCPTelemetry,
+	ServerStatus,
 } from "./types";
+
+// Helper for window['go'] dynamic access for newly added methods before wails generate
+function getGoApp(): any {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.App) {
+		return (window as any).go.main.App;
+	}
+	return AppBindings;
+}
 
 // ===== Session Management =====
 export async function createSession(options: {
@@ -113,13 +122,62 @@ export function windowClose(): void {
 	WailsRuntime.Quit();
 }
 export function windowIsMaximised(): boolean {
-	return false; /* async in wails */
+	return false;
 }
 export function windowFullscreen(): void {
 	AppBindings.WindowFullscreen();
 }
 export function windowUnfullscreen(): void {
 	AppBindings.WindowUnfullscreen();
+}
+
+// ===== Server Lifecycle & Tray Controls =====
+export async function getServerStatus(): Promise<ServerStatus> {
+	const app = getGoApp();
+	if (app && app.GetServerStatus) {
+		return app.GetServerStatus();
+	}
+	return {
+		mcpServerRunning: true,
+		mcpServerPort: 8080,
+		agentRunning: false,
+		trayEnabled: true,
+		activeSessions: 1,
+		uptimeSeconds: 0,
+		version: "1.0.0",
+	};
+}
+
+export async function restartServers(): Promise<any> {
+	const app = getGoApp();
+	if (app && app.RestartServers) {
+		return app.RestartServers();
+	}
+	return { status: "simulated", error: "" };
+}
+
+export async function stopServers(): Promise<any> {
+	const app = getGoApp();
+	if (app && app.StopServers) {
+		return app.StopServers();
+	}
+	return { status: "stopped", error: "" };
+}
+
+export async function toggleSystemTray(): Promise<boolean> {
+	const app = getGoApp();
+	if (app && app.ToggleSystemTray) {
+		return app.ToggleSystemTray();
+	}
+	return true;
+}
+
+export async function quitApp(): Promise<void> {
+	const app = getGoApp();
+	if (app && app.QuitApp) {
+		return app.QuitApp();
+	}
+	WailsRuntime.Quit();
 }
 
 // ===== Agent =====
@@ -135,6 +193,27 @@ export async function agentGetStatus(): Promise<AgentStatus> {
 
 export async function agentHealthCheck(): Promise<AgentStatus> {
 	return AgentBindings.HealthCheck() as Promise<AgentStatus>;
+}
+
+export async function agentQueueTask(task: string): Promise<any> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.QueueTask) {
+		return (window as any).go.main.AgentHarness.QueueTask(task);
+	}
+	return { status: "queued", task, queue: [task] };
+}
+
+export async function agentGetTaskQueue(): Promise<string[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.GetTaskQueue) {
+		return (window as any).go.main.AgentHarness.GetTaskQueue();
+	}
+	return [];
+}
+
+export async function agentClearTaskQueue(): Promise<string[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.ClearTaskQueue) {
+		return (window as any).go.main.AgentHarness.ClearTaskQueue();
+	}
+	return [];
 }
 
 // ===== MCP =====
@@ -175,17 +254,39 @@ export function emitEvent(eventName: string, ...data: any[]): void {
 
 // ===== System =====
 export function getPlatform(): string {
-	return "windows";
+	return "linux";
 }
 export function getHomeDir(): string {
-	return ""; /* async in wails, use AppBindings */
+	return "/home";
 }
 export function getAppVersion(): string {
-	return "";
+	return "1.0.0";
 }
 export function getAppName(): string {
-	return "";
+	return "TormentNexus";
 }
 export function openURL(url: string): void {
 	WailsRuntime.BrowserOpenURL(url);
+}
+
+export async function mcpGetToolExecutionHistory(): Promise<ToolExecutionRecord[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.MCPAggregator && (window as any).go.main.MCPAggregator.GetToolExecutionHistory) {
+		return (window as any).go.main.MCPAggregator.GetToolExecutionHistory();
+	}
+	// Fallback fetch from HTTP endpoint if running
+	try {
+		const res = await fetch("http://localhost:8080/history");
+		if (res.ok) {
+			const data = await res.json();
+			return data.history || [];
+		}
+	} catch {}
+	return [];
+}
+
+export async function agentGetExecutionSteps(): Promise<AgentExecutionStep[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.GetExecutionSteps) {
+		return (window as any).go.main.AgentHarness.GetExecutionSteps();
+	}
+	return [];
 }

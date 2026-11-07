@@ -475,3 +475,913 @@ body,
 	background: rgba(255, 255, 255, 0.1);
 	color: #fff;
 }
+
+/* ---- Tooltips ---- */
+.tn_tooltip_wrapper {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	margin-left: 6px;
+	cursor: pointer;
+}
+
+.tn_tooltip_icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
+	background: #333;
+	color: #aaa;
+	font-size: 10px;
+	font-weight: bold;
+	line-height: 1;
+}
+
+.tn_tooltip_wrapper:hover .tn_tooltip_icon {
+	background: var(--tn-accent);
+	color: #fff;
+}
+
+.tn_tooltip_content {
+	position: absolute;
+	bottom: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%);
+	background: #1f1f1f;
+	color: #eee;
+	border: 1px solid #444;
+	border-radius: 4px;
+	padding: 6px 10px;
+	font-size: 11px;
+	white-space: normal;
+	width: max-content;
+	max-width: 260px;
+	z-index: 1000;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+	pointer-events: none;
+	line-height: 1.4;
+	font-weight: normal;
+}
+
+/* ---- Header Dashboard Button ---- */
+.tn_header_dashboard_btn {
+	background: rgba(255, 255, 255, 0.08);
+	color: #ddd;
+	border: 1px solid var(--tn-border);
+	border-radius: 4px;
+	padding: 4px 10px;
+	font-size: 11px;
+	cursor: pointer;
+	margin-right: 8px;
+	-webkit-app-region: no-drag;
+	transition: all 0.15s ease;
+}
+
+.tn_header_dashboard_btn:hover {
+	background: rgba(248, 28, 229, 0.2);
+	border-color: var(--tn-accent);
+	color: #fff;
+}
+
+.tn_header_dashboard_btn.active {
+	background: var(--tn-accent);
+	border-color: var(--tn-accent);
+	color: #fff;
+	font-weight: bold;
+}
+
+/* ---- Unified Mission Control Dashboard Overlay ---- */
+.tn_dashboard_overlay {
+	flex: 1;
+	display: flex;
+	overflow-y: auto;
+	background: #0d0d0d;
+	padding: 16px;
+	color: #eee;
+}
+
+/* Onboarding Quick-Start Guide Card */
+.tn_onboarding_card {
+	background: linear-gradient(135deg, rgba(30, 30, 45, 0.9), rgba(20, 20, 30, 0.9));
+	border: 1px solid #3d3d5c;
+	border-radius: 8px;
+	padding: 14px 18px;
+	margin-bottom: 16px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tn_onboarding_header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+}
+
+.tn_onboarding_title {
+	font-size: 13px;
+	font-weight: 600;
+	color: #64b5f6;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.tn_onboarding_steps {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
+}
+
+.tn_onboarding_step {
+	background: rgba(0, 0, 0, 0.25);
+	border: 1px solid #2d2d40;
+	border-radius: 6px;
+	padding: 10px 12px;
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	transition: all 0.2s ease;
+}
+
+.tn_onboarding_step:hover {
+	border-color: #3498db;
+	background: rgba(52, 152, 219, 0.08);
+}
+
+.tn_onboarding_step_active {
+	border-color: #00e676 !important;
+	background: rgba(0, 230, 118, 0.1) !important;
+	box-shadow: 0 0 10px rgba(0, 230, 118, 0.2);
+}
+
+.tn_step_hint {
+	margin-top: 4px;
+	font-size: 10px;
+	color: #64b5f6;
+	font-weight: 500;
+}
+
+.tn_step_num {
+	background: #3498db;
+	color: #fff;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 11px;
+	font-weight: bold;
+	flex-shrink: 0;
+}
+
+.tn_step_text {
+	font-size: 11px;
+	line-height: 1.4;
+	color: #ccc;
+}
+
+.tn_step_text strong {
+	color: #fff;
+}
+
+.tn_step_text code {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 1px 4px;
+	border-radius: 3px;
+	color: #64b5f6;
+	font-size: 10px;
+}
+
+/* Toast Feedback Notification Banner */
+.tn_toast_banner {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-size: 12px;
+	font-weight: 500;
+	margin-bottom: 12px;
+	animation: slideDown 0.2s ease-out;
+}
+@keyframes slideDown {
+	from { opacity: 0; transform: translateY(-8px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+.tn_toast_success {
+	background-color: rgba(46, 204, 113, 0.15);
+	border: 1px solid #2ecc71;
+	color: #2ecc71;
+}
+.tn_toast_error {
+	background-color: rgba(231, 76, 60, 0.15);
+	border: 1px solid #e74c3c;
+	color: #ff6b6b;
+}
+.tn_toast_info {
+	background-color: rgba(52, 152, 219, 0.15);
+	border: 1px solid #3498db;
+	color: #64b5f6;
+}
+.tn_toast_close {
+	background: none;
+	border: none;
+	color: inherit;
+	cursor: pointer;
+	margin-left: auto;
+	font-size: 12px;
+	padding: 2px 6px;
+	opacity: 0.8;
+}
+.tn_toast_close:hover {
+	opacity: 1;
+}
+
+.tn_dashboard_container {
+	max-width: 1200px;
+	margin: 0 auto;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.tn_dashboard_header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 12px;
+	border-bottom: 1px solid #262626;
+}
+
+.tn_dashboard_title_group {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.tn_dashboard_title {
+	font-size: 18px;
+	font-weight: 700;
+	color: #fff;
+	letter-spacing: -0.5px;
+}
+
+.tn_version_badge {
+	background: #222;
+	color: #999;
+	padding: 2px 8px;
+	border-radius: 12px;
+	font-size: 10px;
+	border: 1px solid #333;
+}
+
+/* ---- Telemetry Banner ---- */
+.tn_telemetry_banner {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 12px;
+}
+
+.tn_telemetry_card {
+	background: #161616;
+	border: 1px solid #2a2a2a;
+	border-radius: 6px;
+	padding: 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.tn_telemetry_label {
+	font-size: 11px;
+	color: #888;
+	display: flex;
+	align-items: center;
+}
+
+.tn_telemetry_value {
+	display: flex;
+	align-items: center;
+}
+
+.tn_telemetry_number {
+	font-size: 20px;
+	font-weight: bold;
+	color: #fff;
+}
+
+/* ---- Badges ---- */
+.tn_badge {
+	padding: 3px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+}
+
+.tn_badge_success {
+	background: rgba(76, 175, 80, 0.15);
+	color: #4caf50;
+	border: 1px solid #4caf50;
+}
+
+.tn_badge_danger {
+	background: rgba(244, 67, 54, 0.15);
+	color: #f44336;
+	border: 1px solid #f44336;
+}
+
+.tn_badge_idle {
+	background: rgba(255, 255, 255, 0.1);
+	color: #aaa;
+	border: 1px solid #444;
+}
+
+.tn_badge_info {
+	background: rgba(33, 150, 243, 0.15);
+	color: #2196f3;
+	border: 1px solid #2196f3;
+}
+
+/* ---- Dashboard Grid ---- */
+.tn_dashboard_grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 16px;
+}
+
+@media (max-width: 900px) {
+	.tn_dashboard_grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+.tn_dashboard_panel {
+	background: #141414;
+	border: 1px solid #262626;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+.tn_panel_full {
+	grid-column: 1 / -1;
+}
+
+.tn_panel_header {
+	padding: 12px 16px;
+	background: #1a1a1a;
+	border-bottom: 1px solid #262626;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tn_panel_title {
+	font-size: 13px;
+	font-weight: 600;
+	color: #ddd;
+	display: flex;
+	align-items: center;
+}
+
+.tn_panel_badge {
+	font-size: 11px;
+	color: #888;
+}
+
+.tn_panel_controls {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.tn_panel_body {
+	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+/* ---- Buttons ---- */
+.tn_btn {
+	background: #2a2a2a;
+	border: 1px solid #444;
+	color: #eee;
+	padding: 6px 12px;
+	border-radius: 4px;
+	font-size: 11px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+}
+
+.tn_btn:hover {
+	background: #383838;
+	color: #fff;
+}
+
+.tn_btn_primary {
+	background: #0066cc;
+	border-color: #0077ee;
+	color: #fff;
+}
+
+.tn_btn_primary:hover {
+	background: #0077ee;
+}
+
+.tn_btn_success {
+	background: #2e7d32;
+	border-color: #388e3c;
+	color: #fff;
+}
+
+.tn_btn_success:hover {
+	background: #388e3c;
+}
+
+.tn_btn_danger {
+	background: #c62828;
+	border-color: #d32f2f;
+	color: #fff;
+}
+
+.tn_btn_danger:hover {
+	background: #d32f2f;
+}
+
+.tn_btn_secondary {
+	background: #282828;
+	border-color: #3e3e3e;
+}
+
+.tn_btn_small {
+	padding: 3px 8px;
+	font-size: 10px;
+}
+
+.tn_btn_group {
+	display: flex;
+	gap: 8px;
+}
+
+.tn_w_full {
+	width: 100%;
+}
+
+/* ---- Inputs and Forms ---- */
+.tn_form_group {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.tn_label {
+	font-size: 11px;
+	color: #999;
+	display: flex;
+	align-items: center;
+}
+
+.tn_input,
+.tn_select,
+.tn_textarea {
+	background: #1f1f1f;
+	border: 1px solid #333;
+	border-radius: 4px;
+	color: #fff;
+	padding: 8px;
+	font-size: 12px;
+	font-family: var(--tn-ui-font);
+	outline: none;
+}
+
+.tn_input:focus,
+.tn_select:focus,
+.tn_textarea:focus {
+	border-color: var(--tn-accent);
+}
+
+.tn_textarea {
+	font-family: var(--tn-term-font);
+	resize: vertical;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tn_textarea_error {
+	border-color: #f44336 !important;
+	background: #241414 !important;
+	box-shadow: 0 0 6px rgba(244, 67, 54, 0.3);
+}
+
+.tn_validation_error_box {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-top: 6px;
+	padding: 6px 10px;
+	background: rgba(244, 67, 54, 0.15);
+	border: 1px solid rgba(244, 67, 54, 0.4);
+	border-radius: 4px;
+	color: #ff8a80;
+	font-size: 11px;
+	font-family: monospace;
+}
+
+.tn_btn_disabled {
+	opacity: 0.5;
+	cursor: not-allowed !important;
+	filter: grayscale(0.6);
+}
+
+.tn_flex_1 {
+	flex: 1;
+}
+
+.tn_row_controls {
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+}
+
+/* ---- Terminal Log Box ---- */
+.tn_log_terminal {
+	background: #0a0a0a;
+	border: 1px solid #222;
+	border-radius: 4px;
+	padding: 10px;
+	height: 140px;
+	overflow-y: auto;
+	font-family: var(--tn-term-font);
+	font-size: 11px;
+	color: #00ff66;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.tn_log_entry {
+	word-break: break-all;
+	white-space: pre-wrap;
+}
+
+.tn_agent_input_form {
+	display: flex;
+	gap: 8px;
+}
+
+/* ---- Tool Output ---- */
+.tn_tool_output {
+	background: #0a0a0a;
+	border: 1px solid #262626;
+	border-radius: 4px;
+	padding: 10px;
+	max-height: 120px;
+	overflow-y: auto;
+}
+
+.tn_output_header {
+	font-size: 10px;
+	color: #888;
+	margin-bottom: 4px;
+	text-transform: uppercase;
+}
+
+.tn_output_pre {
+	font-family: var(--tn-term-font);
+	font-size: 11px;
+	color: #ddd;
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+/* ---- Session List ---- */
+.tn_session_list {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	max-height: 220px;
+	overflow-y: auto;
+}
+
+.tn_session_row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 12px;
+	background: #1a1a1a;
+	border: 1px solid #2a2a2a;
+	border-radius: 4px;
+}
+
+.tn_session_active {
+	border-color: var(--tn-accent);
+	background: #222;
+}
+
+.tn_session_info {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.tn_session_name {
+	font-weight: 600;
+	color: #fff;
+}
+
+.tn_session_pid {
+	color: #888;
+	font-size: 11px;
+}
+
+.tn_session_shell {
+	color: #666;
+	font-size: 10px;
+	background: #111;
+	padding: 2px 6px;
+	border-radius: 3px;
+}
+
+.tn_session_actions {
+	display: flex;
+	gap: 6px;
+}
+
+/* ---- Control Grid ---- */
+.tn_control_grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 12px;
+}
+
+.tn_control_card {
+	background: #1a1a1a;
+	border: 1px solid #2a2a2a;
+	border-radius: 6px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.tn_control_card_title {
+	font-size: 11px;
+	font-weight: 600;
+	color: #aaa;
+	display: flex;
+	align-items: center;
+}
+
+.tn_status_link {
+	color: var(--tn-accent);
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.tn_status_link:hover {
+	text-decoration: underline;
+}
+
+/* ---- Tool Metrics and Execution History ---- */
+.tn_tool_metrics_grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.tn_tool_card {
+	background: #1c1c1c;
+	border: 1px solid #2e2e2e;
+	border-radius: 6px;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	transition: border-color 0.15s ease;
+}
+
+.tn_tool_card:hover {
+	border-color: #444;
+}
+
+.tn_tool_card_top {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tn_tool_name {
+	font-weight: 600;
+	font-size: 11px;
+	color: #fff;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.tn_tool_status_pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: 10px;
+	padding: 2px 6px;
+	border-radius: 10px;
+	font-weight: bold;
+}
+
+.tn_status_ok {
+	background: rgba(76, 175, 80, 0.2);
+	color: #4caf50;
+	border: 1px solid #4caf50;
+}
+
+.tn_status_warn {
+	background: rgba(255, 152, 0, 0.2);
+	color: #ff9800;
+	border: 1px solid #ff9800;
+}
+
+.tn_status_err {
+	background: rgba(244, 67, 54, 0.2);
+	color: #f44336;
+	border: 1px solid #f44336;
+}
+
+.tn_status_idle {
+	background: rgba(255, 255, 255, 0.08);
+	color: #888;
+	border: 1px solid #333;
+}
+
+.tn_tool_card_bottom {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 10px;
+	color: #888;
+}
+
+.tn_latency_badge {
+	color: #00bcd4;
+	font-family: var(--tn-term-font);
+}
+
+.tn_exec_graph_container {
+	margin-top: 6px;
+	display: flex;
+	align-items: flex-end;
+	gap: 2px;
+	height: 18px;
+	background: #111;
+	border-radius: 3px;
+	padding: 2px;
+}
+
+.tn_exec_graph_bar {
+	flex: 1;
+	min-width: 3px;
+	background: #4caf50;
+	border-radius: 1px;
+	transition: height 0.2s ease;
+}
+
+.tn_exec_graph_bar.err {
+	background: #f44336;
+}
+
+/* ---- Autonomous Reasoning Steps & Workflows ---- */
+.tn_agent_presets_row {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+	margin-bottom: 8px;
+}
+
+.tn_btn_preset {
+	background: #1e1e1e;
+	border: 1px solid #333;
+	border-radius: 4px;
+	color: #bbb;
+	font-size: 10px;
+	padding: 3px 8px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.tn_btn_preset:hover {
+	background: rgba(248, 28, 229, 0.15);
+	border-color: var(--tn-accent);
+	color: #fff;
+}
+
+.tn_steps_container {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	max-height: 180px;
+	overflow-y: auto;
+	background: #0d0d0d;
+	border: 1px solid #222;
+	border-radius: 4px;
+	padding: 8px;
+}
+
+.tn_step_item {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	background: #141414;
+	border: 1px solid #262626;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-size: 11px;
+}
+
+.tn_step_header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.tn_phase_badge {
+	font-weight: bold;
+	font-size: 9px;
+	padding: 1px 5px;
+	border-radius: 3px;
+	text-transform: uppercase;
+}
+
+.tn_phase_plan {
+	background: rgba(63, 81, 181, 0.2);
+	color: #7986cb;
+	border: 1px solid #7986cb;
+}
+
+.tn_phase_think {
+	background: rgba(156, 39, 176, 0.2);
+	color: #ba68c8;
+	border: 1px solid #ba68c8;
+}
+
+.tn_phase_act {
+	background: rgba(33, 150, 243, 0.2);
+	color: #64b5f6;
+	border: 1px solid #64b5f6;
+}
+
+.tn_phase_observe {
+	background: rgba(76, 175, 80, 0.2);
+	color: #81c784;
+	border: 1px solid #81c784;
+}
+
+.tn_phase_reflect {
+	background: rgba(0, 150, 136, 0.2);
+	color: #4db6ac;
+	border: 1px solid #4db6ac;
+}
+
+.tn_task_queue_box {
+	background: #111a24;
+	border: 1px solid #1e3a5f;
+	border-radius: 4px;
+	padding: 6px 10px;
+}
+
+.tn_queue_item_badge {
+	background: #1e293b;
+	border: 1px solid #334155;
+	color: #94a3b8;
+	font-size: 10px;
+	padding: 2px 6px;
+	border-radius: 3px;
+	font-family: monospace;
+}
+
+.tn_step_thought {
+	color: #ddd;
+	font-size: 11px;
+}
+
+.tn_step_result {
+	color: #888;
+	font-family: var(--tn-term-font);
+	font-size: 10px;
+	white-space: pre-wrap;
+	word-break: break-all;
+	margin-top: 2px;
+	background: #080808;
+	padding: 4px 6px;
+	border-radius: 3px;
+}
