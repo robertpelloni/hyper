@@ -919,6 +919,17 @@ export default function Dashboard({
 							<div className="tn_form_group" style={{ marginTop: "10px" }}>
 								<label className="tn_label">
 									Selected Tool: <strong style={{ color: "#fff", marginLeft: "4px" }}>{selectedTool}</strong>
+									{(() => {
+										const current = mcpTools.find((t) => (t.Name || t.name) === selectedTool);
+										if (current && (current.Description || current.description)) {
+											return (
+												<span style={{ color: "#94a3b8", fontSize: "11px", marginLeft: "8px", fontWeight: "normal" }}>
+													— {current.Description || current.description}
+												</span>
+											);
+										}
+										return null;
+									})()}
 									<Tooltip text="Selected tool for manual execution and testing." />
 								</label>
 							</div>
@@ -1218,6 +1229,22 @@ export default function Dashboard({
 								</select>
 							</div>
 						</div>
+					</div>
+				</div>
+
+				{/* Quick-Access Keyboard Shortcuts Bar */}
+				<div className="tn_shortcuts_footer">
+					<div className="tn_shortcut_item">
+						<kbd>Esc</kbd> <span>Return to Shell</span>
+					</div>
+					<div className="tn_shortcut_item">
+						<kbd>Ctrl+Shift+D</kbd> <span>Toggle Dashboard</span>
+					</div>
+					<div className="tn_shortcut_item">
+						<kbd>Ctrl+Enter</kbd> <span>Run Selected Tool</span>
+					</div>
+					<div className="tn_shortcut_item">
+						<kbd>Enter</kbd> <span>Dispatch Agent Directive</span>
 					</div>
 				</div>
 			</div>
