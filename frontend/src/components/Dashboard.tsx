@@ -41,6 +41,7 @@ export default function Dashboard({
 	]);
 	const [agentRunning, setAgentRunning] = useState(false);
 	const [agentSteps, setAgentSteps] = useState<AgentExecutionStep[]>([]);
+	const [taskQueue, setTaskQueue] = useState<string[]>([]);
 
 	const [mcpTools, setMcpTools] = useState<MCPTool[]>([]);
 	const [selectedTool, setSelectedTool] = useState<string>("shell_execute");
@@ -96,6 +97,11 @@ export default function Dashboard({
 			const steps = await api.agentGetExecutionSteps();
 			if (steps && steps.length > 0) {
 				setAgentSteps(steps);
+			}
+
+			const queue = await api.agentGetTaskQueue();
+			if (queue) {
+				setTaskQueue(queue);
 			}
 		} catch (err) {
 			console.warn("Failed to refresh status:", err);
@@ -181,6 +187,28 @@ export default function Dashboard({
 			refreshStatus();
 		} catch (err) {
 			setAgentLogs((prev) => [...prev, `[EXEC ERROR] ${err}`]);
+		}
+	};
+
+	const handleQueueTask = async () => {
+		if (!agentCommand.trim()) return;
+		try {
+			await api.agentQueueTask(agentCommand.trim());
+			showFeedback(`Enqueued task: "${agentCommand.trim()}"`, "success");
+			setAgentCommand("");
+			refreshStatus();
+		} catch (err: any) {
+			showFeedback(`Failed to queue task: ${err.message || err}`, "error");
+		}
+	};
+
+	const handleClearQueue = async () => {
+		try {
+			await api.agentClearTaskQueue();
+			showFeedback("Agent task queue cleared", "info");
+			refreshStatus();
+		} catch (err: any) {
+			showFeedback(`Failed to clear queue: ${err.message || err}`, "error");
 		}
 	};
 
@@ -599,11 +627,15 @@ export default function Dashboard({
 										<div className="tn_step_header">
 											<span
 												className={`tn_phase_badge ${
-													s.phase === "THINK"
+													s.phase === "PLAN"
+														? "tn_phase_plan"
+														: s.phase === "THINK"
 														? "tn_phase_think"
 														: s.phase === "ACT"
 														? "tn_phase_act"
-														: "tn_phase_observe"
+														: s.phase === "OBSERVE"
+														? "tn_phase_observe"
+														: "tn_phase_reflect"
 												}`}
 											>
 												{s.phase}
@@ -635,6 +667,32 @@ export default function Dashboard({
 								))}
 							</div>
 
+							{/* Multi-step Autonomous Task Queue */}
+							{taskQueue.length > 0 && (
+								<div className="tn_task_queue_box" style={{ marginBottom: "8px" }}>
+									<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+										<span style={{ fontSize: "11px", fontWeight: "bold", color: "#64b5f6" }}>
+											📋 Autonomous Task Queue ({taskQueue.length})
+										</span>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={handleClearQueue}
+											title="Clear all pending queued tasks"
+										>
+											Clear Queue
+										</button>
+									</div>
+									<div className="tn_queue_items" style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+										{taskQueue.map((item, idx) => (
+											<span key={idx} className="tn_queue_item_badge">
+												#{idx + 1} {item}
+											</span>
+										))}
+									</div>
+								</div>
+							)}
+
 							<form
 								onSubmit={(e) => {
 									e.preventDefault();
@@ -654,9 +712,18 @@ export default function Dashboard({
 								<button type="submit" className="tn_btn tn_btn_primary" aria-label="Dispatch directive">
 									Dispatch ⏎
 								</button>
+								<button
+									type="button"
+									className="tn_btn tn_btn_secondary"
+									onClick={handleQueueTask}
+									title="Add directive to autonomous task queue"
+									aria-label="Queue task"
+								>
+									+ Queue
+								</button>
 							</form>
 							<div style={{ fontSize: "10px", color: "#666", marginTop: "4px", display: "flex", justifyContent: "space-between" }}>
-								<span>💡 Tip: Press Enter to dispatch. Select presets above for instant agent workflows.</span>
+								<span>💡 Tip: Press Enter to dispatch immediately, or click + Queue for sequential autonomous execution.</span>
 								<span>Autopilot Mode: {agentRunning ? "ACTIVE" : "STANDBY"}</span>
 							</div>
 						</div>

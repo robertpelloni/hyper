@@ -195,6 +195,27 @@ export async function agentHealthCheck(): Promise<AgentStatus> {
 	return AgentBindings.HealthCheck() as Promise<AgentStatus>;
 }
 
+export async function agentQueueTask(task: string): Promise<any> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.QueueTask) {
+		return (window as any).go.main.AgentHarness.QueueTask(task);
+	}
+	return { status: "queued", task, queue: [task] };
+}
+
+export async function agentGetTaskQueue(): Promise<string[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.GetTaskQueue) {
+		return (window as any).go.main.AgentHarness.GetTaskQueue();
+	}
+	return [];
+}
+
+export async function agentClearTaskQueue(): Promise<string[]> {
+	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.ClearTaskQueue) {
+		return (window as any).go.main.AgentHarness.ClearTaskQueue();
+	}
+	return [];
+}
+
 // ===== MCP =====
 export async function mcpListTools(): Promise<MCPTool[]> {
 	return MCPBindings.ListTools() as Promise<MCPTool[]>;

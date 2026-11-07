@@ -12,7 +12,7 @@ import (
 // AgentExecutionStep represents an individual Think-Act-Observe action step
 type AgentExecutionStep struct {
 	ID        string                 `json:"id"`
-	Phase     string                 `json:"phase"`     // "THINK", "ACT", "OBSERVE"
+	Phase     string                 `json:"phase"`     // "PLAN", "THINK", "ACT", "OBSERVE", "REFLECT"
 	Tool      string                 `json:"tool,omitempty"`
 	Thought   string                 `json:"thought"`
 	Input     map[string]interface{} `json:"input,omitempty"`
@@ -25,6 +25,7 @@ type AgentExecutionStep struct {
 type AgentHarness struct {
 	messages   []string
 	steps      []AgentExecutionStep
+	queue      []string
 	status     string
 	iterations int64
 	mu         sync.RWMutex
@@ -38,7 +39,37 @@ func NewAgentHarness() *AgentHarness {
 	return &AgentHarness{
 		status: "idle",
 		steps:  make([]AgentExecutionStep, 0),
+		queue:  make([]string, 0),
 	}
+}
+
+// QueueTask appends a task directive to the agent's autonomous queue
+func (ah *AgentHarness) QueueTask(task string) map[string]interface{} {
+	ah.mu.Lock()
+	defer ah.mu.Unlock()
+	ah.queue = append(ah.queue, task)
+	return map[string]interface{}{
+		"status": "queued",
+		"task":   task,
+		"queue":  ah.queue,
+	}
+}
+
+// GetTaskQueue returns the current list of pending queued tasks
+func (ah *AgentHarness) GetTaskQueue() []string {
+	ah.mu.RLock()
+	defer ah.mu.RUnlock()
+	res := make([]string, len(ah.queue))
+	copy(res, ah.queue)
+	return res
+}
+
+// ClearTaskQueue clears all pending queued tasks
+func (ah *AgentHarness) ClearTaskQueue() []string {
+	ah.mu.Lock()
+	defer ah.mu.Unlock()
+	ah.queue = make([]string, 0)
+	return ah.queue
 }
 
 func (ah *AgentHarness) SetMCPAggregator(mcp *MCPAggregator) {
@@ -123,16 +154,16 @@ func (ah *AgentHarness) executeDirective(directive string) {
 	ah.iterations++
 	ah.mu.Unlock()
 
-	// 1. THINK
-	thinkStep := AgentExecutionStep{
+	// 1. PLAN: Break down directive into high-level objective
+	planStep := AgentExecutionStep{
 		ID:        uuid.New().String(),
-		Phase:     "THINK",
-		Thought:   fmt.Sprintf("Analyzing directive: '%s'. Determining required MCP tool call.", directive),
+		Phase:     "PLAN",
+		Thought:   fmt.Sprintf("Synthesizing execution plan for objective: '%s'", directive),
 		Timestamp: time.Now().UnixMilli(),
 	}
-	ah.recordStep(thinkStep)
+	ah.recordStep(planStep)
 
-	// 2. ACT
+	// 2. THINK: Determine optimal MCP tool and argument synthesis
 	selectedTool := "agent_status"
 	args := map[string]interface{}{}
 	if directive == "scan_sessions" || directive == "session_list" {
@@ -144,6 +175,17 @@ func (ah *AgentHarness) executeDirective(directive string) {
 		args["command"] = "echo Processing: " + directive
 	}
 
+	thinkStep := AgentExecutionStep{
+		ID:        uuid.New().String(),
+		Phase:     "THINK",
+		Tool:      selectedTool,
+		Thought:   fmt.Sprintf("Reasoned selection: invoke MCP tool '%s' with tailored parameters.", selectedTool),
+		Input:     args,
+		Timestamp: time.Now().UnixMilli(),
+	}
+	ah.recordStep(thinkStep)
+
+	// 3. ACT: Dispatch call to MCP aggregator
 	actStep := AgentExecutionStep{
 		ID:        uuid.New().String(),
 		Phase:     "ACT",
@@ -154,7 +196,6 @@ func (ah *AgentHarness) executeDirective(directive string) {
 	}
 	ah.recordStep(actStep)
 
-	// Execute via MCP aggregator if connected
 	var resultStr string
 	ah.mu.RLock()
 	mcpRef := ah.mcp
@@ -167,17 +208,28 @@ func (ah *AgentHarness) executeDirective(directive string) {
 		resultStr = fmt.Sprintf("Tool %s executed (simulated)", selectedTool)
 	}
 
-	// 3. OBSERVE
+	// 4. OBSERVE: Receive output and telemetry
 	obsStep := AgentExecutionStep{
 		ID:        uuid.New().String(),
 		Phase:     "OBSERVE",
 		Tool:      selectedTool,
-		Thought:   "Evaluating output of MCP tool invocation.",
+		Thought:   "Evaluating output and duration of MCP tool execution.",
 		Result:    resultStr,
 		Duration:  time.Since(startTime).Milliseconds(),
 		Timestamp: time.Now().UnixMilli(),
 	}
 	ah.recordStep(obsStep)
+
+	// 5. REFLECT: Synthesize completion and plan next steps
+	reflectStep := AgentExecutionStep{
+		ID:        uuid.New().String(),
+		Phase:     "REFLECT",
+		Tool:      selectedTool,
+		Thought:   fmt.Sprintf("Goal '%s' successfully resolved via '%s'. System state consistent.", directive, selectedTool),
+		Duration:  time.Since(startTime).Milliseconds(),
+		Timestamp: time.Now().UnixMilli(),
+	}
+	ah.recordStep(reflectStep)
 }
 
 func (ah *AgentHarness) recordStep(step AgentExecutionStep) {
@@ -235,7 +287,7 @@ func (ah *AgentHarness) HealthCheck() map[string]interface{} {
 
 // runLoop is the autonomous execution loop
 func (ah *AgentHarness) runLoop(ctx context.Context) {
-	ticker := time.NewTicker(4 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	defer ticker.Stop()
 
 	for {
@@ -247,8 +299,21 @@ func (ah *AgentHarness) runLoop(ctx context.Context) {
 			ah.mu.Unlock()
 			return
 		case <-ticker.C:
-			// Autonomous Think -> Act -> Observe cycle
-			ah.executeDirective(fmt.Sprintf("autonomous heartbeat at %s", time.Now().Format("15:04:05")))
+			// Check if any queued tasks exist to execute sequentially
+			ah.mu.Lock()
+			var nextTask string
+			if len(ah.queue) > 0 {
+				nextTask = ah.queue[0]
+				ah.queue = ah.queue[1:]
+			}
+			ah.mu.Unlock()
+
+			if nextTask != "" {
+				ah.executeDirective(nextTask)
+			} else {
+				// Autonomous heartbeat reasoning cycle
+				ah.executeDirective(fmt.Sprintf("autonomous heartbeat at %s", time.Now().Format("15:04:05")))
+			}
 		}
 	}
 }

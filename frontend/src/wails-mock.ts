@@ -76,6 +76,12 @@ if (typeof window !== "undefined") {
 		GetStatus: async () => ({ status: "idle", running: false, messages: 0 }),
 		HealthCheck: async () => ({ status: "active", running: false, messages: 0 }),
 		GetExecutionSteps: async () => [
+          {
+            id: "step-0",
+            phase: "PLAN",
+            thought: "Synthesizing execution plan for objective: 'scan_sessions'",
+            timestamp: Date.now() - 6000,
+          },
 			{
 				id: "step-1",
 				phase: "THINK",
@@ -100,7 +106,18 @@ if (typeof window !== "undefined") {
 				durationMs: 8,
 				timestamp: Date.now() - 1000,
 			},
+          {
+            id: "step-4",
+            phase: "REFLECT",
+            tool: "session_list",
+            thought: "Goal 'scan_sessions' successfully resolved via 'session_list'. System state consistent.",
+            durationMs: 8,
+            timestamp: Date.now() - 2000,
+          },
 		],
+        QueueTask: async (task: string) => ({ status: "queued", task, queue: [task] }),
+        GetTaskQueue: async () => ["scan_sessions", "check_config"],
+        ClearTaskQueue: async () => [],
 	};
 
 	const defaultMCPAggregator = {

@@ -52,19 +52,46 @@ func TestAgentAutonomousMCPToolUse(t *testing.T) {
 
 	time.Sleep(50 * time.Millisecond)
 	steps := agent.GetExecutionSteps()
-	if len(steps) < 3 {
-		t.Fatalf("expected at least 3 steps (Think, Act, Observe), got %d", len(steps))
+	if len(steps) < 4 {
+		t.Fatalf("expected at least 4 steps across PLAN, THINK, ACT, OBSERVE, REFLECT, got %d", len(steps))
 	}
 
 	foundAct := false
+	foundPlan := false
+	foundReflect := false
 	for _, s := range steps {
+		if s.Phase == "PLAN" {
+			foundPlan = true
+		}
 		if s.Phase == "ACT" && s.Tool == "session_list" {
 			foundAct = true
-			break
 		}
+		if s.Phase == "REFLECT" {
+			foundReflect = true
+		}
+	}
+	if !foundPlan {
+		t.Error("expected PLAN phase step")
 	}
 	if !foundAct {
 		t.Error("expected ACT step with session_list tool")
+	}
+	if !foundReflect {
+		t.Error("expected REFLECT phase step")
+	}
+
+	// Test task queue operations
+	qRes := agent.QueueTask("autonomous_audit")
+	if qRes["status"] != "queued" {
+		t.Errorf("expected queued status, got: %+v", qRes)
+	}
+	queue := agent.GetTaskQueue()
+	if len(queue) != 1 || queue[0] != "autonomous_audit" {
+		t.Errorf("unexpected task queue state: %+v", queue)
+	}
+	cleared := agent.ClearTaskQueue()
+	if len(cleared) != 0 || len(agent.GetTaskQueue()) != 0 {
+		t.Errorf("expected empty queue after clear, got %d", len(agent.GetTaskQueue()))
 	}
 }
 
