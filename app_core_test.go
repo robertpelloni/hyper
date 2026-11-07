@@ -93,6 +93,21 @@ func TestAgentAutonomousMCPToolUse(t *testing.T) {
 	if len(cleared) != 0 || len(agent.GetTaskQueue()) != 0 {
 		t.Errorf("expected empty queue after clear, got %d", len(agent.GetTaskQueue()))
 	}
+
+	// Test task queue execution processing
+	agent.QueueTask("task_one")
+	agent.QueueTask("task_two")
+	if len(agent.GetTaskQueue()) != 2 {
+		t.Errorf("expected 2 tasks in queue, got %d", len(agent.GetTaskQueue()))
+	}
+	popped := agent.ProcessNextTask()
+	if popped != "task_one" {
+		t.Errorf("expected popped task to be task_one, got %s", popped)
+	}
+	if len(agent.GetTaskQueue()) != 1 {
+		t.Errorf("expected 1 task remaining after ProcessNextTask, got %d", len(agent.GetTaskQueue()))
+	}
+	agent.ClearTaskQueue()
 }
 
 func TestMCPAggregatorTools(t *testing.T) {

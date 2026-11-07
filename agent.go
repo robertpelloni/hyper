@@ -72,6 +72,22 @@ func (ah *AgentHarness) ClearTaskQueue() []string {
 	return ah.queue
 }
 
+// ProcessNextTask pops and immediately executes the next queued task, returning the task name
+func (ah *AgentHarness) ProcessNextTask() string {
+	ah.mu.Lock()
+	var nextTask string
+	if len(ah.queue) > 0 {
+		nextTask = ah.queue[0]
+		ah.queue = ah.queue[1:]
+	}
+	ah.mu.Unlock()
+
+	if nextTask != "" {
+		ah.executeDirective(nextTask)
+	}
+	return nextTask
+}
+
 func (ah *AgentHarness) SetMCPAggregator(mcp *MCPAggregator) {
 	ah.mu.Lock()
 	defer ah.mu.Unlock()

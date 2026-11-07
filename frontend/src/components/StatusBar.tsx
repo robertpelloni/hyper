@@ -41,7 +41,7 @@ export default function StatusBar({
 			</div>
 
 			<div className="tn_status_item" style={{ marginLeft: "auto" }}>
-				<span>TormentNexus v1.0.0</span>
+				<span>TormentNexus v1.1.0</span>
 				<Tooltip text="TormentNexus Unified Autonomous Harness & Terminal" />
 			</div>
 		</div>

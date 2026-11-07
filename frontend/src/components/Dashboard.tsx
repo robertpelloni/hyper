@@ -51,6 +51,10 @@ export default function Dashboard({
 	const [jsonValidationError, setJsonValidationError] = useState<string | null>(null);
 	const [isInvokingTool, setIsInvokingTool] = useState<boolean>(false);
 
+	// Tool filtering & status tabs in MCP Monitor
+	const [toolSearchQuery, setToolSearchQuery] = useState<string>("");
+	const [toolStatusFilter, setToolStatusFilter] = useState<"all" | "success" | "error">("all");
+
 	const [telemetry, setTelemetry] = useState<MCPTelemetry>({
 		status: "active",
 		active_tools: 0,
@@ -742,9 +746,61 @@ export default function Dashboard({
 						</div>
 
 						<div className="tn_panel_body">
+							{/* Search & Filter Toolbar */}
+							<div className="tn_mcp_filter_bar">
+								<input
+									type="text"
+									className="tn_filter_input"
+									placeholder="Search tools..."
+									value={toolSearchQuery}
+									onChange={(e) => setToolSearchQuery(e.target.value)}
+								/>
+								<div className="tn_filter_tabs">
+									<button
+										type="button"
+										className={`tn_filter_tab ${toolStatusFilter === "all" ? "active" : ""}`}
+										onClick={() => setToolStatusFilter("all")}
+									>
+										All ({mcpTools.length})
+									</button>
+									<button
+										type="button"
+										className={`tn_filter_tab ${toolStatusFilter === "success" ? "active" : ""}`}
+										onClick={() => setToolStatusFilter("success")}
+									>
+										Success
+									</button>
+									<button
+										type="button"
+										className={`tn_filter_tab ${toolStatusFilter === "error" ? "active" : ""}`}
+										onClick={() => setToolStatusFilter("error")}
+									>
+										Error
+									</button>
+								</div>
+							</div>
+
 							{/* Real-time Tool Performance Cards */}
 							<div className="tn_tool_metrics_grid">
-								{mcpTools.map((t) => {
+								{mcpTools
+									.filter((t) => {
+										const toolName = (t.Name || t.name).toLowerCase();
+										if (toolSearchQuery && !toolName.includes(toolSearchQuery.toLowerCase())) {
+											return false;
+										}
+										if (toolStatusFilter !== "all") {
+											const records = executionHistory.filter((h) => h.tool === (t.Name || t.name));
+											const latest = records[records.length - 1];
+											if (toolStatusFilter === "success") {
+												return latest ? latest.status === "success" : true;
+											}
+											if (toolStatusFilter === "error") {
+												return latest ? latest.status === "error" : false;
+											}
+										}
+										return true;
+									})
+									.map((t) => {
 									const toolName = t.Name || t.name;
 									const records = executionHistory.filter((h) => h.tool === toolName);
 									const latest = records[records.length - 1];

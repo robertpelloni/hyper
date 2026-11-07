@@ -158,3 +158,50 @@ func TestServerEndpoints(t *testing.T) {
 		t.Errorf("expected history capped at 100 records, got %d", len(historyRecords))
 	}
 }
+
+func TestConcurrentMCPCalls(t *testing.T) {
+	server := NewServer()
+	server.RegisterTool(Tool{
+		Name:        "concurrent_tool",
+		Description: "Tool for concurrent stress testing",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+
+	mux := http.NewServeMux()
+	server.SetupRoutes(mux)
+
+	numRequests := 25
+	errChan := make(chan error, numRequests)
+
+	for i := 0; i < numRequests; i++ {
+		go func(id int) {
+			payload, _ := json.Marshal(map[string]interface{}{
+				"name":      "concurrent_tool",
+				"arguments": map[string]interface{}{"id": id},
+			})
+			req, err := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(payload))
+			if err != nil {
+				errChan <- err
+				return
+			}
+			rr := httptest.NewRecorder()
+			mux.ServeHTTP(rr, req)
+			if rr.Code != http.StatusOK {
+				errChan <- err
+				return
+			}
+			errChan <- nil
+		}(i)
+	}
+
+	for i := 0; i < numRequests; i++ {
+		if err := <-errChan; err != nil {
+			t.Fatalf("concurrent request failed: %v", err)
+		}
+	}
+
+	hist := server.GetHistory()
+	if len(hist) < numRequests {
+		t.Errorf("expected at least %d history records, got %d", numRequests, len(hist))
+	}
+}
