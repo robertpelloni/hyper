@@ -203,3 +203,120 @@ func TestAppServerStatusAndTray(t *testing.T) {
 
 	app.shutdown(context.Background())
 }
+
+func TestMCPWorkspaceAndGitTools(t *testing.T) {
+	agg := NewMCPAggregator()
+
+	// Verify categories and existence of newly added tools
+	tools := agg.ListTools()
+	foundWorkspace := false
+	foundGit := false
+	foundSysInfo := false
+
+	for _, tool := range tools {
+		if tool.Name == "workspace_search" {
+			foundWorkspace = true
+			if tool.Category != "Intelligence" {
+				t.Errorf("expected Intelligence category for workspace_search, got: %s", tool.Category)
+			}
+		}
+		if tool.Name == "git_status" {
+			foundGit = true
+			if tool.Category != "System" {
+				t.Errorf("expected System category for git_status, got: %s", tool.Category)
+			}
+		}
+		if tool.Name == "system_info" {
+			foundSysInfo = true
+			if tool.Category != "System" {
+				t.Errorf("expected System category for system_info, got: %s", tool.Category)
+			}
+		}
+	}
+
+	if !foundWorkspace {
+		t.Error("expected workspace_search tool to be registered")
+	}
+	if !foundGit {
+		t.Error("expected git_status tool to be registered")
+	}
+	if !foundSysInfo {
+		t.Error("expected system_info tool to be registered")
+	}
+
+	// Verify tool executions and timing metrics
+	wsRes := agg.CallTool("workspace_search", map[string]interface{}{"query": "TormentNexus"})
+	if wsRes["statusCode"] != 200 || wsRes["status"] != "executed" {
+		t.Errorf("expected 200 executed for workspace_search, got: %+v", wsRes)
+	}
+
+	gitRes := agg.CallTool("git_status", map[string]interface{}{})
+	if gitRes["statusCode"] != 200 || gitRes["status"] != "executed" {
+		t.Errorf("expected 200 executed for git_status, got: %+v", gitRes)
+	}
+
+	sysRes := agg.CallTool("system_info", map[string]interface{}{})
+	if sysRes["statusCode"] != 200 || sysRes["status"] != "executed" {
+		t.Errorf("expected 200 executed for system_info, got: %+v", sysRes)
+	}
+
+	// Verify execution history recorded
+	hist := agg.GetToolExecutionHistory()
+	if len(hist) < 3 {
+		t.Errorf("expected at least 3 execution records, got %d", len(hist))
+	}
+}
+
+func TestAgentWorkspaceSearchDirective(t *testing.T) {
+	agent := NewAgentHarness()
+	mcp := NewMCPAggregator()
+	agent.SetMCPAggregator(mcp)
+
+	// Test workspace_search directive
+	agent.ExecuteCommand("workspace_search:main")
+	time.Sleep(50 * time.Millisecond)
+
+	steps := agent.GetExecutionSteps()
+	foundWorkspaceStep := false
+	for _, s := range steps {
+		if s.Tool == "workspace_search" && s.Phase == "ACT" {
+			foundWorkspaceStep = true
+			if s.Input["query"] != "main" {
+				t.Errorf("expected query 'main', got: %+v", s.Input)
+			}
+		}
+	}
+	if !foundWorkspaceStep {
+		t.Error("expected ACT step with workspace_search tool and query 'main'")
+	}
+
+	// Test git_status directive
+	agent.ExecuteCommand("git_status")
+	time.Sleep(50 * time.Millisecond)
+
+	steps = agent.GetExecutionSteps()
+	foundGitStep := false
+	for _, s := range steps {
+		if s.Tool == "git_status" && s.Phase == "ACT" {
+			foundGitStep = true
+		}
+	}
+	if !foundGitStep {
+		t.Error("expected ACT step with git_status tool")
+	}
+
+	// Test system_info directive
+	agent.ExecuteCommand("system_info")
+	time.Sleep(50 * time.Millisecond)
+
+	steps = agent.GetExecutionSteps()
+	foundSysStep := false
+	for _, s := range steps {
+		if s.Tool == "system_info" && s.Phase == "ACT" {
+			foundSysStep = true
+		}
+	}
+	if !foundSysStep {
+		t.Error("expected ACT step with system_info tool")
+	}
+}

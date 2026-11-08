@@ -199,12 +199,19 @@ func (ah *AgentHarness) executeDirective(directive string) {
 		selectedTool = "session_list"
 	} else if directive == "check_config" {
 		selectedTool = "config_get"
+	} else if directive == "git_status" {
+		selectedTool = "git_status"
+	} else if directive == "system_info" {
+		selectedTool = "system_info"
 	} else if len(directive) > 10 && directive[:10] == "file_read:" {
 		selectedTool = "file_read"
 		args["path"] = directive[10:]
 	} else if len(directive) > 14 && directive[:14] == "shell_execute:" {
 		selectedTool = "shell_execute"
 		args["command"] = directive[14:]
+	} else if len(directive) > 17 && directive[:17] == "workspace_search:" {
+		selectedTool = "workspace_search"
+		args["query"] = directive[17:]
 	} else {
 		selectedTool = "shell_execute"
 		args["command"] = "echo Processing: " + directive

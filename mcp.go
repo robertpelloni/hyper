@@ -10,6 +10,7 @@ import (
 // MCPTool represents a Model Context Protocol tool
 type MCPTool struct {
 	Name        string                 `json:"name"`
+	Category    string                 `json:"category,omitempty"`
 	Description string                 `json:"description"`
 	InputSchema map[string]interface{} `json:"inputSchema"`
 }
@@ -42,6 +43,7 @@ func NewMCPAggregator() *MCPAggregator {
 	// Register built-in tools
 	ag.RegisterTool(MCPTool{
 		Name:        "shell_execute",
+		Category:    "System",
 		Description: "Execute a shell command and return the output",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -57,6 +59,7 @@ func NewMCPAggregator() *MCPAggregator {
 
 	ag.RegisterTool(MCPTool{
 		Name:        "file_read",
+		Category:    "Filesystem",
 		Description: "Read the contents of a file",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -72,6 +75,7 @@ func NewMCPAggregator() *MCPAggregator {
 
 	ag.RegisterTool(MCPTool{
 		Name:        "file_write",
+		Category:    "Filesystem",
 		Description: "Write content to a file",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -91,6 +95,7 @@ func NewMCPAggregator() *MCPAggregator {
 
 	ag.RegisterTool(MCPTool{
 		Name:        "agent_status",
+		Category:    "Agent",
 		Description: "Check the status of the autonomous agent harness",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -99,6 +104,7 @@ func NewMCPAggregator() *MCPAggregator {
 
 	ag.RegisterTool(MCPTool{
 		Name:        "session_list",
+		Category:    "System",
 		Description: "List all active PTY sessions",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -107,6 +113,7 @@ func NewMCPAggregator() *MCPAggregator {
 
 	ag.RegisterTool(MCPTool{
 		Name:        "config_get",
+		Category:    "System",
 		Description: "Get the current application configuration",
 		InputSchema: map[string]interface{}{
 			"type": "object",
@@ -116,6 +123,40 @@ func NewMCPAggregator() *MCPAggregator {
 					"description": "Optional specific config key to retrieve",
 				},
 			},
+		},
+	})
+
+	ag.RegisterTool(MCPTool{
+		Name:        "workspace_search",
+		Category:    "Intelligence",
+		Description: "Search workspace file paths and file contents in-memory",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"query": map[string]interface{}{
+					"type":        "string",
+					"description": "The search keyword or pattern",
+				},
+			},
+			"required": []string{"query"},
+		},
+	})
+
+	ag.RegisterTool(MCPTool{
+		Name:        "git_status",
+		Category:    "System",
+		Description: "Get current Git working branch and modified file status",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+		},
+	})
+
+	ag.RegisterTool(MCPTool{
+		Name:        "system_info",
+		Category:    "System",
+		Description: "Query host platform architecture, CPU count, and runtime stats",
+		InputSchema: map[string]interface{}{
+			"type": "object",
 		},
 	})
 

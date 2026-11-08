@@ -32,6 +32,9 @@
 - [x] Support dynamic parameterized directives (`file_read:`, `shell_execute:`) in `AgentHarness`.
 - [x] Add cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) to Agent Control Panel.
 - [x] Integrate Warp-style Semantic Command Blocks inspector and "Explain & Fix" action in Mission Control.
+- [x] Expand MCP Tool registry with `workspace_search`, `git_status`, and `system_info` tools.
+- [x] Add MCP category filtering pills (`ALL`, `System`, `Filesystem`, `Agent`, `Intelligence`).
+- [x] Implement JSON export utilities for reasoning step telemetry (`Export Steps`) and command block history (`Export Blocks`).
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

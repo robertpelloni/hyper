@@ -33,7 +33,13 @@
    - Exposed Go Wails bindings for history query and recording in `app_core.go`.
    - Built Warp-style interactive command block inspector in Mission Control Section 3 with execution status badges (`✓` / `✕`), search filtering, and one-click "🤖 Explain & Fix" direct result piping into autonomous agent directives.
 
-7. **Testing and Verification:**
+7. **MCP Tool Registry Expansion & Telemetry Export:**
+   - Added `workspace_search` (Intelligence), `git_status` (System), and `system_info` (System) tools with structured categories.
+   - Built interactive category filter tabs (`ALL`, `System`, `Filesystem`, `Agent`, `Intelligence`) in the MCP Tool Monitor.
+   - Added JSON export actions for agent cognitive traces (`Export Steps`) and command block history (`Export Blocks`).
+   - Added quick presets (`Git Status`, `Find 'main'`) for instantaneous agent invocation.
+
+8. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 

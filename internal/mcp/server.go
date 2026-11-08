@@ -10,6 +10,7 @@ import (
 
 type Tool struct {
 	Name        string      `json:"name"`
+	Category    string      `json:"category,omitempty"`
 	Description string      `json:"description"`
 	InputSchema interface{} `json:"inputSchema"`
 }

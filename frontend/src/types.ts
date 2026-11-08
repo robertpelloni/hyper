@@ -114,6 +114,7 @@ export interface AgentStatus {
 
 export interface MCPTool {
 	name: string;
+	category?: string;
 	description: string;
 	inputSchema: Record<string, any>;
 }

@@ -53,9 +53,10 @@ export default function Dashboard({
 	const [jsonValidationError, setJsonValidationError] = useState<string | null>(null);
 	const [isInvokingTool, setIsInvokingTool] = useState<boolean>(false);
 
-	// Tool filtering & status tabs in MCP Monitor
+	// Tool filtering, category & status tabs in MCP Monitor
 	const [toolSearchQuery, setToolSearchQuery] = useState<string>("");
 	const [toolStatusFilter, setToolStatusFilter] = useState<"all" | "success" | "error">("all");
+	const [toolCategoryFilter, setToolCategoryFilter] = useState<string>("ALL");
 
 	const [telemetry, setTelemetry] = useState<MCPTelemetry>({
 		status: "active",
@@ -643,22 +644,56 @@ export default function Dashboard({
 								>
 									📊 Query Status
 								</button>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("git_status")}
+									title="Dispatch directive to query Git repository status"
+								>
+									🌿 Git Status
+								</button>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("workspace_search:main")}
+									title="Dispatch directive to search workspace for 'main'"
+								>
+									🔍 Find 'main'
+								</button>
 							</div>
 
-							{/* Phase Filter Tabs */}
-							<div style={{ display: "flex", gap: "6px", marginBottom: "8px", alignItems: "center" }}>
-								<span style={{ fontSize: "10px", color: "#888" }}>Phase:</span>
-								{["ALL", "PLAN", "THINK", "ACT", "OBSERVE", "REFLECT"].map((phase) => (
-									<button
-										key={phase}
-										type="button"
-										className={`tn_btn tn_btn_small ${selectedPhaseFilter === phase ? "tn_btn_primary" : "tn_btn_secondary"}`}
-										onClick={() => setSelectedPhaseFilter(phase)}
-										style={{ fontSize: "9px", padding: "2px 6px" }}
-									>
-										{phase}
-									</button>
-								))}
+							{/* Phase Filter Tabs & History Export */}
+							<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
+								<div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+									<span style={{ fontSize: "10px", color: "#888" }}>Phase:</span>
+									{["ALL", "PLAN", "THINK", "ACT", "OBSERVE", "REFLECT"].map((phase) => (
+										<button
+											key={phase}
+											type="button"
+											className={`tn_btn tn_btn_small ${selectedPhaseFilter === phase ? "tn_btn_primary" : "tn_btn_secondary"}`}
+											onClick={() => setSelectedPhaseFilter(phase)}
+											style={{ fontSize: "9px", padding: "2px 6px" }}
+										>
+											{phase}
+										</button>
+									))}
+								</div>
+								<button
+									type="button"
+									className="tn_btn tn_btn_small tn_btn_secondary"
+									style={{ fontSize: "9px", padding: "2px 8px" }}
+									onClick={() => {
+										const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(agentSteps, null, 2));
+										const downloadAnchor = document.createElement("a");
+										downloadAnchor.setAttribute("href", dataStr);
+										downloadAnchor.setAttribute("download", `tormentnexus_agent_steps_${Date.now()}.json`);
+										document.body.appendChild(downloadAnchor);
+										downloadAnchor.click();
+										downloadAnchor.remove();
+										showFeedback(`Exported ${agentSteps.length} agent reasoning steps`, "success");
+									}}
+									title="Export agent reasoning history as JSON"
+								>
+									💾 Export Steps
+								</button>
 							</div>
 
 							{/* Think-Act-Observe Step Feed */}
@@ -798,37 +833,55 @@ export default function Dashboard({
 						</div>
 
 						<div className="tn_panel_body">
-							{/* Search & Filter Toolbar */}
-							<div className="tn_mcp_filter_bar">
-								<input
-									type="text"
-									className="tn_filter_input"
-									placeholder="Search tools..."
-									value={toolSearchQuery}
-									onChange={(e) => setToolSearchQuery(e.target.value)}
-								/>
-								<div className="tn_filter_tabs">
-									<button
-										type="button"
-										className={`tn_filter_tab ${toolStatusFilter === "all" ? "active" : ""}`}
-										onClick={() => setToolStatusFilter("all")}
-									>
-										All ({mcpTools.length})
-									</button>
-									<button
-										type="button"
-										className={`tn_filter_tab ${toolStatusFilter === "success" ? "active" : ""}`}
-										onClick={() => setToolStatusFilter("success")}
-									>
-										Success
-									</button>
-									<button
-										type="button"
-										className={`tn_filter_tab ${toolStatusFilter === "error" ? "active" : ""}`}
-										onClick={() => setToolStatusFilter("error")}
-									>
-										Error
-									</button>
+							{/* Search, Categories & Filter Toolbar */}
+							<div className="tn_mcp_filter_bar" style={{ flexDirection: "column", gap: "8px" }}>
+								<div style={{ display: "flex", gap: "8px", width: "100%", alignItems: "center" }}>
+									<input
+										type="text"
+										className="tn_filter_input"
+										placeholder="Search tools..."
+										value={toolSearchQuery}
+										onChange={(e) => setToolSearchQuery(e.target.value)}
+										style={{ flex: 1 }}
+									/>
+									<div className="tn_filter_tabs">
+										<button
+											type="button"
+											className={`tn_filter_tab ${toolStatusFilter === "all" ? "active" : ""}`}
+											onClick={() => setToolStatusFilter("all")}
+										>
+											All ({mcpTools.length})
+										</button>
+										<button
+											type="button"
+											className={`tn_filter_tab ${toolStatusFilter === "success" ? "active" : ""}`}
+											onClick={() => setToolStatusFilter("success")}
+										>
+											Success
+										</button>
+										<button
+											type="button"
+											className={`tn_filter_tab ${toolStatusFilter === "error" ? "active" : ""}`}
+											onClick={() => setToolStatusFilter("error")}
+										>
+											Error
+										</button>
+									</div>
+								</div>
+								{/* Category Pills */}
+								<div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
+									<span style={{ fontSize: "10px", color: "#888" }}>Category:</span>
+									{["ALL", "System", "Filesystem", "Agent", "Intelligence"].map((cat) => (
+										<button
+											key={cat}
+											type="button"
+											className={`tn_btn tn_btn_small ${toolCategoryFilter === cat ? "tn_btn_primary" : "tn_btn_secondary"}`}
+											onClick={() => setToolCategoryFilter(cat)}
+											style={{ fontSize: "9px", padding: "1px 6px" }}
+										>
+											{cat}
+										</button>
+									))}
 								</div>
 							</div>
 
@@ -848,6 +901,12 @@ export default function Dashboard({
 											}
 											if (toolStatusFilter === "error") {
 												return latest ? latest.status === "error" : false;
+											}
+										}
+										if (toolCategoryFilter !== "ALL") {
+											const cat = (t as any).Category || (t as any).category || "System";
+											if (cat.toLowerCase() !== toolCategoryFilter.toLowerCase()) {
+												return false;
 											}
 										}
 										return true;
@@ -870,6 +929,10 @@ export default function Dashboard({
 										file_write: '{"path": "tmp_test.txt", "content": "Hello World"}',
 										agent_status: '{}',
 										session_list: '{}',
+										config_get: '{"key": "fontSize"}',
+										workspace_search: '{"query": "TormentNexus"}',
+										git_status: '{}',
+										system_info: '{}',
 									};
 
 									const handleSelect = () => {
@@ -1174,6 +1237,24 @@ export default function Dashboard({
 											title="Clear all recorded command history blocks"
 										>
 											Clear
+										</button>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											style={{ fontSize: "9px", padding: "1px 6px" }}
+											onClick={() => {
+												const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(commandBlocks, null, 2));
+												const downloadAnchor = document.createElement("a");
+												downloadAnchor.setAttribute("href", dataStr);
+												downloadAnchor.setAttribute("download", `tormentnexus_command_blocks_${Date.now()}.json`);
+												document.body.appendChild(downloadAnchor);
+												downloadAnchor.click();
+												downloadAnchor.remove();
+												showFeedback(`Exported ${commandBlocks.length} command blocks`, "success");
+											}}
+											title="Export terminal command blocks as JSON"
+										>
+											💾 Export Blocks
 										</button>
 									</div>
 									<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>

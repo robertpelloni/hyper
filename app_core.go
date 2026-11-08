@@ -103,17 +103,50 @@ func (a *App) StartMCPServer(port int) error {
 	server := mcp.NewServer()
 	server.RegisterTool(mcp.Tool{
 		Name:        "shell_execute",
+		Category:    "System",
 		Description: "Execute a shell command in TormentNexus",
 		InputSchema: map[string]interface{}{"type": "object"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "agent_status",
+		Category:    "Agent",
 		Description: "Query autonomous agent status",
 		InputSchema: map[string]interface{}{"type": "object"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "file_read",
+		Category:    "Filesystem",
 		Description: "Read file contents",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+	server.RegisterTool(mcp.Tool{
+		Name:        "file_write",
+		Category:    "Filesystem",
+		Description: "Write content to a file",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+	server.RegisterTool(mcp.Tool{
+		Name:        "session_list",
+		Category:    "System",
+		Description: "List active terminal sessions",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+	server.RegisterTool(mcp.Tool{
+		Name:        "workspace_search",
+		Category:    "Intelligence",
+		Description: "Search workspace file paths and contents",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+	server.RegisterTool(mcp.Tool{
+		Name:        "git_status",
+		Category:    "System",
+		Description: "Query current Git branch and repository state",
+		InputSchema: map[string]interface{}{"type": "object"},
+	})
+	server.RegisterTool(mcp.Tool{
+		Name:        "system_info",
+		Category:    "System",
+		Description: "Get CPU, memory, and OS runtime info",
 		InputSchema: map[string]interface{}{"type": "object"},
 	})
 
