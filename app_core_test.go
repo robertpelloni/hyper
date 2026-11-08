@@ -163,5 +163,26 @@ func TestAppServerStatusAndTray(t *testing.T) {
 		t.Errorf("expected tray state to flip from %v, got %v", initialTray, newTray)
 	}
 
+	// Test Terminal Buffer bindings
+	blk := app.RecordTerminalCommand("git status", "On branch main", true)
+	if blk.Command != "git status" {
+		t.Errorf("unexpected command: %s", blk.Command)
+	}
+
+	hist := app.GetTerminalHistory()
+	if len(hist) != 1 {
+		t.Errorf("expected 1 history item, got %d", len(hist))
+	}
+
+	searchRes := app.SearchTerminalHistory("branch")
+	if len(searchRes) != 1 {
+		t.Errorf("expected 1 search result for 'branch', got %d", len(searchRes))
+	}
+
+	app.ClearTerminalHistory()
+	if len(app.GetTerminalHistory()) != 0 {
+		t.Errorf("expected empty history after ClearTerminalHistory")
+	}
+
 	app.shutdown(context.Background())
 }

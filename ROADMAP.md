@@ -23,9 +23,10 @@
 - [ ] Multi-language core parity across 5 languages (TypeScript, Rust, Go, C#, Java).
 - [ ] Multi-agent swarm orchestration and collaborative delegation.
 - [ ] WASM sandboxed tool runtime for secure arbitrary code execution.
+- [x] Warp-like semantic command block tracking and terminal history search (`internal/terminal/buffer.go`).
 - [ ] Persistent session state replication and SQLite session buffer indexing.
 - [ ] External MCP socket server proxying and SSE streaming support.
-- [ ] Warp-like semantic command blocks and AI code completion layer.
+- [ ] AI code completion layer and inline suggestions.
 
 ## Phase 4: Production Deployment & Packaging
 - [ ] Multi-platform CI/CD installer generation.

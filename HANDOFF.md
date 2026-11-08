@@ -27,7 +27,11 @@
    - Archived legacy `start.bat` non-destructively into `archive/start.bat.bak`.
    - Created modern cross-platform executable scripts `build.sh` and `start.sh`.
 
-6. **Testing and Verification:**
+6. **Command Block History & Semantic Search:**
+   - Implemented thread-safe `SearchBlocks`, `GetBlocks`, and `Clear` in `internal/terminal/buffer.go`.
+   - Exposed Go Wails bindings for history query and recording in `app_core.go`.
+
+7. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 

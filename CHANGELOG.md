@@ -21,6 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Session Manager Lifecycle:** Added thread-safe `ListSessions()`, `Count()`, and `CloseAll()` methods to `internal/session/manager.go` with unit test suite.
 - **In-Memory File Indexing & Search:** Added directory walking, in-memory text indexing, and case-insensitive keyword search in `internal/intelligence/indexer.go`.
 - **System Tray & Server Lifecycle Management:** Added `StartMCPServer`, `StopMCPServer`, `RestartServers`, `StopServers`, `GetServerStatus`, `ToggleSystemTray`, and `QuitApp` in `app_core.go` and `main.go`.
+- **Terminal Command History & Search:** Implemented thread-safe `SearchBlocks` and history recording in `internal/terminal/buffer.go` with Wails bindings in `app_core.go`.
+- **Accessible Keyboard Tooltips:** Added full keyboard focus, ARIA attributes, and Escape key dismissal with placement indicator arrow in `Tooltip.tsx`.
 - **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
 - **Cross-Platform Scripts:** Added executable `build.sh` and `start.sh` runners; non-destructively archived legacy scripts in `archive/start.bat.bak`.
 

@@ -11,6 +11,7 @@ import (
 
 	"github.com/wailsapp/wails/v2/pkg/runtime" // wails runtime for window/events/dialogs
 	"tormentnexus/internal/mcp"
+	"tormentnexus/internal/terminal"
 )
 
 // ServerStatus represents the state of backend services
@@ -26,21 +27,23 @@ type ServerStatus struct {
 
 // App is the main application struct for Wails
 type App struct {
-	ctx         context.Context
-	sessions    *SessionManager
-	config      *ConfigManager
-	agent       *AgentHarness
-	mcp         *MCPAggregator
-	mcpServer   *http.Server
-	mcpMu       sync.Mutex
-	startTime   time.Time
-	trayVisible bool
+	ctx            context.Context
+	sessions       *SessionManager
+	config         *ConfigManager
+	agent          *AgentHarness
+	mcp            *MCPAggregator
+	terminalBuffer *terminal.Buffer
+	mcpServer      *http.Server
+	mcpMu          sync.Mutex
+	startTime      time.Time
+	trayVisible    bool
 }
 
 func NewApp() *App {
 	return &App{
-		startTime:   time.Now(),
-		trayVisible: true,
+		startTime:      time.Now(),
+		trayVisible:    true,
+		terminalBuffer: terminal.NewBuffer(),
 	}
 }
 
@@ -51,6 +54,9 @@ func (a *App) startup(ctx context.Context) {
 	a.config = NewConfigManager()
 	a.agent = NewAgentHarness()
 	a.mcp = NewMCPAggregator()
+	if a.terminalBuffer == nil {
+		a.terminalBuffer = terminal.NewBuffer()
+	}
 
 	// Connect Agent Harness to MCP Aggregator and Runtime
 	a.agent.SetMCPAggregator(a.mcp)
@@ -228,6 +234,42 @@ func (a *App) QuitApp() {
 		runtime.Quit(a.ctx)
 	} else {
 		os.Exit(0)
+	}
+}
+
+// ---- Terminal Command History & Buffer Operations ----
+
+// RecordTerminalCommand stores an executed command and its output in the semantic buffer
+func (a *App) RecordTerminalCommand(cmd, output string, success bool) terminal.Block {
+	if a.terminalBuffer == nil {
+		a.terminalBuffer = terminal.NewBuffer()
+	}
+	blk := a.terminalBuffer.AddBlock(cmd, output, success)
+	a.EmitEvent("terminal:block_added", blk)
+	return blk
+}
+
+// GetTerminalHistory returns all recorded terminal command blocks
+func (a *App) GetTerminalHistory() []terminal.Block {
+	if a.terminalBuffer == nil {
+		return []terminal.Block{}
+	}
+	return a.terminalBuffer.GetBlocks()
+}
+
+// SearchTerminalHistory performs a keyword search across commands and outputs
+func (a *App) SearchTerminalHistory(keyword string) []terminal.Block {
+	if a.terminalBuffer == nil {
+		return []terminal.Block{}
+	}
+	return a.terminalBuffer.SearchBlocks(keyword)
+}
+
+// ClearTerminalHistory flushes all recorded terminal command blocks
+func (a *App) ClearTerminalHistory() {
+	if a.terminalBuffer != nil {
+		a.terminalBuffer.Clear()
+		a.EmitEvent("terminal:history_cleared")
 	}
 }
 
