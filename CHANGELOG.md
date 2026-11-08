@@ -1,24 +1,36 @@
-# CHANGELOG: TormentNexus
+# Changelog
 
-## [1.1.0] - 2026-11-04
-### Added
-- **Mission Control Dashboard:** Singular, consolidated dashboard combining Agent Harness, MCP Tool Aggregator, Terminal Orchestration, Server Lifecycle, and Quick Config.
-- **System Tray & Server Lifecycle Controls:** Ability to cleanly stop, restart, and inspect all backend servers and quit the app cleanly via menu, UI, and Go bindings.
-- **Contextual Tooltip System:** Added informative tooltips and guidance markers across all UI controls and telemetry badges.
-- **Interactive MCP Tool Runner:** Built-in form to select, configure arguments, and execute any registered MCP tool with formatted JSON output.
-- **HTTP /call POST Support:** Added JSON body decoding and execution response in `internal/mcp/server.go`.
-- **Modern Build Scripts:** Created cross-platform `build.sh` and `start.sh`, non-destructively archived legacy scripts, and sanitized branding.
-- **Backend Unit Tests:** Added unit test coverage in `app_core_test.go` for AgentHarness, MCPAggregator, and App server/tray status.
-- **Autonomous Agent Think-Act-Observe Workflows:** Autonomous MCP tool invocation and reasoning step streaming (`agent:step`) in real-time.
-- **Real-Time MCP Tool Monitor:** Per-tool performance cards tracking average latency, HTTP status codes (`200 OK`), and execution history bar graphs.
-- **Enhanced Ergonomics & Keyboard Navigation:** Support for `Esc` dashboard toggle, `Ctrl+Enter` tool execution, and informative inline workflow tips.
-- **Client-Side JSON Validation & Formatting:** Real-time syntax checking on tool argument payloads with inline error highlighting, disabled run state on invalid syntax, 'Format JSON', and 'Reset Template' convenience actions.
-- **MCP Server Hardening & Structured Errors:** 1MB body limit enforcement on POST `/call` requests (`PAYLOAD_TOO_LARGE` 413), non-empty tool validation (`EMPTY_TOOL_NAME` 400), `TOOL_NOT_FOUND` (404), and `INVALID_ARGUMENTS` (400) structured JSON responses.
+All notable changes to TormentNexus will be documented in this file.
 
-## [1.0.0] - 2026-06-05
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.1.0] - 2026-11-07
+
 ### Added
-- Complete project rebranding to **TormentNexus**.
-- High-performance Go core sidecar (v1.25.0) for PTY and Agent management.
-- REST API for agent execution and MCP server aggregation.
-- TypeScript bridge for seamless UI-to-Go Core connectivity.
-- Unified documentation suite.
+- **Consolidated Mission Control Dashboard:** Redesigned `Dashboard.tsx` into a singular, high-value page consolidating agent control, MCP tool runner, terminal session list, server lifecycle controls, and preferences without page fragmentation.
+- **Universal Tooltips & Interactive Guidance:** Added `Tooltip.tsx` markers (`?`) across all dashboard metrics, form fields, and actions.
+- **Quick-Start Onboarding Guide:** Added an interactive 3-step banner with pre-filling actions for agent directives, tool runner arguments, and result piping.
+- **MCP HTTP Server Hardening:** Implemented `POST /call` and `GET /history` in `internal/mcp/server.go` with 1MB payload limits (`http.MaxBytesReader`) and structured error responses (`PAYLOAD_TOO_LARGE`, `INVALID_ARGUMENTS`, `EMPTY_TOOL_NAME`, `TOOL_NOT_FOUND`).
+- **Real-Time Client-Side Validation:** Added real-time JSON syntax checking, red border error states, Format JSON, and Reset Template utilities in Mission Control.
+- **Structured Error Recovery Callouts:** Added visual error callout boxes with dedicated `errorCode` badge, "📋 Copy Error", and "🔄 Reset & Retry" controls.
+- **MCP Tool Search & Status Filtering:** Added search filtering by tool name/description and status tabs (All, Success, Error).
+- **Multi-Phase Agent Reasoning Engine:** Extended `AgentHarness` (`agent.go`) and `Agent` (`internal/agent/harness.go`) to support multi-phase reasoning steps (`PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`), step callbacks, and sequential task queueing.
+- **Inline Task Removal & Agent Status Indicator:** Added inline task deletion (`✕`) for queue badges and pulsating real-time status indicator (`● RUNNING` / `○ IDLE`).
+- **Quick-Access Shortcuts Footer:** Added persistent keyboard shortcuts bar (`Esc`, `Ctrl+Shift+D`, `Ctrl+Enter`, `Enter`) and inline tool description hints.
+- **Session Manager Lifecycle:** Added thread-safe `ListSessions()`, `Count()`, and `CloseAll()` methods to `internal/session/manager.go` with unit test suite.
+- **In-Memory File Indexing & Search:** Added directory walking, in-memory text indexing, and case-insensitive keyword search in `internal/intelligence/indexer.go`.
+- **System Tray & Server Lifecycle Management:** Added `StartMCPServer`, `StopMCPServer`, `RestartServers`, `StopServers`, `GetServerStatus`, `ToggleSystemTray`, and `QuitApp` in `app_core.go` and `main.go`.
+- **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
+- **Cross-Platform Scripts:** Added executable `build.sh` and `start.sh` runners; non-destructively archived legacy scripts in `archive/start.bat.bak`.
+
+### Changed
+- Rebranded remaining references across the codebase to TormentNexus.
+- Synchronized all documentation files to v1.1.0 (`VERSION.md`, `DEPLOY.md`, `MEMORY.md`, `ROADMAP.md`, `TODO.md`, `VISION.md`, `README.md`, `USAGE.md`, `SUMMARY.md`, `HANDOFF.md`).
+
+## [1.0.0] - 2026-11-04
+
+### Added
+- Initial rebranding of hyper to TormentNexus.
+- Basic terminal architecture and Go core backend.
+- Embedded Wails UI integration.
