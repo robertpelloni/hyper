@@ -40,6 +40,9 @@
 - [x] Expand Quick-Start Onboarding Guide to 4-step interactive workflow including plugin customization.
 - [x] Implement thread-safe terminal session snapshot export and file persistence (`internal/session/manager.go`).
 - [x] Integrate interactive "💾 Snapshot Sessions" export button with toast feedback in Mission Control Section 3.
+- [x] Add "⚡ Pipe to Agent" direct invocation buttons to MCP Tool cards in Mission Control.
+- [x] Add "🔗 Pipeline: Audit" chained workflow preset and "🔧 Inspect Tool" shortcut on reasoning steps.
+- [x] Implement chained directive pipelines (`&&`) in Go `AgentHarness`.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

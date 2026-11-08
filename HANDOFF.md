@@ -55,7 +55,13 @@
    - Exposed Go Wails method `ExportSessionSnapshot()` in `app_core.go` and `session.go`.
    - Added interactive `💾 Snapshot Sessions` export button in Section 3 ("Terminal Session Orchestration") of `Dashboard.tsx` with download trigger and toast feedback.
 
-11. **Testing and Verification:**
+11. **Streamlined Autonomous Agent Workflows & Directive Pipelines:**
+   - Streamlined tool selection and invocation by adding direct "⚡ Pipe to Agent" action buttons to every MCP Tool card in Section 2 of `Dashboard.tsx`.
+   - Added multi-step chained workflow preset ("🔗 Pipeline: Audit": `git_status && system_info`).
+   - Added "🔧 Inspect Tool" quick action buttons on `ACT` and `THINK` steps in the agent reasoning feed.
+   - Enhanced `AgentHarness` in `agent.go` to parse and execute chained directive pipelines separated by `&&`.
+
+12. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 

@@ -694,6 +694,14 @@ export default function Dashboard({
 								>
 									🔍 Find 'main'
 								</button>
+								<button
+									className="tn_btn_preset"
+									onClick={() => handleAgentExec("git_status && system_info")}
+									title="Dispatch multi-step pipeline: git_status then system_info"
+									style={{ borderColor: "#00e676", color: "#00e676" }}
+								>
+									🔗 Pipeline: Audit
+								</button>
 							</div>
 
 							{/* Phase Filter Tabs & History Export */}
@@ -763,6 +771,21 @@ export default function Dashboard({
 													<span style={{ fontSize: "9px", color: "#00bcd4" }}>
 														{s.durationMs}ms
 													</span>
+												)}
+												{s.tool && (s.phase === "ACT" || s.phase === "THINK") && (
+													<button
+														type="button"
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														style={{ fontSize: "8px", padding: "1px 4px", marginLeft: "auto", borderColor: "#64b5f6", color: "#64b5f6" }}
+														onClick={(e) => {
+															e.stopPropagation();
+															setSelectedTool(s.tool);
+															showFeedback(`Loaded tool '${s.tool}' into MCP runner`, "info");
+														}}
+														title="Load this tool into the MCP Runner for manual inspection"
+													>
+														🔧 Inspect Tool
+													</button>
 												)}
 											</div>
 											<div className="tn_step_thought">{s.thought}</div>
@@ -1038,6 +1061,23 @@ export default function Dashboard({
 														/>
 													),
 												)}
+											</div>
+
+											{/* Streamlined Quick Pipe to Agent Directive */}
+											<div style={{ marginTop: "6px", display: "flex", justifyContent: "flex-end" }}>
+												<button
+													type="button"
+													className="tn_btn tn_btn_small tn_btn_secondary"
+													style={{ fontSize: "9px", padding: "2px 6px", borderColor: "#7c4dff", color: "#b388ff" }}
+													onClick={(e) => {
+														e.stopPropagation();
+														handleAgentExec(toolName);
+														showFeedback(`Dispatched directive '${toolName}' to agent!`, "success");
+													}}
+													title={`Directly dispatch '${toolName}' as an autonomous agent directive`}
+												>
+													⚡ Pipe to Agent
+												</button>
 											</div>
 										</div>
 									);

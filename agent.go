@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"strings"
 	"sync"
 	"time"
 
@@ -181,6 +182,18 @@ func (ah *AgentHarness) executeDirective(directive string) {
 	ah.mu.Lock()
 	ah.iterations++
 	ah.mu.Unlock()
+
+	// Support chained pipeline execution via '&&'
+	if strings.Contains(directive, "&&") {
+		subDirectives := strings.Split(directive, "&&")
+		for _, sub := range subDirectives {
+			trimmed := strings.TrimSpace(sub)
+			if trimmed != "" {
+				ah.executeDirective(trimmed)
+			}
+		}
+		return
+	}
 
 	// 1. PLAN: Break down directive into high-level objective
 	planStep := AgentExecutionStep{

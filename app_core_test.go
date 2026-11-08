@@ -418,3 +418,32 @@ func TestAppSessionSnapshotExport(t *testing.T) {
 		t.Errorf("expected session metadata and buffer in JSON: %s", snapJSON)
 	}
 }
+
+func TestAgentPipelineChainedDirectives(t *testing.T) {
+	harness := NewAgentHarness()
+	mcp := NewMCPAggregator()
+	harness.SetMCPAggregator(mcp)
+
+	// Execute chained directives with &&
+	harness.executeDirective("git_status && system_info")
+
+	steps := harness.GetExecutionSteps()
+	if len(steps) < 10 { // 5 phases * 2 sub-directives = 10 steps
+		t.Fatalf("expected at least 10 steps from chained directives, got %d", len(steps))
+	}
+
+	foundGit := false
+	foundSys := false
+	for _, s := range steps {
+		if s.Tool == "git_status" {
+			foundGit = true
+		}
+		if s.Tool == "system_info" {
+			foundSys = true
+		}
+	}
+
+	if !foundGit || !foundSys {
+		t.Fatalf("expected both git_status and system_info tools to be invoked, foundGit=%v foundSys=%v", foundGit, foundSys)
+	}
+}
