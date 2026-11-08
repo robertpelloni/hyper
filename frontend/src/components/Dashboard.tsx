@@ -1026,7 +1026,30 @@ export default function Dashboard({
 													>
 														🔄 Reset & Retry
 													</button>
+													<button
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														onClick={() => {
+															setToolOutput("");
+															setToolErrorState(null);
+															showFeedback("Cleared output", "info");
+														}}
+														title="Dismiss error output"
+													>
+														✕ Clear
+													</button>
 												</>
+											)}
+											{!toolErrorState && (
+												<button
+													className="tn_btn tn_btn_small tn_btn_secondary"
+													onClick={() => {
+														setToolOutput("");
+														showFeedback("Cleared output", "info");
+													}}
+													title="Clear output"
+												>
+													✕ Clear
+												</button>
 											)}
 											<button
 												className="tn_btn tn_btn_small tn_btn_secondary"
