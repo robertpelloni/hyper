@@ -67,6 +67,7 @@ export default function Dashboard({
 	// Terminal Command Blocks State (Warp-style)
 	const [commandBlocks, setCommandBlocks] = useState<TerminalBlock[]>([]);
 	const [blockSearchQuery, setBlockSearchQuery] = useState<string>("");
+	const [blockStatusFilter, setBlockStatusFilter] = useState<"all" | "success" | "failed">("all");
 
 	// Quick Settings state
 	const [fontSize, setFontSize] = useState<number>(config.fontSize || 12);
@@ -1155,26 +1156,64 @@ export default function Dashboard({
 
 							{/* Semantic Command Blocks Inspector (Warp-style) */}
 							<div style={{ marginTop: "14px", borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: "10px" }}>
-								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px", flexWrap: "wrap", gap: "6px" }}>
 									<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
 										<span style={{ fontSize: "11px", fontWeight: "bold", color: "#64b5f6" }}>
 											⚡ Semantic Command Blocks ({commandBlocks.length})
 										</span>
 										<Tooltip text="Discrete command and output stream tracking. Click '🤖 Explain & Fix' to pipe terminal errors directly to the AI agent." />
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											style={{ fontSize: "9px", padding: "1px 6px", marginLeft: "4px" }}
+											onClick={async () => {
+												await api.clearTerminalHistory();
+												setCommandBlocks([]);
+												showFeedback("Cleared terminal command blocks", "info");
+											}}
+											title="Clear all recorded command history blocks"
+										>
+											Clear
+										</button>
 									</div>
-									<input
-										type="text"
-										className="tn_filter_input"
-										style={{ width: "140px", padding: "2px 6px", fontSize: "10px" }}
-										placeholder="Filter blocks..."
-										value={blockSearchQuery}
-										onChange={(e) => setBlockSearchQuery(e.target.value)}
-									/>
+									<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+										<div style={{ display: "flex", gap: "2px", background: "rgba(0,0,0,0.3)", borderRadius: "4px", padding: "2px" }}>
+											{(["all", "success", "failed"] as const).map((filter) => (
+												<button
+													key={filter}
+													type="button"
+													style={{
+														fontSize: "9px",
+														padding: "1px 5px",
+														borderRadius: "3px",
+														border: "none",
+														background: blockStatusFilter === filter ? "#3b82f6" : "transparent",
+														color: blockStatusFilter === filter ? "#fff" : "#94a3b8",
+														cursor: "pointer",
+														textTransform: "capitalize",
+													}}
+													onClick={() => setBlockStatusFilter(filter)}
+												>
+													{filter}
+												</button>
+											))}
+										</div>
+										<input
+											type="text"
+											className="tn_filter_input"
+											style={{ width: "110px", padding: "2px 6px", fontSize: "10px" }}
+											placeholder="Filter blocks..."
+											value={blockSearchQuery}
+											onChange={(e) => setBlockSearchQuery(e.target.value)}
+										/>
+									</div>
 								</div>
 
 								<div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "160px", overflowY: "auto" }}>
 									{commandBlocks
 										.filter((b) => {
+											if (blockStatusFilter === "success" && !b.success) return false;
+											if (blockStatusFilter === "failed" && b.success) return false;
 											if (!blockSearchQuery) return true;
 											const q = blockSearchQuery.toLowerCase();
 											return b.command.toLowerCase().includes(q) || b.output.toLowerCase().includes(q);
@@ -1199,18 +1238,34 @@ export default function Dashboard({
 														</span>
 														<code style={{ fontSize: "11px", color: "#f1f5f9" }}>{b.command}</code>
 													</div>
-													<button
-														type="button"
-														className="tn_btn tn_btn_small tn_btn_secondary"
-														style={{ fontSize: "9px", padding: "1px 6px" }}
-														onClick={() => {
-															setAgentCommand(`Analyze and fix output of '${b.command}': ${b.output.slice(0, 200)}`);
-															showFeedback(`Piped command block '${b.command}' into Agent directive!`, "success");
-														}}
-														title="Send command output to Autonomous Agent for explanation or troubleshooting"
-													>
-														🤖 Explain & Fix
-													</button>
+													<div style={{ display: "flex", gap: "4px" }}>
+														{b.output && (
+															<button
+																type="button"
+																className="tn_btn tn_btn_small tn_btn_secondary"
+																style={{ fontSize: "9px", padding: "1px 6px" }}
+																onClick={() => {
+																	navigator.clipboard?.writeText(b.output);
+																	showFeedback("Output copied to clipboard", "info");
+																}}
+																title="Copy block output to clipboard"
+															>
+																📋 Copy
+															</button>
+														)}
+														<button
+															type="button"
+															className="tn_btn tn_btn_small tn_btn_secondary"
+															style={{ fontSize: "9px", padding: "1px 6px" }}
+															onClick={() => {
+																setAgentCommand(`Analyze and fix output of '${b.command}': ${b.output.slice(0, 200)}`);
+																showFeedback(`Piped command block '${b.command}' into Agent directive!`, "success");
+															}}
+															title="Send command output to Autonomous Agent for explanation or troubleshooting"
+														>
+															🤖 Explain & Fix
+														</button>
+													</div>
 												</div>
 												{b.output && (
 													<pre
@@ -1229,6 +1284,11 @@ export default function Dashboard({
 												)}
 											</div>
 										))}
+									{commandBlocks.length === 0 && (
+										<div style={{ fontSize: "11px", color: "#64748b", fontStyle: "italic", textAlign: "center", padding: "8px" }}>
+											No command history blocks recorded yet.
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
