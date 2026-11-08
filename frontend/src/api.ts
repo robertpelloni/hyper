@@ -15,6 +15,7 @@ import type {
 	MCPTool,
 	MCPTelemetry,
 	ServerStatus,
+	TerminalBlock,
 } from "./types";
 
 // Helper for window['go'] dynamic access for newly added methods before wails generate
@@ -207,6 +208,65 @@ export async function agentGetTaskQueue(): Promise<string[]> {
 		return (window as any).go.main.AgentHarness.GetTaskQueue();
 	}
 	return [];
+}
+
+// ===== Terminal Command Blocks & History =====
+export async function getTerminalHistory(): Promise<TerminalBlock[]> {
+	const app = getGoApp();
+	if (app && app.GetTerminalHistory) {
+		return app.GetTerminalHistory();
+	}
+	return [
+		{
+			id: 1,
+			command: "git status",
+			output: "On branch main\nYour branch is up to date with 'origin/main'.",
+			success: true,
+			timestamp: new Date().toISOString(),
+		},
+		{
+			id: 2,
+			command: "npm test",
+			output: "PASS internal/terminal/buffer_test.go",
+			success: true,
+			timestamp: new Date().toISOString(),
+		},
+	];
+}
+
+export async function searchTerminalHistory(keyword: string): Promise<TerminalBlock[]> {
+	const app = getGoApp();
+	if (app && app.SearchTerminalHistory) {
+		return app.SearchTerminalHistory(keyword);
+	}
+	const all = await getTerminalHistory();
+	if (!keyword) return all;
+	return all.filter((b) => b.command.includes(keyword) || b.output.includes(keyword));
+}
+
+export async function recordTerminalCommand(
+	cmd: string,
+	output: string,
+	success: boolean,
+): Promise<TerminalBlock> {
+	const app = getGoApp();
+	if (app && app.RecordTerminalCommand) {
+		return app.RecordTerminalCommand(cmd, output, success);
+	}
+	return {
+		id: Date.now(),
+		command: cmd,
+		output,
+		success,
+		timestamp: new Date().toISOString(),
+	};
+}
+
+export async function clearTerminalHistory(): Promise<void> {
+	const app = getGoApp();
+	if (app && app.ClearTerminalHistory) {
+		return app.ClearTerminalHistory();
+	}
 }
 
 export async function agentRemoveTask(index: number): Promise<string[]> {

@@ -31,6 +31,7 @@
 - [x] Expose command history and search bindings in Go application core (`app_core.go`).
 - [x] Support dynamic parameterized directives (`file_read:`, `shell_execute:`) in `AgentHarness`.
 - [x] Add cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) to Agent Control Panel.
+- [x] Integrate Warp-style Semantic Command Blocks inspector and "Explain & Fix" action in Mission Control.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

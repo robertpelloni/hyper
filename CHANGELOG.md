@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Terminal Command History & Search:** Implemented thread-safe `SearchBlocks` and history recording in `internal/terminal/buffer.go` with Wails bindings in `app_core.go`.
 - **Accessible Keyboard Tooltips:** Added full keyboard focus, ARIA attributes, and Escape key dismissal with placement indicator arrow in `Tooltip.tsx`.
 - **Dynamic Parameterized Agent Directives:** Added prefix-based tool directive routing (`file_read:`, `shell_execute:`) in `AgentHarness` and cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) in Mission Control.
+- **Warp-Style Semantic Command Blocks & Explain in UI:** Added interactive command block history inspector in Section 3 ("Terminal Session Orchestration") with execution status badges (`✓` / `✕`), search filtering, and one-click "🤖 Explain & Fix" button piping terminal command outputs into agent directives.
 - **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
 - **Cross-Platform Scripts:** Added executable `build.sh` and `start.sh` runners; non-destructively archived legacy scripts in `archive/start.bat.bak`.
 

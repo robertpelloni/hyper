@@ -146,11 +146,19 @@ export interface ToolExecutionRecord {
 
 export interface AgentExecutionStep {
 	id: string;
-	phase: "THINK" | "ACT" | "OBSERVE";
+	phase: "PLAN" | "THINK" | "ACT" | "OBSERVE" | "REFLECT";
 	tool?: string;
 	thought: string;
 	input?: Record<string, any>;
 	result?: string;
 	durationMs: number;
 	timestamp: number;
+}
+
+export interface TerminalBlock {
+	id: number;
+	command: string;
+	output: string;
+	success: boolean;
+	timestamp: string;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord, AgentExecutionStep } from "../types";
+import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord, AgentExecutionStep, TerminalBlock } from "../types";
 import * as api from "../api";
 import Tooltip from "./Tooltip";
 
@@ -64,6 +64,10 @@ export default function Dashboard({
 		version: "1.1.0",
 	});
 
+	// Terminal Command Blocks State (Warp-style)
+	const [commandBlocks, setCommandBlocks] = useState<TerminalBlock[]>([]);
+	const [blockSearchQuery, setBlockSearchQuery] = useState<string>("");
+
 	// Quick Settings state
 	const [fontSize, setFontSize] = useState<number>(config.fontSize || 12);
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
@@ -108,6 +112,11 @@ export default function Dashboard({
 			const queue = await api.agentGetTaskQueue();
 			if (queue) {
 				setTaskQueue(queue);
+			}
+
+			const blocks = await api.getTerminalHistory();
+			if (blocks) {
+				setCommandBlocks(blocks);
 			}
 		} catch (err) {
 			console.warn("Failed to refresh status:", err);
@@ -1142,6 +1151,85 @@ export default function Dashboard({
 										</div>
 									</div>
 								))}
+							</div>
+
+							{/* Semantic Command Blocks Inspector (Warp-style) */}
+							<div style={{ marginTop: "14px", borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: "10px" }}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+									<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+										<span style={{ fontSize: "11px", fontWeight: "bold", color: "#64b5f6" }}>
+											⚡ Semantic Command Blocks ({commandBlocks.length})
+										</span>
+										<Tooltip text="Discrete command and output stream tracking. Click '🤖 Explain & Fix' to pipe terminal errors directly to the AI agent." />
+									</div>
+									<input
+										type="text"
+										className="tn_filter_input"
+										style={{ width: "140px", padding: "2px 6px", fontSize: "10px" }}
+										placeholder="Filter blocks..."
+										value={blockSearchQuery}
+										onChange={(e) => setBlockSearchQuery(e.target.value)}
+									/>
+								</div>
+
+								<div style={{ display: "flex", flexDirection: "column", gap: "6px", maxHeight: "160px", overflowY: "auto" }}>
+									{commandBlocks
+										.filter((b) => {
+											if (!blockSearchQuery) return true;
+											const q = blockSearchQuery.toLowerCase();
+											return b.command.toLowerCase().includes(q) || b.output.toLowerCase().includes(q);
+										})
+										.map((b) => (
+											<div
+												key={b.id}
+												style={{
+													background: "rgba(0, 0, 0, 0.35)",
+													border: "1px solid rgba(255, 255, 255, 0.07)",
+													borderRadius: "4px",
+													padding: "6px 8px",
+													display: "flex",
+													flexDirection: "column",
+													gap: "4px",
+												}}
+											>
+												<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+													<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+														<span style={{ color: b.success ? "#4ade80" : "#f87171", fontSize: "11px" }}>
+															{b.success ? "✓" : "✕"}
+														</span>
+														<code style={{ fontSize: "11px", color: "#f1f5f9" }}>{b.command}</code>
+													</div>
+													<button
+														type="button"
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														style={{ fontSize: "9px", padding: "1px 6px" }}
+														onClick={() => {
+															setAgentCommand(`Analyze and fix output of '${b.command}': ${b.output.slice(0, 200)}`);
+															showFeedback(`Piped command block '${b.command}' into Agent directive!`, "success");
+														}}
+														title="Send command output to Autonomous Agent for explanation or troubleshooting"
+													>
+														🤖 Explain & Fix
+													</button>
+												</div>
+												{b.output && (
+													<pre
+														style={{
+															margin: 0,
+															fontSize: "10px",
+															color: "#94a3b8",
+															fontFamily: "monospace",
+															maxHeight: "45px",
+															overflow: "hidden",
+															textOverflow: "ellipsis",
+														}}
+													>
+														{b.output}
+													</pre>
+												)}
+											</div>
+										))}
+								</div>
 							</div>
 						</div>
 					</div>
