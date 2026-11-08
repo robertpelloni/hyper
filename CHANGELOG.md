@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **System Tray & Server Lifecycle Management:** Added `StartMCPServer`, `StopMCPServer`, `RestartServers`, `StopServers`, `GetServerStatus`, `ToggleSystemTray`, and `QuitApp` in `app_core.go` and `main.go`.
 - **Terminal Command History & Search:** Implemented thread-safe `SearchBlocks` and history recording in `internal/terminal/buffer.go` with Wails bindings in `app_core.go`.
 - **Accessible Keyboard Tooltips:** Added full keyboard focus, ARIA attributes, and Escape key dismissal with placement indicator arrow in `Tooltip.tsx`.
+- **Dynamic Parameterized Agent Directives:** Added prefix-based tool directive routing (`file_read:`, `shell_execute:`) in `AgentHarness` and cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) in Mission Control.
 - **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
 - **Cross-Platform Scripts:** Added executable `build.sh` and `start.sh` runners; non-destructively archived legacy scripts in `archive/start.bat.bak`.
 

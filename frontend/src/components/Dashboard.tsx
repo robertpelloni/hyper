@@ -41,6 +41,7 @@ export default function Dashboard({
 	]);
 	const [agentRunning, setAgentRunning] = useState(false);
 	const [agentSteps, setAgentSteps] = useState<AgentExecutionStep[]>([]);
+	const [selectedPhaseFilter, setSelectedPhaseFilter] = useState<string>("ALL");
 	const [taskQueue, setTaskQueue] = useState<string[]>([]);
 
 	const [mcpTools, setMcpTools] = useState<MCPTool[]>([]);
@@ -634,43 +635,61 @@ export default function Dashboard({
 								</button>
 							</div>
 
+							{/* Phase Filter Tabs */}
+							<div style={{ display: "flex", gap: "6px", marginBottom: "8px", alignItems: "center" }}>
+								<span style={{ fontSize: "10px", color: "#888" }}>Phase:</span>
+								{["ALL", "PLAN", "THINK", "ACT", "OBSERVE", "REFLECT"].map((phase) => (
+									<button
+										key={phase}
+										type="button"
+										className={`tn_btn tn_btn_small ${selectedPhaseFilter === phase ? "tn_btn_primary" : "tn_btn_secondary"}`}
+										onClick={() => setSelectedPhaseFilter(phase)}
+										style={{ fontSize: "9px", padding: "2px 6px" }}
+									>
+										{phase}
+									</button>
+								))}
+							</div>
+
 							{/* Think-Act-Observe Step Feed */}
 							<div className="tn_steps_container">
-								{agentSteps.map((s) => (
-									<div key={s.id} className="tn_step_item">
-										<div className="tn_step_header">
-											<span
-												className={`tn_phase_badge ${
-													s.phase === "PLAN"
-														? "tn_phase_plan"
-														: s.phase === "THINK"
-														? "tn_phase_think"
-														: s.phase === "ACT"
-														? "tn_phase_act"
-														: s.phase === "OBSERVE"
-														? "tn_phase_observe"
-														: "tn_phase_reflect"
-												}`}
-											>
-												{s.phase}
-											</span>
-											{s.tool && (
-												<span style={{ fontSize: "10px", color: "#64b5f6" }}>
-													tool: {s.tool}
+								{agentSteps
+									.filter((s) => selectedPhaseFilter === "ALL" || s.phase === selectedPhaseFilter)
+									.map((s) => (
+										<div key={s.id} className="tn_step_item">
+											<div className="tn_step_header">
+												<span
+													className={`tn_phase_badge ${
+														s.phase === "PLAN"
+															? "tn_phase_plan"
+															: s.phase === "THINK"
+															? "tn_phase_think"
+															: s.phase === "ACT"
+															? "tn_phase_act"
+															: s.phase === "OBSERVE"
+															? "tn_phase_observe"
+															: "tn_phase_reflect"
+													}`}
+												>
+													{s.phase}
 												</span>
-											)}
-											{s.durationMs > 0 && (
-												<span style={{ fontSize: "9px", color: "#00bcd4" }}>
-													{s.durationMs}ms
-												</span>
+												{s.tool && (
+													<span style={{ fontSize: "10px", color: "#64b5f6" }}>
+														tool: {s.tool}
+													</span>
+												)}
+												{s.durationMs > 0 && (
+													<span style={{ fontSize: "9px", color: "#00bcd4" }}>
+														{s.durationMs}ms
+													</span>
+												)}
+											</div>
+											<div className="tn_step_thought">{s.thought}</div>
+											{s.result && (
+												<div className="tn_step_result">{s.result}</div>
 											)}
 										</div>
-										<div className="tn_step_thought">{s.thought}</div>
-										{s.result && (
-											<div className="tn_step_result">{s.result}</div>
-										)}
-									</div>
-								))}
+									))}
 							</div>
 
 							<div className="tn_log_terminal" style={{ height: "80px" }}>

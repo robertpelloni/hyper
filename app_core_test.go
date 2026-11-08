@@ -80,6 +80,23 @@ func TestAgentAutonomousMCPToolUse(t *testing.T) {
 		t.Error("expected REFLECT phase step")
 	}
 
+	// Test dynamic parameterized directive
+	agent.ExecuteCommand("file_read:VERSION.md")
+	time.Sleep(50 * time.Millisecond)
+	steps = agent.GetExecutionSteps()
+	foundFileRead := false
+	for _, s := range steps {
+		if s.Tool == "file_read" && s.Phase == "ACT" {
+			foundFileRead = true
+			if s.Input["path"] != "VERSION.md" {
+				t.Errorf("expected path VERSION.md, got: %+v", s.Input)
+			}
+		}
+	}
+	if !foundFileRead {
+		t.Error("expected ACT step with file_read tool and path input")
+	}
+
 	// Test task queue operations
 	qRes := agent.QueueTask("autonomous_audit")
 	if qRes["status"] != "queued" {

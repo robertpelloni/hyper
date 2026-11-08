@@ -17,6 +17,7 @@
    - Extended `AgentHarness` (`agent.go`) and `Agent` (`internal/agent/harness.go`) to execute 5 discrete cognitive reasoning phases (`PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`).
    - Implemented autonomous sequential task queue (`QueueTask`, `ProcessNextTask`, `GetTaskQueue`, `RemoveTask`, `ClearTaskQueue`) with inline UI deletion badges (`✕`).
    - Added pulsating real-time indicator (`● RUNNING` / `○ IDLE`) and live `agent:step` telemetry streaming.
+   - Added dynamic parameterized directive dispatch (`file_read:`, `shell_execute:`) and interactive phase filtering tabs in Mission Control UI (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`).
 
 4. **Session Lifecycle & In-Memory Intelligence:**
    - Extended `internal/session/manager.go` with thread-safe `ListSessions()`, `Count()`, and `CloseAll()` methods.

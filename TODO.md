@@ -29,6 +29,8 @@
 - [x] Harden Go MCP server with 1MB payload limits and structured error codes (413, 400, 404).
 - [x] Implement semantic command block tracking and history search in `internal/terminal/buffer.go`.
 - [x] Expose command history and search bindings in Go application core (`app_core.go`).
+- [x] Support dynamic parameterized directives (`file_read:`, `shell_execute:`) in `AgentHarness`.
+- [x] Add cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) to Agent Control Panel.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

@@ -194,10 +194,17 @@ func (ah *AgentHarness) executeDirective(directive string) {
 	// 2. THINK: Determine optimal MCP tool and argument synthesis
 	selectedTool := "agent_status"
 	args := map[string]interface{}{}
+
 	if directive == "scan_sessions" || directive == "session_list" {
 		selectedTool = "session_list"
 	} else if directive == "check_config" {
 		selectedTool = "config_get"
+	} else if len(directive) > 10 && directive[:10] == "file_read:" {
+		selectedTool = "file_read"
+		args["path"] = directive[10:]
+	} else if len(directive) > 14 && directive[:14] == "shell_execute:" {
+		selectedTool = "shell_execute"
+		args["command"] = directive[14:]
 	} else {
 		selectedTool = "shell_execute"
 		args["command"] = "echo Processing: " + directive
