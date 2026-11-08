@@ -115,49 +115,90 @@ func (a *App) StartMCPServer(port int) error {
 		Name:        "shell_execute",
 		Category:    "System",
 		Description: "Execute a shell command in TormentNexus",
-		InputSchema: map[string]interface{}{"type": "object"},
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"command": map[string]interface{}{"type": "string", "description": "The bash shell command to execute"},
+			},
+			"required": []string{"command"},
+		},
+		Required: []string{"command"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "agent_status",
 		Category:    "Agent",
-		Description: "Query autonomous agent status",
-		InputSchema: map[string]interface{}{"type": "object"},
+		Description: "Query autonomous agent status and reasoning traces",
+		InputSchema: map[string]interface{}{
+			"type":       "object",
+			"properties": map[string]interface{}{},
+		},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "file_read",
 		Category:    "Filesystem",
-		Description: "Read file contents",
-		InputSchema: map[string]interface{}{"type": "object"},
+		Description: "Read file contents from workspace",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"path": map[string]interface{}{"type": "string", "description": "File path relative to workspace root"},
+			},
+			"required": []string{"path"},
+		},
+		Required: []string{"path"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "file_write",
 		Category:    "Filesystem",
-		Description: "Write content to a file",
-		InputSchema: map[string]interface{}{"type": "object"},
+		Description: "Write content to a workspace file",
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"path":    map[string]interface{}{"type": "string", "description": "File path relative to workspace root"},
+				"content": map[string]interface{}{"type": "string", "description": "Content string to write"},
+			},
+			"required": []string{"path", "content"},
+		},
+		Required: []string{"path", "content"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "session_list",
 		Category:    "System",
-		Description: "List active terminal sessions",
-		InputSchema: map[string]interface{}{"type": "object"},
+		Description: "List active terminal sessions and states",
+		InputSchema: map[string]interface{}{
+			"type":       "object",
+			"properties": map[string]interface{}{},
+		},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "workspace_search",
 		Category:    "Intelligence",
 		Description: "Search workspace file paths and contents",
-		InputSchema: map[string]interface{}{"type": "object"},
+		InputSchema: map[string]interface{}{
+			"type": "object",
+			"properties": map[string]interface{}{
+				"query": map[string]interface{}{"type": "string", "description": "Search term or regex pattern"},
+			},
+			"required": []string{"query"},
+		},
+		Required: []string{"query"},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "git_status",
 		Category:    "System",
 		Description: "Query current Git branch and repository state",
-		InputSchema: map[string]interface{}{"type": "object"},
+		InputSchema: map[string]interface{}{
+			"type":       "object",
+			"properties": map[string]interface{}{},
+		},
 	})
 	server.RegisterTool(mcp.Tool{
 		Name:        "system_info",
 		Category:    "System",
 		Description: "Get CPU, memory, and OS runtime info",
-		InputSchema: map[string]interface{}{"type": "object"},
+		InputSchema: map[string]interface{}{
+			"type":       "object",
+			"properties": map[string]interface{}{},
+		},
 	})
 
 	mux := http.NewServeMux()

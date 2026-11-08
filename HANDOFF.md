@@ -61,9 +61,15 @@
    - Added "🔧 Inspect Tool" quick action buttons on `ACT` and `THINK` steps in the agent reasoning feed.
    - Enhanced `AgentHarness` in `agent.go` to parse and execute chained directive pipelines separated by `&&`.
 
-12. **Testing and Verification:**
+12. **Interactive Tool Parameter Schemas, Retry Counter & Actionable Remediation:**
+   - Enforced explicit parameter schemas in backend MCP server (`internal/mcp/server.go`) and Wails bridge (`app_core.go`) for all 8 tools, returning structured `MISSING_REQUIRED_ARG` error codes and specific actionable `remediation` advice.
+   - Built "PARAMETER SCHEMA & QUICK-FILL" helper directly above the JSON editor in Mission Control UI (`Dashboard.tsx`), displaying parameter badges with type tags and required asterisks (`*`) that insert property snippets upon clicking.
+   - Added live execution duration timer (`⏱ Xms`) and retry attempt counter tracking `(Retries: N)` on tool runner invocations.
+   - Added dedicated actionable remediation callout banner (`💡 Remediation: ...`) and streamlined one-click "🔄 Retry" and "📋 Copy Error" actions.
+
+13. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
-   - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
+   - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright headless browser testing.
 
 ## Handoff to Phase 3: Autonomous Swarm & Multi-Language Parity
 The next development cycle should focus on:

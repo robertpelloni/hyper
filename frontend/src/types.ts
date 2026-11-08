@@ -117,6 +117,7 @@ export interface MCPTool {
 	category?: string;
 	description: string;
 	inputSchema: Record<string, any>;
+	required?: string[];
 }
 
 export interface MCPTelemetry {

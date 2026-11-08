@@ -211,20 +211,106 @@ if (typeof window !== "undefined") {
 
 	const defaultMCPAggregator = {
 		ListTools: async () => [
-			{ name: "shell_execute", description: "Execute shell command", inputSchema: { type: "object" } },
-			{ name: "file_read", description: "Read file contents", inputSchema: { type: "object" } },
-			{ name: "file_write", description: "Write file contents", inputSchema: { type: "object" } },
-			{ name: "agent_status", description: "Check agent status", inputSchema: { type: "object" } },
-			{ name: "session_list", description: "List terminal sessions", inputSchema: { type: "object" } },
+			{
+				name: "shell_execute",
+				category: "System",
+				description: "Execute shell command in TormentNexus",
+				inputSchema: {
+					type: "object",
+					properties: {
+						command: { type: "string", description: "The bash shell command to execute" },
+					},
+					required: ["command"],
+				},
+				required: ["command"],
+			},
+			{
+				name: "file_read",
+				category: "Filesystem",
+				description: "Read file contents from workspace",
+				inputSchema: {
+					type: "object",
+					properties: {
+						path: { type: "string", description: "File path relative to workspace root" },
+					},
+					required: ["path"],
+				},
+				required: ["path"],
+			},
+			{
+				name: "file_write",
+				category: "Filesystem",
+				description: "Write content to a workspace file",
+				inputSchema: {
+					type: "object",
+					properties: {
+						path: { type: "string", description: "File path relative to workspace root" },
+						content: { type: "string", description: "Content string to write" },
+					},
+					required: ["path", "content"],
+				},
+				required: ["path", "content"],
+			},
+			{
+				name: "agent_status",
+				category: "Agent",
+				description: "Query autonomous agent status and reasoning traces",
+				inputSchema: { type: "object", properties: {} },
+			},
+			{
+				name: "session_list",
+				category: "System",
+				description: "List active terminal sessions and states",
+				inputSchema: { type: "object", properties: {} },
+			},
+			{
+				name: "workspace_search",
+				category: "Intelligence",
+				description: "Search workspace file paths and contents",
+				inputSchema: {
+					type: "object",
+					properties: {
+						query: { type: "string", description: "Search term or regex pattern" },
+					},
+					required: ["query"],
+				},
+				required: ["query"],
+			},
+			{
+				name: "git_status",
+				category: "System",
+				description: "Query current Git branch and repository state",
+				inputSchema: { type: "object", properties: {} },
+			},
+			{
+				name: "system_info",
+				category: "System",
+				description: "Get CPU, memory, and OS runtime info",
+				inputSchema: { type: "object", properties: {} },
+			},
 		],
-		CallTool: async (name: string, args: any) => ({
-			tool: name,
-			status: "executed",
-			statusCode: 200,
-			durationMs: 14,
-			args,
-			result: "Executed successfully in TormentNexus",
-		}),
+		CallTool: async (name: string, args: any) => {
+			if (name === "shell_execute" && (!args || !args.command)) {
+				return {
+					tool: name,
+					status: "failed",
+					statusCode: 400,
+					errorCode: "MISSING_REQUIRED_ARG",
+					missingArg: "command",
+					error: "Missing required argument: 'command'",
+					remediation: "Provide 'command' in the arguments JSON object and retry",
+					durationMs: 5,
+				};
+			}
+			return {
+				tool: name,
+				status: "executed",
+				statusCode: 200,
+				durationMs: 14,
+				args,
+				result: "Executed successfully in TormentNexus",
+			};
+		},
 		GetTelemetry: async () => ({ status: "active", active_tools: 5, servers: 1, version: "1.1.0" }),
 		GetToolExecutionHistory: async () => [
 			{ tool: "shell_execute", statusCode: 200, durationMs: 18, timestamp: Date.now() - 5000, success: true, status: "executed" },

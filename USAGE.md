@@ -38,10 +38,12 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 3. **Model Context Protocol (MCP) Tool Monitor:** Inspect per-tool performance telemetry with average latency metrics, HTTP status codes (`200 OK`), mini execution bar graphs, and an interactive test harness:
    - **Real-Time Search & Filtering:** Search tools by name or description using the live search filter box.
    - **Status Tabs:** Filter the tool list by status: **All**, **Success** (`200 OK`), or **Error** (`500 / 4xx`).
+   - **Parameter Schema & Quick-Fill Helper:** Directly above the arguments editor, view all available parameters with type tags and required asterisks (`*`). Click any parameter badge to automatically insert property snippets.
    - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template with inline description hints.
    - **Client-Side Syntax Validation:** Real-time JSON validation with red border highlighting and actionable error alerts when syntax is invalid.
    - **Utility Actions:** **✨ Format JSON** to clean indentation and **↺ Reset Template** to restore default parameters.
-   - **Structured Error Recovery:** If an invocation fails or returns an error (such as `TOOL_NOT_FOUND`, `INVALID_ARGUMENTS`, or `PAYLOAD_TOO_LARGE`), a structured error callout appears displaying the error code badge, with one-click **📋 Copy Error** and **🔄 Reset & Retry** controls.
+   - **Live Execution Duration Timer:** Displays exact microsecond/millisecond execution time (`⏱ Xms`) for every tool call.
+   - **Structured Error Recovery & Remediation:** If an invocation fails (e.g. `MISSING_REQUIRED_ARG`, `TOOL_NOT_FOUND`, `INVALID_ARGUMENTS`), a structured error callout displays with retry counter tracking `(Retries: N)`, actionable remediation advice (`💡 Remediation: ...`), and one-click **📋 Copy Error** and **🔄 Retry** controls.
    - **Interactive Piping:** Use the **🤖 Send to Agent Directive** button to forward invocation results directly into the Autonomous Agent harness for automated analysis.
 4. **Terminal Session Orchestration & Snapshot Persistence:**
    - **Active Session Output Tail:** Real-time buffer stream inspection with Hide/Show toggles and one-click Copy.
@@ -110,6 +112,7 @@ The Go MCP backend enforces rigorous validation and returns structured JSON erro
 | **413 Request Entity Too Large** | `PAYLOAD_TOO_LARGE` | Incoming request payload exceeds the 1MB safety limit. |
 | **400 Bad Request** | `INVALID_ARGUMENTS` | Payload body is malformed or invalid JSON. |
 | **400 Bad Request** | `EMPTY_TOOL_NAME` | The `name` field in the request was empty or omitted. |
+| **400 Bad Request** | `MISSING_REQUIRED_ARG` | A required argument specified by the tool's schema is absent. |
 | **404 Not Found** | `TOOL_NOT_FOUND` | The requested tool name is not registered in the MCP Hub. |
 
 Example Error Response:

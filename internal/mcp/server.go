@@ -13,6 +13,7 @@ type Tool struct {
 	Category    string      `json:"category,omitempty"`
 	Description string      `json:"description"`
 	InputSchema interface{} `json:"inputSchema"`
+	Required    []string    `json:"required,omitempty"`
 }
 
 type CallToolRequest struct {
@@ -123,7 +124,8 @@ func (s *Server) HandleCallTool(w http.ResponseWriter, r *http.Request) {
 	var found *Tool
 	for _, t := range s.tools {
 		if t.Name == req.Name {
-			found = &t
+			tCopy := t
+			found = &tCopy
 			break
 		}
 	}
@@ -141,6 +143,29 @@ func (s *Server) HandleCallTool(w http.ResponseWriter, r *http.Request) {
 			"status":     "failed",
 		})
 		return
+	}
+
+	// Validate required arguments if defined
+	if len(found.Required) > 0 {
+		for _, reqArg := range found.Required {
+			val, exists := req.Arguments[reqArg]
+			if !exists || val == nil || val == "" {
+				durationMs := time.Since(startTime).Milliseconds()
+				s.recordExecution(req.Name, http.StatusBadRequest, durationMs, false, "MISSING_REQUIRED_ARG")
+				w.WriteHeader(http.StatusBadRequest)
+				_ = json.NewEncoder(w).Encode(map[string]interface{}{
+					"error":       "Missing required argument: '" + reqArg + "'",
+					"errorCode":   "MISSING_REQUIRED_ARG",
+					"missingArg":  reqArg,
+					"tool":        req.Name,
+					"required":    found.Required,
+					"statusCode":  http.StatusBadRequest,
+					"status":      "failed",
+					"remediation": "Provide '" + reqArg + "' in the arguments JSON object and retry",
+				})
+				return
+			}
+		}
 	}
 
 	durationMs := time.Since(startTime).Milliseconds()

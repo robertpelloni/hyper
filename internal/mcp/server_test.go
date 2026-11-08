@@ -81,6 +81,30 @@ func TestServerEndpoints(t *testing.T) {
 		t.Errorf("expected errorCode TOOL_NOT_FOUND, got %v", missingResp["errorCode"])
 	}
 
+	// 4b. Test POST /call with missing required arguments
+	server.RegisterTool(Tool{
+		Name:        "strict_tool",
+		Description: "Tool requiring specific argument",
+		InputSchema: map[string]interface{}{"type": "object"},
+		Required:    []string{"file_path"},
+	})
+	strictReqPayload := []byte(`{"name": "strict_tool", "arguments": {}}`)
+	reqStrict, _ := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(strictReqPayload))
+	rrStrict := httptest.NewRecorder()
+	mux.ServeHTTP(rrStrict, reqStrict)
+
+	if rrStrict.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400 for missing required argument, got %d", rrStrict.Code)
+	}
+	var strictResp map[string]interface{}
+	_ = json.Unmarshal(rrStrict.Body.Bytes(), &strictResp)
+	if strictResp["errorCode"] != "MISSING_REQUIRED_ARG" {
+		t.Errorf("expected errorCode MISSING_REQUIRED_ARG, got %v", strictResp["errorCode"])
+	}
+	if strictResp["missingArg"] != "file_path" {
+		t.Errorf("expected missingArg 'file_path', got %v", strictResp["missingArg"])
+	}
+
 	// 5. Test POST /call with malformed JSON
 	badPayload := []byte(`{invalid-json`)
 	reqBad, _ := http.NewRequest(http.MethodPost, "/call", bytes.NewBuffer(badPayload))

@@ -48,7 +48,9 @@ export default function Dashboard({
 	const [selectedTool, setSelectedTool] = useState<string>("shell_execute");
 	const [toolArgs, setToolArgs] = useState('{"command": "echo Hello from TormentNexus"}');
 	const [toolOutput, setToolOutput] = useState<string>("");
-	const [toolErrorState, setToolErrorState] = useState<{ isError: boolean; errorCode?: string; message?: string } | null>(null);
+	const [toolErrorState, setToolErrorState] = useState<{ isError: boolean; errorCode?: string; message?: string; remediation?: string } | null>(null);
+	const [toolRetryCount, setToolRetryCount] = useState<number>(0);
+	const [lastExecutionDuration, setLastExecutionDuration] = useState<number | null>(null);
 	const [executionHistory, setExecutionHistory] = useState<ToolExecutionRecord[]>([]);
 	const [jsonValidationError, setJsonValidationError] = useState<string | null>(null);
 	const [isInvokingTool, setIsInvokingTool] = useState<boolean>(false);
@@ -317,25 +319,39 @@ export default function Dashboard({
 			setTimeout(() => reject(new Error("Tool invocation timed out after 15 seconds")), 15000);
 		});
 
+		const callStart = Date.now();
 		try {
 			const callPromise = api.mcpCallTool(selectedTool, parsed);
 			const result: any = await Promise.race([callPromise, timeoutPromise]);
+			const duration = Date.now() - callStart;
+			setLastExecutionDuration(result?.durationMs ?? duration);
 			const resStr = JSON.stringify(result, null, 2);
 			setToolOutput(resStr);
 			if (result && (result.error || result.status === "error" || result.statusCode >= 400)) {
 				const code = result.errorCode || (result.statusCode ? `HTTP_${result.statusCode}` : "EXECUTION_ERROR");
 				const msg = result.error || result.message || "Tool execution failed";
-				setToolErrorState({ isError: true, errorCode: code, message: msg });
+				const remediation = result.remediation || "Check input schema and parameters, then retry";
+				setToolErrorState({ isError: true, errorCode: code, message: msg, remediation });
+				setToolRetryCount(prev => prev + 1);
 				showFeedback(`Tool returned error [${code}]: ${msg}`, "error");
 			} else {
 				setToolErrorState(null);
+				setToolRetryCount(0);
 				showFeedback(`Successfully executed tool: ${selectedTool}`, "success");
 			}
 			refreshStatus();
 		} catch (err: any) {
+			const duration = Date.now() - callStart;
+			setLastExecutionDuration(duration);
 			const errorMsg = err.message || String(err);
 			setToolOutput(`Execution failed:\n${errorMsg}`);
-			setToolErrorState({ isError: true, errorCode: "INVOCATION_EXCEPTION", message: errorMsg });
+			setToolErrorState({
+				isError: true,
+				errorCode: "INVOCATION_EXCEPTION",
+				message: errorMsg,
+				remediation: "Verify MCP daemon status or network connection and retry",
+			});
+			setToolRetryCount(prev => prev + 1);
 			showFeedback(`Tool execution failed: ${errorMsg}`, "error");
 		} finally {
 			setIsInvokingTool(false);
@@ -1126,6 +1142,75 @@ export default function Dashboard({
 								</label>
 							</div>
 
+							{/* Interactive Parameter Schema & Properties Inspector */}
+							{(() => {
+								const currentToolObj = mcpTools.find((t) => (t.Name || t.name) === selectedTool);
+								const schema = currentToolObj?.inputSchema || (currentToolObj as any)?.InputSchema;
+								const props = schema?.properties || {};
+								const reqList: string[] = currentToolObj?.required || (currentToolObj as any)?.Required || schema?.required || [];
+								const propKeys = Object.keys(props);
+
+								if (propKeys.length === 0) {
+									return (
+										<div style={{ background: "rgba(255,255,255,0.03)", border: "1px dashed rgba(255,255,255,0.1)", borderRadius: "4px", padding: "6px 10px", marginBottom: "8px", fontSize: "11px", color: "#94a3b8" }}>
+											ℹ️ This tool takes no required parameters. Send <code>{}</code> to execute.
+										</div>
+									);
+								}
+
+								return (
+									<div style={{ background: "rgba(0, 0, 0, 0.25)", border: "1px solid rgba(255,255,255,0.07)", borderRadius: "4px", padding: "6px 10px", marginBottom: "8px" }}>
+										<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+											<span style={{ fontSize: "10px", fontWeight: "bold", color: "#64b5f6", textTransform: "uppercase" }}>
+												Parameter Schema & Quick-Fill:
+											</span>
+											<span style={{ fontSize: "10px", color: "#888" }}>
+												Click badge to insert property template
+											</span>
+										</div>
+										<div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+											{propKeys.map((propKey) => {
+												const propDef = props[propKey] || {};
+												const isRequired = reqList.includes(propKey);
+												return (
+													<button
+														key={propKey}
+														type="button"
+														className="tn_btn tn_btn_small tn_btn_secondary"
+														style={{
+															fontSize: "10px",
+															padding: "2px 6px",
+															borderColor: isRequired ? "rgba(239, 68, 68, 0.4)" : "rgba(255,255,255,0.15)",
+															background: isRequired ? "rgba(239, 68, 68, 0.1)" : "rgba(255,255,255,0.04)",
+														}}
+														onClick={() => {
+															try {
+																const currentParsed = JSON.parse(toolArgs.trim() || "{}");
+																if (!currentParsed[propKey]) {
+																	currentParsed[propKey] = propDef.type === "string" ? "" : propDef.type === "number" ? 0 : null;
+																	setToolArgs(JSON.stringify(currentParsed, null, 2));
+																	showFeedback(`Inserted parameter '${propKey}' into editor`, "info");
+																}
+															} catch (err) {
+																setToolArgs(`{\n  "${propKey}": ""\n}`);
+															}
+														}}
+														title={`${propDef.description || "Parameter"} (${propDef.type || "any"}) ${isRequired ? "[REQUIRED]" : "[OPTIONAL]"}`}
+													>
+														<span style={{ color: isRequired ? "#f87171" : "#94a3b8", fontWeight: isRequired ? "bold" : "normal" }}>
+															{propKey}
+														</span>
+														<span style={{ fontSize: "8px", opacity: 0.7, marginLeft: "4px" }}>
+															({propDef.type || "string"}){isRequired ? " *" : ""}
+														</span>
+													</button>
+												);
+											})}
+										</div>
+									</div>
+								);
+							})()}
+
 							<div className="tn_form_group">
 								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
 									<label className="tn_label" style={{ margin: 0 }}>
@@ -1190,11 +1275,27 @@ export default function Dashboard({
 							{toolOutput && (
 								<div className={`tn_tool_output ${toolErrorState ? "tn_tool_output_error" : ""}`}>
 									<div className="tn_output_header" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-										<div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+										<div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
 											<span>Invocation Result:</span>
-											{toolErrorState && (
-												<span className="tn_err_code_badge">
-													{toolErrorState.errorCode || "ERROR"}
+											{lastExecutionDuration !== null && (
+												<span style={{ fontSize: "10px", color: "#38bdf8" }}>
+													⏱ {lastExecutionDuration}ms
+												</span>
+											)}
+											{toolErrorState ? (
+												<>
+													<span className="tn_err_code_badge">
+														{toolErrorState.errorCode || "ERROR"}
+													</span>
+													{toolRetryCount > 0 && (
+														<span style={{ fontSize: "10px", color: "#f87171" }}>
+															(Retries: {toolRetryCount})
+														</span>
+													)}
+												</>
+											) : (
+												<span style={{ fontSize: "10px", color: "#4ade80", fontWeight: "bold" }}>
+													✓ 200 OK
 												</span>
 											)}
 										</div>
@@ -1213,36 +1314,26 @@ export default function Dashboard({
 													</button>
 													<button
 														className="tn_btn tn_btn_small tn_btn_secondary"
-														onClick={handleResetTemplate}
-														title="Reset arguments to default template"
-													>
-														🔄 Reset & Retry
-													</button>
-													<button
-														className="tn_btn tn_btn_small tn_btn_secondary"
 														onClick={() => {
-															setToolOutput("");
-															setToolErrorState(null);
-															showFeedback("Cleared output", "info");
+															handleRunTool();
 														}}
-														title="Dismiss error output"
+														title="Retry tool execution"
 													>
-														✕ Clear
+														🔄 Retry
 													</button>
 												</>
 											)}
-											{!toolErrorState && (
-												<button
-													className="tn_btn tn_btn_small tn_btn_secondary"
-													onClick={() => {
-														setToolOutput("");
-														showFeedback("Cleared output", "info");
-													}}
-													title="Clear output"
-												>
-													✕ Clear
-												</button>
-											)}
+											<button
+												className="tn_btn tn_btn_small tn_btn_secondary"
+												onClick={() => {
+													setToolOutput("");
+													setToolErrorState(null);
+													showFeedback("Cleared output", "info");
+												}}
+												title="Dismiss output"
+											>
+												✕ Clear
+											</button>
 											<button
 												className="tn_btn tn_btn_small tn_btn_secondary"
 												onClick={() => {
@@ -1256,6 +1347,14 @@ export default function Dashboard({
 											</button>
 										</div>
 									</div>
+
+									{/* Actionable Error Remediation Advice */}
+									{toolErrorState?.remediation && (
+										<div style={{ margin: "6px 0", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.25)", borderRadius: "4px", padding: "6px 8px", fontSize: "11px", color: "#fca5a5" }}>
+											💡 <strong>Remediation:</strong> {toolErrorState.remediation}
+										</div>
+									)}
+
 									<pre className="tn_output_pre">{toolOutput}</pre>
 								</div>
 							)}

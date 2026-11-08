@@ -43,6 +43,9 @@
 - [x] Add "⚡ Pipe to Agent" direct invocation buttons to MCP Tool cards in Mission Control.
 - [x] Add "🔗 Pipeline: Audit" chained workflow preset and "🔧 Inspect Tool" shortcut on reasoning steps.
 - [x] Implement chained directive pipelines (`&&`) in Go `AgentHarness`.
+- [x] Implement interactive Tool Parameter Schema inspector and Quick-Fill snippet generator in Mission Control.
+- [x] Implement live microsecond-precision tool execution duration timer and sequential retry counter tracking.
+- [x] Implement backend validation for required tool parameters with `MISSING_REQUIRED_ARG` error code and actionable remediation advice.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.
