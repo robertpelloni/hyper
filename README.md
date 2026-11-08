@@ -11,11 +11,13 @@
 
 For more details, head to: https://TormentNexus.is
 
-- **Go-based Core:** High-performance PTY management and system interactions (v1.25.0).
-- **Mission Control Dashboard:** Consolidated single-page control center with real-time telemetry, agent dispatch, MCP runner, and server lifecycle controls.
-- **Universal Tooltip System:** Contextual markers across every UI control and metric card.
-- **LLM Agent Harness:** Built-in loops for autonomous agent execution and interactive command dispatch.
-- **MCP Hub & Interactive Runner:** Centralized aggregator for Model Context Protocol servers with HTTP `/tools` and `/call` endpoints.
+- **Go-based Core:** High-performance PTY management, persistent session snapshots, and system interactions (v1.25.0).
+- **Mission Control Dashboard:** Consolidated single-page cockpit with real-time telemetry, interactive 5-step onboarding guide, agent dispatch, and server lifecycle controls.
+- **Universal Tooltip System:** Contextual accessible markers across every UI control, form input, and metric card.
+- **Autonomous Agent Harness:** 5-phase cognitive reasoning loops (`PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) with chained directive pipelines (`&&`) and sequential task queueing.
+- **MCP Hub & Interactive Runner:** Centralized aggregator for Model Context Protocol tools with HTTP `/tools`, `/call` (1MB ceiling), `/history`, and live latency charts.
+- **Semantic Command Blocks & Explain in AI:** Warp-style terminal block inspection with one-click "🤖 Explain & Fix" automated agent analysis.
+- **Plugins & Themes Hub:** In-app discovery and installation of curated terminal plugins and color themes.
 - **Server Lifecycle & System Tray:** Clean start, stop, restart, tray toggling, and application shutdown.
 
 ## Setup and Usage

@@ -21,10 +21,12 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 
 - **Toggle Mission Control:** Press `Ctrl+Shift+D` or click the **⚡ Dashboard** button in the top header.
 - **Return to Terminal:** Click **Return to Terminal ⏎**, press `Esc`, or toggle the dashboard button.
-- **Interactive Quick-Start Onboarding Guide:** Accessible at the top of Mission Control (or via the **📖 Quick-Start Guide** header button if dismissed). Each card is clickable with visual tour guidance:
-  1. **Step 1 (Agent Presets):** Click to pre-fill and focus the directive prompt (`scan_sessions`), then press `Enter` to observe real-time Think-Act-Observe telemetry streaming.
-  2. **Step 2 (MCP Tool Invocation):** Click to select a registered tool (`session_list`, `shell_execute`), pre-populate sample JSON arguments, and press `Ctrl+Enter` to run.
-  3. **Step 3 (Autonomous Result Piping):** Click to pipe any tool output directly into the agent directive field for LLM evaluation and multi-step action.
+- **Interactive Quick-Start Onboarding Guide:** Accessible at the top of Mission Control (or via the **📖 Quick-Start Guide** header button if dismissed). Features interactive progress tracking (`X/5 Completed`) and visual checkmarks (`✓`):
+  1. **Step 1 (Agent Pipelines):** Click to pre-fill autonomous pipelines (`git_status && system_info` or `scan_sessions`), then dispatch to observe multi-phase Think-Act-Observe reasoning loops.
+  2. **Step 2 (MCP Tool Invocation):** Click to select a registered tool (`session_list`, `shell_execute`), pre-populate sample JSON arguments, and press `Ctrl+Enter` to execute.
+  3. **Step 3 (Autonomous Result Piping):** Click to pipe any tool output directly into the agent directive field for LLM evaluation.
+  4. **Step 4 (Blocks & Snapshots):** Inspect Warp-style semantic command blocks, pipe errors with **🤖 Explain & Fix**, or export session state using **💾 Snapshot Sessions**.
+  5. **Step 5 (Plugin Personalization):** Browse and install curated themes and productivity extensions in the Terminal Plugins Hub.
 
 ### Key Mission Control Capabilities:
 1. **Live Subsystem Telemetry:** Monitor real-time status of the Agent Harness (`IDLE` vs `RUNNING`), MCP Hub Server port, count of active tools, number of active pseudo-terminal sessions, and system tray integration.
@@ -41,10 +43,14 @@ TormentNexus features a consolidated, singular Mission Control page providing co
    - **Utility Actions:** **✨ Format JSON** to clean indentation and **↺ Reset Template** to restore default parameters.
    - **Structured Error Recovery:** If an invocation fails or returns an error (such as `TOOL_NOT_FOUND`, `INVALID_ARGUMENTS`, or `PAYLOAD_TOO_LARGE`), a structured error callout appears displaying the error code badge, with one-click **📋 Copy Error** and **🔄 Reset & Retry** controls.
    - **Interactive Piping:** Use the **🤖 Send to Agent Directive** button to forward invocation results directly into the Autonomous Agent harness for automated analysis.
-4. **Terminal Session Orchestration:** View all active shell processes (Shell type, PID, UID), focus on a selected terminal tab, or safely terminate sessions.
-5. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.
-6. **Universal Tooltips:** Hover over any `?` marker for contextual guidance and tips across all inputs and telemetry cards.
-7. **Quick-Access Shortcuts Footer:** At the bottom of Mission Control, access the persistent keyboard shortcuts bar:
+4. **Terminal Session Orchestration & Snapshot Persistence:**
+   - **Active Session Output Tail:** Real-time buffer stream inspection with Hide/Show toggles and one-click Copy.
+   - **Session Snapshots:** Export persistent session state JSON files via **💾 Snapshot Sessions** for backup, crash recovery, and offline analysis.
+   - **Warp-Style Semantic Command Blocks:** View tracked command execution history with status badges (`✓` / `✕`), search filtering, copy actions, and **🤖 Explain & Fix** automated AI remediation.
+5. **Terminal Plugins & Themes Hub:** Browse, filter (Theme, Productivity, Navigation, Visuals), and install curated plugins with dynamic configuration persistence.
+6. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.
+7. **Universal Tooltips:** Hover over any `?` marker for contextual guidance and tips across all inputs and telemetry cards.
+8. **Quick-Access Shortcuts Footer:** At the bottom of Mission Control, access the persistent keyboard shortcuts bar:
    - `Esc`: Return to Shell
    - `Ctrl+Shift+D`: Toggle Dashboard
    - `Ctrl+Enter`: Run Selected Tool
@@ -59,7 +65,8 @@ The Autonomous Agent Harness operates a structured 5-phase cognitive loop:
 - **OBSERVE:** Ingests output payload, computes duration, and checks output validity.
 - **REFLECT:** Confirms goal resolution and evaluates whether follow-up tasks are required.
 
-### Preset Workflow Directives:
+### Preset Workflow Directives & Pipelines:
+- `git_status && system_info`: Executes chained multi-step pipeline running git status followed by system telemetry query.
 - `scan_sessions`: Dispatches an autonomous query to inspect all active PTY terminal sessions and tab contexts.
 - `check_config`: Inspects current configuration options, terminal font sizing, and shell defaults.
 - `status`: Queries the agent harness health and server runtime status.

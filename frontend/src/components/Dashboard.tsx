@@ -84,9 +84,10 @@ export default function Dashboard({
 	const [pluginsList, setPluginsList] = useState<PluginInfo[]>([]);
 	const [pluginFilter, setPluginFilter] = useState<string>("ALL");
 
-	// Onboarding Guide banner visibility
+	// Onboarding Guide banner visibility & progress tracking
 	const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
 	const [activeOnboardingStep, setActiveOnboardingStep] = useState<number | null>(null);
+	const [completedSteps, setCompletedSteps] = useState<Record<number, boolean>>({});
 
 	// Inline toast banner for feedback
 	const [feedbackToast, setFeedbackToast] = useState<{ message: string; type: "success" | "error" | "info" } | null>(null);
@@ -455,7 +456,10 @@ export default function Dashboard({
 						<div className="tn_onboarding_header">
 							<div className="tn_onboarding_title">
 								🚀 Welcome to TormentNexus — Quick-Start Onboarding Guide
-								<Tooltip text="Follow these 3 simple steps to master autonomous agent operations and MCP tooling." />
+								<span style={{ fontSize: "11px", fontWeight: "bold", marginLeft: "10px", color: "#64b5f6", background: "rgba(100, 181, 246, 0.15)", padding: "2px 8px", borderRadius: "10px" }}>
+									{Object.values(completedSteps).filter(Boolean).length}/5 Completed
+								</span>
+								<Tooltip text="Follow these 5 simple steps to master autonomous agent operations, MCP tooling, terminal blocks, snapshots, and plugins." />
 							</div>
 							<button
 								className="tn_toast_close"
@@ -474,22 +478,24 @@ export default function Dashboard({
 								className={`tn_onboarding_step ${activeOnboardingStep === 1 ? "tn_onboarding_step_active" : ""}`}
 								onClick={() => {
 									setActiveOnboardingStep(1);
-									setAgentCommand("scan_sessions");
-									showFeedback("Step 1 Activated: Agent prompt pre-filled with 'scan_sessions'. Click Dispatch to run!", "info");
+									setCompletedSteps(prev => ({ ...prev, 1: true }));
+									setAgentCommand("git_status && system_info");
+									showFeedback("Step 1 Activated: Agent prompt pre-filled with pipeline 'git_status && system_info'. Press Dispatch to run!", "info");
 								}}
 								style={{ cursor: "pointer" }}
 								title="Click to activate Step 1"
 							>
-								<span className="tn_step_num">1</span>
+								<span className="tn_step_num">{completedSteps[1] ? "✓" : "1"}</span>
 								<div className="tn_step_text">
-									<strong>Agent Presets:</strong> Click <code>⚡ Scan Sessions</code> or <code>⚙ Inspect Config</code> to trigger immediate Think-Act-Observe reasoning loops.
-									<div className="tn_step_hint">👉 Click step to pre-fill prompt</div>
+									<strong>Agent Pipelines:</strong> Click presets like <code>🔗 Pipeline: Audit</code> or <code>⚡ Scan Sessions</code> to run Think-Act-Observe reasoning loops.
+									<div className="tn_step_hint">👉 Click to pre-fill pipeline</div>
 								</div>
 							</div>
 							<div
 								className={`tn_onboarding_step ${activeOnboardingStep === 2 ? "tn_onboarding_step_active" : ""}`}
 								onClick={() => {
 									setActiveOnboardingStep(2);
+									setCompletedSteps(prev => ({ ...prev, 2: true }));
 									setSelectedTool("session_list");
 									setToolArgs("{}");
 									showFeedback("Step 2 Activated: 'session_list' tool selected and arguments initialized.", "info");
@@ -497,16 +503,17 @@ export default function Dashboard({
 								style={{ cursor: "pointer" }}
 								title="Click to activate Step 2"
 							>
-								<span className="tn_step_num">2</span>
+								<span className="tn_step_num">{completedSteps[2] ? "✓" : "2"}</span>
 								<div className="tn_step_text">
 									<strong>MCP Tool Invocation:</strong> Click any tool card below to auto-populate arguments, then press <code>Ctrl+Enter</code> or click <strong>⚡ Run Tool</strong>.
-									<div className="tn_step_hint">👉 Click step to select tool</div>
+									<div className="tn_step_hint">👉 Click to select tool</div>
 								</div>
 							</div>
 							<div
 								className={`tn_onboarding_step ${activeOnboardingStep === 3 ? "tn_onboarding_step_active" : ""}`}
 								onClick={() => {
 									setActiveOnboardingStep(3);
+									setCompletedSteps(prev => ({ ...prev, 3: true }));
 									if (toolOutput) {
 										setAgentCommand(`Analyze MCP tool result for '${selectedTool}': ${toolOutput.slice(0, 150)}`);
 										showFeedback(`Piped '${selectedTool}' result into agent directive input!`, "success");
@@ -517,30 +524,47 @@ export default function Dashboard({
 								style={{ cursor: "pointer" }}
 								title="Click to activate Step 3"
 							>
-							<span className="tn_step_num">3</span>
-							<div className="tn_step_text">
-								<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze the output.
-								<div className="tn_step_hint">👉 Click step to pipe result</div>
+								<span className="tn_step_num">{completedSteps[3] ? "✓" : "3"}</span>
+								<div className="tn_step_text">
+									<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze output.
+									<div className="tn_step_hint">👉 Click to pipe result</div>
+								</div>
 							</div>
-						</div>
-						<div
-							className={`tn_onboarding_step ${activeOnboardingStep === 4 ? "tn_onboarding_step_active" : ""}`}
-							onClick={() => {
-								setActiveOnboardingStep(4);
-								showFeedback("Step 4 Activated: Explore popular terminal plugins below in 'Plugins & Themes Hub' to customize themes and workflows.", "info");
-							}}
-							style={{ cursor: "pointer" }}
-							title="Click to activate Step 4"
-						>
-							<span className="tn_step_num">4</span>
-							<div className="tn_step_text">
-								<strong>Plugin Personalization:</strong> Enable curated themes and tools like <code>hyper-snazzy</code> or <code>hypercwd</code> in the Plugins Hub below.
-								<div className="tn_step_hint">👉 Click step to explore plugins</div>
+							<div
+								className={`tn_onboarding_step ${activeOnboardingStep === 4 ? "tn_onboarding_step_active" : ""}`}
+								onClick={async () => {
+									setActiveOnboardingStep(4);
+									setCompletedSteps(prev => ({ ...prev, 4: true }));
+									showFeedback("Step 4 Activated: Use '💾 Snapshot Sessions' or click '🤖 Explain & Fix' on command blocks to debug errors.", "info");
+								}}
+								style={{ cursor: "pointer" }}
+								title="Click to activate Step 4"
+							>
+								<span className="tn_step_num">{completedSteps[4] ? "✓" : "4"}</span>
+								<div className="tn_step_text">
+									<strong>Blocks & Snapshots:</strong> Inspect Warp-style command blocks, export state, or click <code>💾 Snapshot Sessions</code> in Section 3.
+									<div className="tn_step_hint">👉 Click to explore blocks</div>
+								</div>
+							</div>
+							<div
+								className={`tn_onboarding_step ${activeOnboardingStep === 5 ? "tn_onboarding_step_active" : ""}`}
+								onClick={() => {
+									setActiveOnboardingStep(5);
+									setCompletedSteps(prev => ({ ...prev, 5: true }));
+									showFeedback("Step 5 Activated: Explore popular terminal plugins below in 'Plugins & Themes Hub' to customize themes and workflows.", "info");
+								}}
+								style={{ cursor: "pointer" }}
+								title="Click to activate Step 5"
+							>
+								<span className="tn_step_num">{completedSteps[5] ? "✓" : "5"}</span>
+								<div className="tn_step_text">
+									<strong>Plugin Personalization:</strong> Enable curated themes and tools like <code>hyper-snazzy</code> or <code>hypercwd</code> in the Plugins Hub below.
+									<div className="tn_step_hint">👉 Click to explore plugins</div>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			)}
+				)}
 
 				{/* High-Value Telemetry Banner */}
 				<div className="tn_telemetry_banner">

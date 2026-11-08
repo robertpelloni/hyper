@@ -47,7 +47,7 @@
 9. **Terminal Plugins & Themes Hub & Onboarding Expansion:**
    - Designed and integrated Section 5 ("Terminal Plugins & Themes Hub") in `Dashboard.tsx` with category filters (`ALL`, `Theme`, `Productivity`, `Navigation`, `Visuals`), install status badges (`INSTALLED` vs `+ Install`), and GitHub repository links.
    - Built Go core backend methods `GetInstalledPlugins()`, `GetRecommendedPlugins()`, and `InstallPlugin(name)` in `app_core.go`, writing dynamically to `ConfigManager`.
-   - Added 4th interactive step to Quick-Start Onboarding Guide highlighting plugin personalization with auto-scroll.
+   - Expanded Quick-Start Onboarding Guide to a 5-step interactive journey with real-time completion progress tracking (`X/5 Completed`), visual checkmarks (`✓`), and clickable pre-fill shortcuts for pipelines, tool invocation, piping, snapshots & command blocks, and plugins.
    - Verified via unit test suite `TestAppPluginCatalogAndInstall` and visual screenshot rendering.
 
 10. **Session Snapshot & Persistent State Export:**
