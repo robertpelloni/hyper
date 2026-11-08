@@ -18,12 +18,14 @@
 - [x] Real-time MCP tool performance monitoring (latency, 200 OK status, mini history bar charts).
 - [x] Interactive argument templates and "Send to Agent Directive" result piping.
 - [x] Robust MCP error handling, client-side real-time syntax checking, and 1MB request limits.
+- [x] Interactive MCP Invocation Runner with argument schema auto-population, formatting, and live error recovery callouts.
+- [x] Warp-like semantic command block tracking and terminal history search (`internal/terminal/buffer.go`).
+- [x] "Explain & Fix" automated error piping from terminal blocks directly into agent reasoning loops.
 
 ## Phase 3: Autonomous Agent Extensions & Multi-Language Swarm (In Progress)
 - [ ] Multi-language core parity across 5 languages (TypeScript, Rust, Go, C#, Java).
-- [ ] Multi-agent swarm orchestration and collaborative delegation.
+- [ ] Multi-agent swarm orchestration and collaborative delegation across specialized roles.
 - [ ] WASM sandboxed tool runtime for secure arbitrary code execution.
-- [x] Warp-like semantic command block tracking and terminal history search (`internal/terminal/buffer.go`).
 - [ ] Persistent session state replication and SQLite session buffer indexing.
 - [ ] External MCP socket server proxying and SSE streaming support.
 - [ ] AI code completion layer and inline suggestions.

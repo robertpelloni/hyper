@@ -15,5 +15,15 @@ Rather than fragmenting developer tooling across hidden tabs and disparate subpa
 ### 2. High-Performance Go Core
 Critical backend operations—PTY management, HTTP servers, MCP routing, and process supervision—are executed by the compiled Go core, ensuring high performance, instant startup, and zero UI stuttering.
 
-### 3. Contextual Usability & Tooltips
-Every UI element provides embedded tooltips and explanatory markers, ensuring that whether developers are executing complex agent chains or configuring PTY parameters, guidance is always accessible.
+### 3. Interactive MCP Invocation & Dynamic Result Piping
+Rather than treating Model Context Protocol (MCP) tools as opaque background endpoints, TormentNexus exposes first-class interactive tooling directly within the Mission Control interface:
+- **Instant Discovery & Templating:** Tool cards automatically generate editable JSON argument skeletons based on registered schema parameters.
+- **Client-Side Syntax Validation:** Real-time JSON validation prevents malformed execution payloads before they reach the backend Go core.
+- **Bi-Directional Result Piping:** Outputs from manual tool runs or terminal command blocks can be piped directly into autonomous agent directives via a single click ("Send to Agent Directive" / "Explain & Fix"), creating seamless human-in-the-loop workflows.
+- **Hardened Execution Pipeline:** Backend `/call` endpoints enforce strict 1MB body bounds and structured error reporting (`PAYLOAD_TOO_LARGE`, `INVALID_ARGUMENTS`, `TOOL_NOT_FOUND`).
+
+### 4. Warp-Style Semantic Command Blocks
+TormentNexus elevates traditional continuous terminal scrollback into discrete semantic command blocks. Each executed command is tracked with its duration, exit status badge, and isolated output stream, empowering developers to search execution history and trigger targeted AI diagnostic workflows on demand.
+
+### 5. Contextual Usability & Tooltips
+Every UI element provides embedded, accessible tooltips and explanatory markers, ensuring that whether developers are executing complex agent chains or configuring PTY parameters, guidance is always accessible.
