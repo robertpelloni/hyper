@@ -81,3 +81,35 @@ func TestManagerLifecycle(t *testing.T) {
 		t.Errorf("expected 0 sessions after CloseAll, got %d", mgr.Count())
 	}
 }
+
+func TestSessionOutputTail(t *testing.T) {
+	sh, err := exec.LookPath("sh")
+	if err != nil {
+		t.Skip("sh not available on system")
+	}
+
+	mgr := NewManager()
+	s, err := NewSession("test-out", sh, []string{}, "", 24, 80)
+	if err != nil {
+		t.Fatalf("failed to create session: %v", err)
+	}
+	defer func() {
+		_ = s.Close()
+	}()
+
+	s.AppendOutput("line 1: start")
+	s.AppendOutput("line 2: executing command")
+	s.AppendOutput("line 3: done")
+
+	tail := s.GetOutputTail(2)
+	expected := "line 2: executing command\nline 3: done"
+	if tail != expected {
+		t.Errorf("expected tail %q, got %q", expected, tail)
+	}
+
+	mgr.AddSession(s)
+	mgrTail := mgr.GetSessionOutput("test-out", 1)
+	if mgrTail != "line 3: done" {
+		t.Errorf("expected %q, got %q", "line 3: done", mgrTail)
+	}
+}

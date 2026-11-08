@@ -424,6 +424,21 @@ func (a *App) GetWorkingDir() string {
 	return wd
 }
 
+// GetSessionOutput retrieves the tail output lines of a session
+func (a *App) GetSessionOutput(id string, maxLines int) string {
+	if a.sessions == nil {
+		return ""
+	}
+	return a.sessions.GetSessionOutput(id, maxLines)
+}
+
+// AppendSessionOutput appends lines to a session's buffer (useful for tests or IPC simulation)
+func (a *App) AppendSessionOutput(id string, text string) {
+	if a.sessions != nil {
+		a.sessions.AppendOutput(id, text)
+	}
+}
+
 // ---- Dialog Operations ----
 
 func (a *App) OpenFileDialog(title string) (string, error) {

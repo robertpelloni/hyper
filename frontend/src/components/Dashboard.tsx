@@ -70,6 +70,11 @@ export default function Dashboard({
 	const [blockSearchQuery, setBlockSearchQuery] = useState<string>("");
 	const [blockStatusFilter, setBlockStatusFilter] = useState<"all" | "success" | "failed">("all");
 
+	// Active Terminal Session Output Preview State
+	const [sessionTailOutput, setSessionTailOutput] = useState<string>("");
+	const [showSessionOutputPreview, setShowSessionOutputPreview] = useState<boolean>(true);
+	const [sessionTailLines, setSessionTailLines] = useState<number>(10);
+
 	// Quick Settings state
 	const [fontSize, setFontSize] = useState<number>(config.fontSize || 12);
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
@@ -120,10 +125,17 @@ export default function Dashboard({
 			if (blocks) {
 				setCommandBlocks(blocks);
 			}
+
+			if (activeSessionId) {
+				const tail = await api.getSessionOutput(activeSessionId, sessionTailLines);
+				if (tail) {
+					setSessionTailOutput(tail);
+				}
+			}
 		} catch (err) {
 			console.warn("Failed to refresh status:", err);
 		}
-	}, []);
+	}, [activeSessionId, sessionTailLines]);
 
 	useEffect(() => {
 		refreshStatus();
@@ -1186,6 +1198,12 @@ export default function Dashboard({
 										className={`tn_session_row ${
 											s.uid === activeSessionId ? "tn_session_active" : ""
 										}`}
+										onClick={async () => {
+											onSelectSession(s.uid);
+											const tail = await api.getSessionOutput(s.uid, sessionTailLines);
+											setSessionTailOutput(tail);
+										}}
+										style={{ cursor: "pointer" }}
 									>
 										<div className="tn_session_info">
 											<span className="tn_session_name">{s.title || "Shell"}</span>
@@ -1195,7 +1213,8 @@ export default function Dashboard({
 										<div className="tn_session_actions">
 											<button
 												className="tn_btn tn_btn_small tn_btn_primary"
-												onClick={() => {
+												onClick={(e) => {
+													e.stopPropagation();
 													onSelectSession(s.uid);
 													onCloseDashboard();
 												}}
@@ -1206,7 +1225,10 @@ export default function Dashboard({
 											{sessionList.length > 1 && (
 												<button
 													className="tn_btn tn_btn_small tn_btn_danger"
-													onClick={() => onCloseSession(s.uid)}
+													onClick={(e) => {
+														e.stopPropagation();
+														onCloseSession(s.uid);
+													}}
 													title="Terminate this terminal process"
 												>
 													Terminate
@@ -1215,6 +1237,60 @@ export default function Dashboard({
 										</div>
 									</div>
 								))}
+							</div>
+
+							{/* Live Session Output Preview */}
+							<div style={{ marginTop: "10px", background: "rgba(0,0,0,0.4)", borderRadius: "4px", border: "1px solid rgba(255,255,255,0.08)", padding: "8px" }}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+									<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+										<span style={{ fontSize: "11px", fontWeight: "bold", color: "#64b5f6" }}>
+											📺 Active Session Output Tail
+										</span>
+										<Tooltip text="Real-time tail buffer of the selected active PTY session. Lets you inspect terminal output without leaving the dashboard." />
+									</div>
+									<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											style={{ fontSize: "9px", padding: "1px 6px" }}
+											onClick={() => setShowSessionOutputPreview(!showSessionOutputPreview)}
+										>
+											{showSessionOutputPreview ? "Hide Preview" : "Show Preview"}
+										</button>
+										{sessionTailOutput && showSessionOutputPreview && (
+											<button
+												type="button"
+												className="tn_btn tn_btn_small tn_btn_secondary"
+												style={{ fontSize: "9px", padding: "1px 6px" }}
+												onClick={() => {
+													navigator.clipboard?.writeText(sessionTailOutput);
+													showFeedback("Copied session output tail to clipboard", "info");
+												}}
+											>
+												📋 Copy
+											</button>
+										)}
+									</div>
+								</div>
+								{showSessionOutputPreview && (
+									<pre
+										style={{
+											margin: 0,
+											fontSize: "10px",
+											color: "#38bdf8",
+											fontFamily: "monospace",
+											background: "#090d16",
+											padding: "6px 8px",
+											borderRadius: "3px",
+											maxHeight: "75px",
+											overflowY: "auto",
+											whiteSpace: "pre-wrap",
+											border: "1px solid rgba(56, 189, 248, 0.2)",
+										}}
+									>
+										{sessionTailOutput || "No recent output recorded for this session."}
+									</pre>
+								)}
 							</div>
 
 							{/* Semantic Command Blocks Inspector (Warp-style) */}

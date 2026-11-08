@@ -29,6 +29,7 @@ type Session struct {
 	closed    bool
 	dataChans []chan []byte
 	onExit    func()
+	outputBuf []string
 }
 
 // SessionManager manages all PTY sessions
@@ -273,6 +274,41 @@ func (sm *SessionManager) CloseAll() {
 		sess.mu.Unlock()
 		delete(sm.sessions, id)
 	}
+}
+
+// AppendOutput appends output text into a session buffer
+func (sm *SessionManager) AppendOutput(id string, text string) {
+	sm.mu.RLock()
+	sess, ok := sm.sessions[id]
+	sm.mu.RUnlock()
+	if ok && sess != nil {
+		sess.mu.Lock()
+		defer sess.mu.Unlock()
+		sess.outputBuf = append(sess.outputBuf, text)
+		if len(sess.outputBuf) > 500 {
+			sess.outputBuf = sess.outputBuf[len(sess.outputBuf)-500:]
+		}
+	}
+}
+
+// GetSessionOutput returns the tail output lines of a session
+func (sm *SessionManager) GetSessionOutput(id string, maxLines int) string {
+	sm.mu.RLock()
+	sess, ok := sm.sessions[id]
+	sm.mu.RUnlock()
+	if !ok || sess == nil {
+		return ""
+	}
+	sess.mu.Lock()
+	defer sess.mu.Unlock()
+	if len(sess.outputBuf) == 0 {
+		return ""
+	}
+	start := 0
+	if maxLines > 0 && len(sess.outputBuf) > maxLines {
+		start = len(sess.outputBuf) - maxLines
+	}
+	return strings.Join(sess.outputBuf[start:], "\n")
 }
 
 // getDefaultShell returns the default shell for the current platform

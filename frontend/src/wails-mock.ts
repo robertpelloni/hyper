@@ -34,6 +34,28 @@ if (typeof window !== "undefined") {
 		StopServers: async () => ({ status: "stopped", error: "" }),
 		ToggleSystemTray: async () => true,
 		QuitApp: () => {},
+		GetTerminalHistory: async () => [
+			{
+				id: 1,
+				command: "git status",
+				output: "On branch main\nYour branch is up to date with 'origin/main'.",
+				success: true,
+				timestamp: new Date().toISOString(),
+			},
+			{
+				id: 2,
+				command: "npm test",
+				output: "PASS internal/terminal/buffer_test.go",
+				success: true,
+				timestamp: new Date().toISOString(),
+			},
+		],
+		SearchTerminalHistory: async (kw: string) => [],
+		RecordTerminalCommand: async () => ({}),
+		ClearTerminalHistory: async () => {},
+		GetSessionOutput: async (uid: string, maxLines: number) => {
+			return "[bash] session active: pid 1234\n$ tormentnexus --version\nTormentNexus v1.1.0\n$ echo 'Ready for user directives.'\nReady for user directives.";
+		},
 	};
 
 	const defaultSessionManager = {

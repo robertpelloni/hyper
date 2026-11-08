@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"os/exec"
 	"testing"
 	"time"
 )
@@ -264,6 +265,35 @@ func TestMCPWorkspaceAndGitTools(t *testing.T) {
 	hist := agg.GetToolExecutionHistory()
 	if len(hist) < 3 {
 		t.Errorf("expected at least 3 execution records, got %d", len(hist))
+	}
+}
+
+func TestAppSessionOutputInspection(t *testing.T) {
+	app := NewApp()
+	app.sessions = NewSessionManager()
+
+	sh, err := exec.LookPath("sh")
+	if err != nil {
+		t.Skip("sh not found")
+	}
+
+	res, err := app.sessions.CreateSession(sh, []string{}, "", 24, 80, "default")
+	if err != nil {
+		t.Fatalf("failed to create session: %v", err)
+	}
+	uid := res["uid"].(string)
+	defer func() {
+		_ = app.sessions.CloseSession(uid)
+	}()
+
+	app.AppendSessionOutput(uid, "user@nexus:~$ ls -la")
+	app.AppendSessionOutput(uid, "total 32")
+	app.AppendSessionOutput(uid, "-rw-r--r-- main.go")
+
+	tail := app.GetSessionOutput(uid, 2)
+	expected := "total 32\n-rw-r--r-- main.go"
+	if tail != expected {
+		t.Errorf("expected %q, got %q", expected, tail)
 	}
 }
 

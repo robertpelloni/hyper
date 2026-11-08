@@ -73,6 +73,14 @@ export async function listSessions(): Promise<SessionInfo[]> {
 	return SessionBindings.ListSessions() as Promise<SessionInfo[]>;
 }
 
+export async function getSessionOutput(uid: string, maxLines: number = 20): Promise<string> {
+	const app = getGoApp();
+	if (app && app.GetSessionOutput) {
+		return app.GetSessionOutput(uid, maxLines);
+	}
+	return "";
+}
+
 // ===== Configuration =====
 export async function getConfig(): Promise<AppConfig> {
 	return ConfigBindings.GetConfig() as Promise<AppConfig>;

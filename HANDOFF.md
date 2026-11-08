@@ -39,7 +39,12 @@
    - Added JSON export actions for agent cognitive traces (`Export Steps`) and command block history (`Export Blocks`).
    - Added quick presets (`Git Status`, `Find 'main'`) for instantaneous agent invocation.
 
-8. **Testing and Verification:**
+8. **Live Terminal Session Output Tail Inspection:**
+   - Added thread-safe ring buffer for session output in `session.go` and `internal/session/manager.go`.
+   - Exposed `GetSessionOutput(uid, maxLines)` in `app_core.go` and `frontend/src/api.ts`.
+   - Built interactive live session output preview card in Section 3 ("Terminal Session Orchestration") of `Dashboard.tsx` with hide/show toggle, output tailing, copy button, and row click selection.
+
+9. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 
