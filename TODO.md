@@ -36,6 +36,8 @@
 - [x] Add MCP category filtering pills (`ALL`, `System`, `Filesystem`, `Agent`, `Intelligence`).
 - [x] Implement JSON export utilities for reasoning step telemetry (`Export Steps`) and command block history (`Export Blocks`).
 - [x] Add live terminal session output tail inspection with Hide/Show toggle and copy utilities in Mission Control.
+- [x] Implement Terminal Plugins & Themes Hub with category filtering, install/status tracking, and persistent configuration.
+- [x] Expand Quick-Start Onboarding Guide to 4-step interactive workflow including plugin customization.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

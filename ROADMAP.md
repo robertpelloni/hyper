@@ -23,6 +23,8 @@
 - [x] "Explain & Fix" automated error piping from terminal blocks directly into agent reasoning loops.
 - [x] Multi-category MCP Tool Registry with category-based filtering and instant search.
 - [x] Autonomous reasoning step and semantic command block JSON telemetry export.
+- [x] Interactive Terminal Plugins & Themes Hub with category filtering and persistent config management.
+- [x] Live Terminal Session Output Tail Inspection with circular buffer history and clipboard export.
 
 ## Phase 3: Autonomous Agent Extensions & Multi-Language Swarm (In Progress)
 - [ ] Multi-language core parity across 5 languages (TypeScript, Rust, Go, C#, Java).

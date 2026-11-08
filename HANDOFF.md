@@ -44,7 +44,13 @@
    - Exposed `GetSessionOutput(uid, maxLines)` in `app_core.go` and `frontend/src/api.ts`.
    - Built interactive live session output preview card in Section 3 ("Terminal Session Orchestration") of `Dashboard.tsx` with hide/show toggle, output tailing, copy button, and row click selection.
 
-9. **Testing and Verification:**
+9. **Terminal Plugins & Themes Hub & Onboarding Expansion:**
+   - Designed and integrated Section 5 ("Terminal Plugins & Themes Hub") in `Dashboard.tsx` with category filters (`ALL`, `Theme`, `Productivity`, `Navigation`, `Visuals`), install status badges (`INSTALLED` vs `+ Install`), and GitHub repository links.
+   - Built Go core backend methods `GetInstalledPlugins()`, `GetRecommendedPlugins()`, and `InstallPlugin(name)` in `app_core.go`, writing dynamically to `ConfigManager`.
+   - Added 4th interactive step to Quick-Start Onboarding Guide highlighting plugin personalization with auto-scroll.
+   - Verified via unit test suite `TestAppPluginCatalogAndInstall` and visual screenshot rendering.
+
+10. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 

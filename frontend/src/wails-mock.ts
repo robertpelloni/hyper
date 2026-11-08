@@ -56,6 +56,45 @@ if (typeof window !== "undefined") {
 		GetSessionOutput: async (uid: string, maxLines: number) => {
 			return "[bash] session active: pid 1234\n$ tormentnexus --version\nTormentNexus v1.1.0\n$ echo 'Ready for user directives.'\nReady for user directives.";
 		},
+		GetInstalledPlugins: async () => ["hyper-snazzy"],
+		GetRecommendedPlugins: async () => [
+			{
+				name: "hyper-snazzy",
+				description: "Elegant and vivid terminal theme with crisp syntax colors",
+				category: "Theme",
+				installed: true,
+				url: "https://github.com/sindresorhus/hyper-snazzy",
+			},
+			{
+				name: "hypercwd",
+				description: "Opens new tabs with the current active directory from the previous tab",
+				category: "Productivity",
+				installed: false,
+				url: "https://github.com/hharnisc/hypercwd",
+			},
+			{
+				name: "hyper-search",
+				description: "Search text within the terminal buffer using Ctrl+Shift+F",
+				category: "Productivity",
+				installed: false,
+				url: "https://github.com/zeit/hyper-search",
+			},
+			{
+				name: "hyper-pane",
+				description: "Enhanced pane navigation and directional focus switching shortcuts",
+				category: "Navigation",
+				installed: false,
+				url: "https://github.com/chabou/hyper-pane",
+			},
+			{
+				name: "hyperpower",
+				description: "Particle visual effects and cursor explosions when typing commands",
+				category: "Visuals",
+				installed: false,
+				url: "https://github.com/zeit/hyperpower",
+			},
+		],
+		InstallPlugin: async (name: string) => true,
 	};
 
 	const defaultSessionManager = {

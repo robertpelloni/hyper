@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord, AgentExecutionStep, TerminalBlock } from "../types";
+import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolExecutionRecord, AgentExecutionStep, TerminalBlock, PluginInfo } from "../types";
 import * as api from "../api";
 import Tooltip from "./Tooltip";
 
@@ -80,6 +80,10 @@ export default function Dashboard({
 	const [fontFamily, setFontFamily] = useState<string>(config.fontFamily || "monospace");
 	const [cursorShape, setCursorShape] = useState<string>(config.cursorShape || "BLOCK");
 
+	// Terminal Plugins & Extensions State
+	const [pluginsList, setPluginsList] = useState<PluginInfo[]>([]);
+	const [pluginFilter, setPluginFilter] = useState<string>("ALL");
+
 	// Onboarding Guide banner visibility
 	const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
 	const [activeOnboardingStep, setActiveOnboardingStep] = useState<number | null>(null);
@@ -124,6 +128,11 @@ export default function Dashboard({
 			const blocks = await api.getTerminalHistory();
 			if (blocks) {
 				setCommandBlocks(blocks);
+			}
+
+			const plugins = await api.getRecommendedPlugins();
+			if (plugins) {
+				setPluginsList(plugins);
 			}
 
 			if (activeSessionId) {
@@ -508,15 +517,30 @@ export default function Dashboard({
 								style={{ cursor: "pointer" }}
 								title="Click to activate Step 3"
 							>
-								<span className="tn_step_num">3</span>
-								<div className="tn_step_text">
-									<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze the output.
-									<div className="tn_step_hint">👉 Click step to pipe result</div>
-								</div>
+							<span className="tn_step_num">3</span>
+							<div className="tn_step_text">
+								<strong>Autonomous Result Piping:</strong> Click <strong>🤖 Send to Agent Directive</strong> on tool results to instruct the AI agent to analyze the output.
+								<div className="tn_step_hint">👉 Click step to pipe result</div>
+							</div>
+						</div>
+						<div
+							className={`tn_onboarding_step ${activeOnboardingStep === 4 ? "tn_onboarding_step_active" : ""}`}
+							onClick={() => {
+								setActiveOnboardingStep(4);
+								showFeedback("Step 4 Activated: Explore popular terminal plugins below in 'Plugins & Themes Hub' to customize themes and workflows.", "info");
+							}}
+							style={{ cursor: "pointer" }}
+							title="Click to activate Step 4"
+						>
+							<span className="tn_step_num">4</span>
+							<div className="tn_step_text">
+								<strong>Plugin Personalization:</strong> Enable curated themes and tools like <code>hyper-snazzy</code> or <code>hypercwd</code> in the Plugins Hub below.
+								<div className="tn_step_hint">👉 Click step to explore plugins</div>
 							</div>
 						</div>
 					</div>
-				)}
+				</div>
+			)}
 
 				{/* High-Value Telemetry Banner */}
 				<div className="tn_telemetry_banner">
@@ -1517,7 +1541,98 @@ export default function Dashboard({
 						</div>
 					</div>
 
-					{/* SECTION 5: Quick Settings & Preferences */}
+					{/* SECTION 5: Terminal Plugins & Extensions Hub */}
+					<div className="tn_dashboard_panel tn_panel_full">
+						<div className="tn_panel_header">
+							<div className="tn_panel_title">
+								🧩 Terminal Plugins & Themes Hub
+								<Tooltip text="Discover, enable, and manage curated terminal extensions, visual themes, and workflow enhancers." />
+							</div>
+							<div style={{ display: "flex", gap: "6px" }}>
+								{["ALL", "Theme", "Productivity", "Navigation", "Visuals"].map((cat) => (
+									<button
+										key={cat}
+										type="button"
+										className={`tn_btn tn_btn_small ${pluginFilter === cat ? "tn_btn_primary" : "tn_btn_secondary"}`}
+										onClick={() => setPluginFilter(cat)}
+										style={{ fontSize: "9px", padding: "1px 6px" }}
+									>
+										{cat}
+									</button>
+								))}
+							</div>
+						</div>
+
+						<div className="tn_panel_body">
+							<div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "10px" }}>
+								{pluginsList
+									.filter((p) => pluginFilter === "ALL" || p.category === pluginFilter)
+									.map((p) => (
+										<div
+											key={p.name}
+											style={{
+												background: "rgba(0,0,0,0.3)",
+												border: "1px solid rgba(255,255,255,0.08)",
+												borderRadius: "6px",
+												padding: "10px",
+												display: "flex",
+												flexDirection: "column",
+												justifyContent: "space-between",
+												gap: "8px",
+											}}
+										>
+											<div>
+												<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
+													<strong style={{ color: "#f8fafc", fontSize: "12px" }}>{p.name}</strong>
+													<span
+														style={{
+															fontSize: "9px",
+															padding: "1px 6px",
+															borderRadius: "3px",
+															background: p.installed ? "rgba(34, 197, 94, 0.2)" : "rgba(148, 163, 184, 0.2)",
+															color: p.installed ? "#4ade80" : "#94a3b8",
+															border: `1px solid ${p.installed ? "rgba(34, 197, 94, 0.4)" : "rgba(148, 163, 184, 0.3)"}`,
+														}}
+													>
+														{p.installed ? "INSTALLED" : p.category}
+													</span>
+												</div>
+												<div style={{ fontSize: "11px", color: "#94a3b8", lineHeight: "1.4" }}>
+													{p.description}
+												</div>
+											</div>
+											<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "4px" }}>
+												<a
+													href={p.url}
+													target="_blank"
+													rel="noreferrer"
+													style={{ fontSize: "10px", color: "#38bdf8", textDecoration: "none" }}
+												>
+													GitHub ↗
+												</a>
+												<button
+													type="button"
+													className={`tn_btn tn_btn_small ${p.installed ? "tn_btn_secondary" : "tn_btn_success"}`}
+													onClick={async () => {
+														await api.installPlugin(p.name);
+														setPluginsList((prev) =>
+															prev.map((item) => (item.name === p.name ? { ...item, installed: true } : item))
+														);
+														showFeedback(`Installed and enabled plugin: ${p.name}`, "success");
+													}}
+													disabled={p.installed}
+													style={{ fontSize: "10px", padding: "2px 8px" }}
+												>
+													{p.installed ? "✓ Enabled" : "+ Install"}
+												</button>
+											</div>
+										</div>
+									))}
+							</div>
+						</div>
+					</div>
+
+					{/* SECTION 6: Quick Settings & Preferences */}
 					<div className="tn_dashboard_panel tn_panel_full">
 						<div className="tn_panel_header">
 							<div className="tn_panel_title">

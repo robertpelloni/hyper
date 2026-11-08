@@ -25,6 +25,15 @@ type ServerStatus struct {
 	Version          string `json:"version"`
 }
 
+// PluginInfo represents terminal plugin metadata
+type PluginInfo struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Category    string `json:"category"`
+	Installed   bool   `json:"installed"`
+	URL         string `json:"url"`
+}
+
 // App is the main application struct for Wails
 type App struct {
 	ctx            context.Context
@@ -437,6 +446,98 @@ func (a *App) AppendSessionOutput(id string, text string) {
 	if a.sessions != nil {
 		a.sessions.AppendOutput(id, text)
 	}
+}
+
+// ---- Terminal Plugins & Extensions Hub ----
+
+// GetInstalledPlugins retrieves user-configured plugins from config
+func (a *App) GetInstalledPlugins() []string {
+	if a.config == nil {
+		return []string{}
+	}
+	cfgVal := a.config.GetConfigValue("plugins")
+	if cfgVal == nil {
+		return []string{}
+	}
+	switch v := cfgVal.(type) {
+	case []string:
+		return v
+	case []interface{}:
+		res := make([]string, 0, len(v))
+		for _, item := range v {
+			if s, ok := item.(string); ok {
+				res = append(res, s)
+			}
+		}
+		return res
+	}
+	return []string{}
+}
+
+// GetRecommendedPlugins returns a catalog of vetted plugins with install status
+func (a *App) GetRecommendedPlugins() []PluginInfo {
+	installed := make(map[string]bool)
+	for _, p := range a.GetInstalledPlugins() {
+		installed[p] = true
+	}
+
+	catalog := []PluginInfo{
+		{
+			Name:        "hyper-snazzy",
+			Description: "Elegant and vivid terminal theme with crisp syntax colors",
+			Category:    "Theme",
+			Installed:   installed["hyper-snazzy"],
+			URL:         "https://github.com/sindresorhus/hyper-snazzy",
+		},
+		{
+			Name:        "hypercwd",
+			Description: "Opens new tabs with the current active directory from the previous tab",
+			Category:    "Productivity",
+			Installed:   installed["hypercwd"],
+			URL:         "https://github.com/hharnisc/hypercwd",
+		},
+		{
+			Name:        "hyper-search",
+			Description: "Search text within the terminal buffer using Ctrl+Shift+F",
+			Category:    "Productivity",
+			Installed:   installed["hyper-search"],
+			URL:         "https://github.com/zeit/hyper-search",
+		},
+		{
+			Name:        "hyper-pane",
+			Description: "Enhanced pane navigation and directional focus switching shortcuts",
+			Category:    "Navigation",
+			Installed:   installed["hyper-pane"],
+			URL:         "https://github.com/chabou/hyper-pane",
+		},
+		{
+			Name:        "hyperpower",
+			Description: "Particle visual effects and cursor explosions when typing commands",
+			Category:    "Visuals",
+			Installed:   installed["hyperpower"],
+			URL:         "https://github.com/zeit/hyperpower",
+		},
+	}
+	return catalog
+}
+
+// InstallPlugin adds a plugin to configuration
+func (a *App) InstallPlugin(name string) (bool, error) {
+	if a.config == nil {
+		return false, fmt.Errorf("config manager not initialized")
+	}
+	current := a.GetInstalledPlugins()
+	for _, p := range current {
+		if p == name {
+			return true, nil // Already installed
+		}
+	}
+	updated := append(current, name)
+	err := a.config.SetConfigValue("plugins", updated)
+	if err != nil {
+		return false, fmt.Errorf("failed to save plugin config: %w", err)
+	}
+	return true, nil
 }
 
 // ---- Dialog Operations ----

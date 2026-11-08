@@ -163,3 +163,11 @@ export interface TerminalBlock {
 	success: boolean;
 	timestamp: string;
 }
+
+export interface PluginInfo {
+	name: string;
+	description: string;
+	category: string;
+	installed: boolean;
+	url: string;
+}

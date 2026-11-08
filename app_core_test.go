@@ -350,3 +350,49 @@ func TestAgentWorkspaceSearchDirective(t *testing.T) {
 		t.Error("expected ACT step with system_info tool")
 	}
 }
+
+func TestAppPluginCatalogAndInstall(t *testing.T) {
+	app := NewApp()
+	app.config = NewConfigManager()
+
+	plugins := app.GetInstalledPlugins()
+	if plugins == nil {
+		t.Fatal("expected non-nil installed plugins slice")
+	}
+
+	rec := app.GetRecommendedPlugins()
+	if len(rec) < 5 {
+		t.Fatalf("expected at least 5 recommended plugins, got %d", len(rec))
+	}
+
+	foundSnazzy := false
+	for _, p := range rec {
+		if p.Name == "hyper-snazzy" {
+			foundSnazzy = true
+			if p.Category != "Theme" {
+				t.Errorf("expected Theme category for hyper-snazzy, got %s", p.Category)
+			}
+		}
+	}
+	if !foundSnazzy {
+		t.Error("expected hyper-snazzy in recommended catalog")
+	}
+
+	// Test installing plugin
+	ok, err := app.InstallPlugin("hyper-snazzy")
+	if err != nil || !ok {
+		t.Fatalf("failed to install plugin: %v", err)
+	}
+
+	installedList := app.GetInstalledPlugins()
+	found := false
+	for _, p := range installedList {
+		if p == "hyper-snazzy" {
+			found = true
+			break
+		}
+	}
+	if !found {
+		t.Error("expected hyper-snazzy in installed list after InstallPlugin")
+	}
+}

@@ -277,6 +277,67 @@ export async function clearTerminalHistory(): Promise<void> {
 	}
 }
 
+// ===== Terminal Plugins & Extensions Hub =====
+export async function getInstalledPlugins(): Promise<string[]> {
+	const app = getGoApp();
+	if (app && app.GetInstalledPlugins) {
+		return app.GetInstalledPlugins();
+	}
+	return ["hyper-snazzy"];
+}
+
+export async function getRecommendedPlugins(): Promise<any[]> {
+	const app = getGoApp();
+	if (app && app.GetRecommendedPlugins) {
+		return app.GetRecommendedPlugins();
+	}
+	return [
+		{
+			name: "hyper-snazzy",
+			description: "Elegant and vivid terminal theme with crisp syntax colors",
+			category: "Theme",
+			installed: true,
+			url: "https://github.com/sindresorhus/hyper-snazzy",
+		},
+		{
+			name: "hypercwd",
+			description: "Opens new tabs with the current active directory from the previous tab",
+			category: "Productivity",
+			installed: false,
+			url: "https://github.com/hharnisc/hypercwd",
+		},
+		{
+			name: "hyper-search",
+			description: "Search text within the terminal buffer using Ctrl+Shift+F",
+			category: "Productivity",
+			installed: false,
+			url: "https://github.com/zeit/hyper-search",
+		},
+		{
+			name: "hyper-pane",
+			description: "Enhanced pane navigation and directional focus switching shortcuts",
+			category: "Navigation",
+			installed: false,
+			url: "https://github.com/chabou/hyper-pane",
+		},
+		{
+			name: "hyperpower",
+			description: "Particle visual effects and cursor explosions when typing commands",
+			category: "Visuals",
+			installed: false,
+			url: "https://github.com/zeit/hyperpower",
+		},
+	];
+}
+
+export async function installPlugin(name: string): Promise<boolean> {
+	const app = getGoApp();
+	if (app && app.InstallPlugin) {
+		return app.InstallPlugin(name);
+	}
+	return true;
+}
+
 export async function agentRemoveTask(index: number): Promise<string[]> {
 	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.RemoveTask) {
 		return (window as any).go.main.AgentHarness.RemoveTask(index);
