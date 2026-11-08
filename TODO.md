@@ -38,6 +38,8 @@
 - [x] Add live terminal session output tail inspection with Hide/Show toggle and copy utilities in Mission Control.
 - [x] Implement Terminal Plugins & Themes Hub with category filtering, install/status tracking, and persistent configuration.
 - [x] Expand Quick-Start Onboarding Guide to 4-step interactive workflow including plugin customization.
+- [x] Implement thread-safe terminal session snapshot export and file persistence (`internal/session/manager.go`).
+- [x] Integrate interactive "💾 Snapshot Sessions" export button with toast feedback in Mission Control Section 3.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

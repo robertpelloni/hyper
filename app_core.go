@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"os"
@@ -519,6 +520,19 @@ func (a *App) GetRecommendedPlugins() []PluginInfo {
 		},
 	}
 	return catalog
+}
+
+// ExportSessionSnapshot returns the active session snapshot as a JSON string
+func (a *App) ExportSessionSnapshot() string {
+	if a.sessions == nil {
+		return `{"version":"1.1.0","sessions":[]}`
+	}
+	snap := a.sessions.ExportSnapshot()
+	bytes, err := json.MarshalIndent(snap, "", "  ")
+	if err != nil {
+		return `{"error":"failed to serialize snapshot"}`
+	}
+	return string(bytes)
 }
 
 // InstallPlugin adds a plugin to configuration

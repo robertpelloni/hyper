@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 )
@@ -394,5 +395,26 @@ func TestAppPluginCatalogAndInstall(t *testing.T) {
 	}
 	if !found {
 		t.Error("expected hyper-snazzy in installed list after InstallPlugin")
+	}
+}
+
+func TestAppSessionSnapshotExport(t *testing.T) {
+	app := NewApp()
+	app.sessions = NewSessionManager()
+	s := &Session{
+		ID:        "test-snap-sess",
+		Shell:     "/bin/bash",
+		Pid:       9999,
+		Profile:   "default",
+		outputBuf: []string{"first output line", "second output line"},
+	}
+	app.sessions.sessions["test-snap-sess"] = s
+
+	snapJSON := app.ExportSessionSnapshot()
+	if snapJSON == "" {
+		t.Fatalf("expected non-empty JSON snapshot")
+	}
+	if !strings.Contains(snapJSON, "test-snap-sess") || !strings.Contains(snapJSON, "second output line") {
+		t.Errorf("expected session metadata and buffer in JSON: %s", snapJSON)
 	}
 }

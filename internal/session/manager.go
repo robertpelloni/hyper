@@ -1,10 +1,12 @@
 package session
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
 	"sync"
+	"time"
 
 	"github.com/creack/pty"
 )
@@ -180,4 +182,76 @@ func (m *Manager) CloseAll() {
 		}
 	}
 	m.sessions = make(map[string]*Session)
+}
+
+// SessionMetadata represents exported state and buffer of a session
+type SessionMetadata struct {
+	ID        string   `json:"id"`
+	Shell     string   `json:"shell"`
+	Args      []string `json:"args"`
+	CWD       string   `json:"cwd"`
+	OutputBuf []string `json:"output_buf"`
+}
+
+// SessionSnapshot contains serialized metadata of managed sessions
+type SessionSnapshot struct {
+	Version   string            `json:"version"`
+	Timestamp int64             `json:"timestamp"`
+	Sessions  []SessionMetadata `json:"sessions"`
+}
+
+// ExportSnapshot creates a deep copy snapshot of all managed sessions
+func (m *Manager) ExportSnapshot() SessionSnapshot {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	snap := SessionSnapshot{
+		Version:   "1.1.0",
+		Timestamp: time.Now().Unix(),
+		Sessions:  make([]SessionMetadata, 0, len(m.sessions)),
+	}
+
+	for _, s := range m.sessions {
+		if s == nil {
+			continue
+		}
+		s.mu.Lock()
+		bufCopy := make([]string, len(s.outputBuf))
+		copy(bufCopy, s.outputBuf)
+		argsCopy := make([]string, len(s.Args))
+		copy(argsCopy, s.Args)
+		meta := SessionMetadata{
+			ID:        s.ID,
+			Shell:     s.Shell,
+			Args:      argsCopy,
+			CWD:       s.CWD,
+			OutputBuf: bufCopy,
+		}
+		s.mu.Unlock()
+		snap.Sessions = append(snap.Sessions, meta)
+	}
+	return snap
+}
+
+// SaveSnapshotToFile writes the session snapshot JSON to disk
+func (m *Manager) SaveSnapshotToFile(path string) error {
+	snap := m.ExportSnapshot()
+	data, err := json.MarshalIndent(snap, "", "  ")
+	if err != nil {
+		return fmt.Errorf("failed to marshal session snapshot: %w", err)
+	}
+	return os.WriteFile(path, data, 0644)
+}
+
+// LoadSnapshotFromFile loads a session snapshot JSON from disk
+func LoadSnapshotFromFile(path string) (*SessionSnapshot, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read snapshot file: %w", err)
+	}
+	var snap SessionSnapshot
+	if err := json.Unmarshal(data, &snap); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal snapshot: %w", err)
+	}
+	return &snap, nil
 }

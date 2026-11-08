@@ -113,3 +113,51 @@ func TestSessionOutputTail(t *testing.T) {
 		t.Errorf("expected %q, got %q", "line 3: done", mgrTail)
 	}
 }
+
+func TestSessionSnapshotExportAndPersistence(t *testing.T) {
+	sh, err := exec.LookPath("sh")
+	if err != nil {
+		t.Skip("sh not available on system")
+	}
+
+	mgr := NewManager()
+	s1, err := NewSession("sess-snap-1", sh, []string{"-l"}, "/tmp", 24, 80)
+	if err != nil {
+		t.Fatalf("failed to create session: %v", err)
+	}
+	defer func() {
+		_ = s1.Close()
+	}()
+
+	s1.AppendOutput("cmd: ls -la")
+	s1.AppendOutput("output: file1.txt file2.txt")
+	mgr.AddSession(s1)
+
+	snap := mgr.ExportSnapshot()
+	if snap.Version != "1.1.0" {
+		t.Errorf("expected version 1.1.0, got %s", snap.Version)
+	}
+	if len(snap.Sessions) != 1 {
+		t.Fatalf("expected 1 session in snapshot, got %d", len(snap.Sessions))
+	}
+	if snap.Sessions[0].ID != "sess-snap-1" || len(snap.Sessions[0].OutputBuf) != 2 {
+		t.Errorf("unexpected snapshot session contents: %+v", snap.Sessions[0])
+	}
+
+	// Test disk persistence
+	tmpPath := "/tmp/test_tormentnexus_session_snapshot.json"
+	if err := mgr.SaveSnapshotToFile(tmpPath); err != nil {
+		t.Fatalf("failed to save snapshot: %v", err)
+	}
+
+	loaded, err := LoadSnapshotFromFile(tmpPath)
+	if err != nil {
+		t.Fatalf("failed to load snapshot from file: %v", err)
+	}
+	if loaded.Version != snap.Version || len(loaded.Sessions) != 1 {
+		t.Errorf("loaded snapshot mismatch: %+v", loaded)
+	}
+	if loaded.Sessions[0].OutputBuf[1] != "output: file1.txt file2.txt" {
+		t.Errorf("loaded buffer mismatch: %v", loaded.Sessions[0].OutputBuf)
+	}
+}

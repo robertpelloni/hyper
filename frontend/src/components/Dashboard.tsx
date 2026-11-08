@@ -1205,13 +1205,37 @@ export default function Dashboard({
 								💻 Terminal Session Orchestration
 								<Tooltip text="Inspect and manage all concurrent Go core PTY sessions." />
 							</div>
-							<button
-								className="tn_btn tn_btn_secondary"
-								onClick={onNewSession}
-								title="Create a new terminal tab"
-							>
-								+ New Session
-							</button>
+							<div style={{ display: "flex", gap: "6px" }}>
+								<button
+									type="button"
+									className="tn_btn tn_btn_small tn_btn_secondary"
+									onClick={async () => {
+										try {
+											const snapJSON = await api.exportSessionSnapshot();
+											const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(snapJSON);
+											const downloadAnchor = document.createElement("a");
+											downloadAnchor.setAttribute("href", dataStr);
+											downloadAnchor.setAttribute("download", `tormentnexus_sessions_${Date.now()}.json`);
+											document.body.appendChild(downloadAnchor);
+											downloadAnchor.click();
+											downloadAnchor.remove();
+											showFeedback("Exported session snapshot JSON", "success");
+										} catch (err: any) {
+											showFeedback(`Snapshot failed: ${err.message || err}`, "error");
+										}
+									}}
+									title="Save a persistent JSON snapshot of all active terminal sessions and output buffers"
+								>
+									💾 Snapshot Sessions
+								</button>
+								<button
+									className="tn_btn tn_btn_secondary"
+									onClick={onNewSession}
+									title="Create a new terminal tab"
+								>
+									+ New Session
+								</button>
+							</div>
 						</div>
 
 						<div className="tn_panel_body">

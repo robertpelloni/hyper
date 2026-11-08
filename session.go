@@ -291,6 +291,38 @@ func (sm *SessionManager) AppendOutput(id string, text string) {
 	}
 }
 
+// ExportSnapshot exports session state and output tails for all active sessions
+func (sm *SessionManager) ExportSnapshot() map[string]interface{} {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	sessionsList := make([]map[string]interface{}, 0, len(sm.sessions))
+	for _, sess := range sm.sessions {
+		if sess == nil {
+			continue
+		}
+		sess.mu.Lock()
+		bufCopy := make([]string, len(sess.outputBuf))
+		copy(bufCopy, sess.outputBuf)
+		sessionsList = append(sessionsList, map[string]interface{}{
+			"id":         sess.ID,
+			"shell":      sess.Shell,
+			"pid":        sess.Pid,
+			"cwd":        sess.Cwd,
+			"profile":    sess.Profile,
+			"output_buf": bufCopy,
+		})
+		sess.mu.Unlock()
+	}
+
+	return map[string]interface{}{
+		"version":   "1.1.0",
+		"timestamp": time.Now().Unix(),
+		"count":     len(sessionsList),
+		"sessions":  sessionsList,
+	}
+}
+
 // GetSessionOutput returns the tail output lines of a session
 func (sm *SessionManager) GetSessionOutput(id string, maxLines int) string {
 	sm.mu.RLock()

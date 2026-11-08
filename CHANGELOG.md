@@ -31,7 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Expanded MCP Tool Registry & Category Classification:** Added `workspace_search` (Intelligence), `git_status` (System), and `system_info` (System) tools with structured categories (`System`, `Filesystem`, `Agent`, `Intelligence`).
 - **Category Filtering & Preset Dispatch:** Added interactive category filter pills in the MCP Tool Monitor and one-click quick presets (`Git Status`, `Find 'main'`) in the Autonomous Agent Control Panel.
 - **JSON Telemetry & Block Export:** Added JSON export utilities for cognitive reasoning step traces (`Export Steps`) and semantic command block logs (`Export Blocks`).
-- **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`), including workspace indexing and git status tool tests.
+- **Session Snapshot Export & Persistent State:** Implemented thread-safe session metadata and snapshot persistence (`SessionMetadata`, `SessionSnapshot`, `ExportSnapshot()`, `SaveSnapshotToFile()`, `LoadSnapshotFromFile()`) in `internal/session/manager.go` and exposed via Go backend method `ExportSessionSnapshot()` in `app_core.go` and `session.go`. Added interactive "💾 Snapshot Sessions" button in Section 3 ("Terminal Session Orchestration") of `Dashboard.tsx` with toast confirmation and automated JSON export.
+- **Automated Testing:** 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`), including workspace indexing, git status tools, and session snapshot persistence.
 - **Cross-Platform Scripts:** Added executable `build.sh` and `start.sh` runners; non-destructively archived legacy scripts in `archive/start.bat.bak`.
 
 ### Changed

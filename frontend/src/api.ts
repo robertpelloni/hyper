@@ -181,6 +181,28 @@ export async function toggleSystemTray(): Promise<boolean> {
 	return true;
 }
 
+export async function exportSessionSnapshot(): Promise<string> {
+	const app = getGoApp();
+	if (app && app.ExportSessionSnapshot) {
+		return app.ExportSessionSnapshot();
+	}
+	return JSON.stringify({
+		version: "1.1.0",
+		timestamp: Math.floor(Date.now() / 1000),
+		count: 1,
+		sessions: [
+			{
+				id: "sess-default",
+				shell: "/bin/bash",
+				pid: 1234,
+				cwd: "/workspace",
+				profile: "default",
+				output_buf: ["[bash] session active: pid 1234", "$ echo 'Session snapshot ready'"],
+			},
+		],
+	}, null, 2);
+}
+
 export async function quitApp(): Promise<void> {
 	const app = getGoApp();
 	if (app && app.QuitApp) {

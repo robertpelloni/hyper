@@ -95,6 +95,19 @@ if (typeof window !== "undefined") {
 			},
 		],
 		InstallPlugin: async (name: string) => true,
+		ExportSessionSnapshot: async () => JSON.stringify({
+			version: "1.1.0",
+			timestamp: Math.floor(Date.now() / 1000),
+			count: 1,
+			sessions: [{
+				id: "mock-session-1",
+				shell: "/bin/bash",
+				pid: 1234,
+				cwd: "/workspace",
+				profile: "default",
+				output_buf: ["[bash] session active: pid 1234", "$ echo 'Session snapshot ready'"],
+			}],
+		}, null, 2),
 	};
 
 	const defaultSessionManager = {

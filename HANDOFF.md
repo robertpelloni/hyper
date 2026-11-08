@@ -50,7 +50,12 @@
    - Added 4th interactive step to Quick-Start Onboarding Guide highlighting plugin personalization with auto-scroll.
    - Verified via unit test suite `TestAppPluginCatalogAndInstall` and visual screenshot rendering.
 
-10. **Testing and Verification:**
+10. **Session Snapshot & Persistent State Export:**
+   - Implemented thread-safe session metadata and snapshot serialization (`SessionMetadata`, `SessionSnapshot`, `ExportSnapshot()`, `SaveSnapshotToFile()`, `LoadSnapshotFromFile()`) in `internal/session/manager.go`.
+   - Exposed Go Wails method `ExportSessionSnapshot()` in `app_core.go` and `session.go`.
+   - Added interactive `💾 Snapshot Sessions` export button in Section 3 ("Terminal Session Orchestration") of `Dashboard.tsx` with download trigger and toast feedback.
+
+11. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
    - Frontend builds cleanly via Vite in ~4 seconds and verified visually via Playwright.
 
@@ -59,4 +64,4 @@ The next development cycle should focus on:
 1. **Multi-Language Architecture:** Implementing core data structures and PTY interfaces in Rust, C#, and Java to match TypeScript and Go implementations.
 2. **Multi-Agent Swarm Orchestration:** Extending `AgentHarness` to support subagents and task delegation across specialized roles.
 3. **WASM Sandboxing:** Integrating a WebAssembly runtime to securely run untrusted user tools.
-4. **Persistent Session State:** SQLite session indexing for fast semantic search across historical terminal buffer streams.
+4. **Persistent Session State & SQLite Indexing:** SQLite session indexing for fast semantic search across historical terminal buffer streams.
