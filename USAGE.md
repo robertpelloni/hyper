@@ -43,7 +43,9 @@ TormentNexus features a consolidated, singular Mission Control page providing co
    - **Parameter Schema & Quick-Fill Helper:** Directly above the arguments editor, view all available parameters with type tags and required asterisks (`*`). Click any parameter badge to automatically insert property snippets.
    - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template with inline description hints.
    - **Client-Side Syntax Validation:** Real-time JSON validation with red border highlighting and actionable error alerts when syntax is invalid.
-   - **Utility Actions:** **✨ Format JSON** to clean indentation and **↺ Reset Template** to restore default parameters.
+   - **Utility Actions:** **✨ Format JSON** to clean indentation, **↺ Reset Template** to restore default parameters, and **🗑 Clear** to instantly clear arguments to `{}`.
+   - **Empty Filter State & Reset:** If search queries or category filters yield no results, an empty state card with a one-click **Reset Filters** button is provided.
+   - **Keyboard Navigation:** Tool cards support full keyboard selection via `Tab` and `Enter` / `Space`.
    - **Live Execution Duration Timer:** Displays exact microsecond/millisecond execution time (`⏱ Xms`) for every tool call.
    - **Structured Error Recovery & Remediation:** If an invocation fails (e.g. `MISSING_REQUIRED_ARG`, `TOOL_NOT_FOUND`, `INVALID_ARGUMENTS`), a structured error callout displays with retry counter tracking `(Retries: N)`, actionable remediation advice (`💡 Remediation: ...`), and one-click **📋 Copy Error** and **🔄 Retry** controls.
    - **Interactive Piping:** Use the **🤖 Send to Agent Directive** button to forward invocation results directly into the Autonomous Agent harness for automated analysis.

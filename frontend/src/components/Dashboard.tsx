@@ -1034,8 +1034,8 @@ export default function Dashboard({
 
 							{/* Real-time Tool Performance Cards */}
 							<div className="tn_tool_metrics_grid">
-								{mcpTools
-									.filter((t) => {
+								{(() => {
+									const filteredTools = mcpTools.filter((t) => {
 										const toolName = (t.Name || t.name).toLowerCase();
 										if (toolSearchQuery && !toolName.includes(toolSearchQuery.toLowerCase())) {
 											return false;
@@ -1057,8 +1057,39 @@ export default function Dashboard({
 											}
 										}
 										return true;
-									})
-									.map((t) => {
+									});
+
+									if (filteredTools.length === 0) {
+										return (
+											<div style={{
+												gridColumn: "1 / -1",
+												textAlign: "center",
+												padding: "24px 16px",
+												background: "rgba(0, 0, 0, 0.25)",
+												borderRadius: "6px",
+												border: "1px dashed rgba(255, 255, 255, 0.12)",
+												color: "#94a3b8",
+												fontSize: "12px",
+											}}>
+												<div style={{ fontSize: "18px", marginBottom: "6px" }}>🔍</div>
+												<div>No MCP tools found matching query "<strong>{toolSearchQuery || toolCategoryFilter}</strong>".</div>
+												<button
+													type="button"
+													className="tn_btn tn_btn_small tn_btn_secondary"
+													style={{ marginTop: "10px", fontSize: "10px" }}
+													onClick={() => {
+														setToolSearchQuery("");
+														setToolStatusFilter("all");
+														setToolCategoryFilter("ALL");
+													}}
+												>
+													↺ Reset Filters
+												</button>
+											</div>
+										);
+									}
+
+									return filteredTools.map((t) => {
 									const toolName = t.Name || t.name;
 									const records = executionHistory.filter((h) => h.tool === toolName);
 									const latest = records[records.length - 1];
@@ -1192,7 +1223,8 @@ export default function Dashboard({
 											</div>
 										</div>
 									);
-								})}
+								});
+							})()}
 							</div>
 
 							<div className="tn_form_group" style={{ marginTop: "10px" }}>
@@ -1297,6 +1329,19 @@ export default function Dashboard({
 											aria-label="Format JSON"
 										>
 											✨ Format JSON
+										</button>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={() => {
+												setToolArgs("{}");
+												setJsonValidationError(null);
+												showFeedback("Cleared arguments to empty JSON '{}'", "info");
+											}}
+											title="Clear arguments editor to empty JSON object"
+											aria-label="Clear Arguments"
+										>
+											🗑 Clear
 										</button>
 										<button
 											type="button"
