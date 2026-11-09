@@ -121,7 +121,28 @@ def run_tests():
             assert "TormentNexus" in agent_input.input_value() or "shell_execute" in agent_input.input_value(), "Result not piped into agent input"
             print("[E2E] ✓ 'Send to Agent Directive' piping verified")
 
-        # Step 9: Verify Remote SSH Modal Flow
+        # Step 9: Verify Workflow Templates & Autonomous Automation Presets
+        workflow_select = page.locator("select[aria-label='Workflow Template Selector']")
+        assert workflow_select.count() > 0, "Workflow template selector missing in Section 1"
+        workflow_select.first.select_option("security")
+        page.wait_for_timeout(300)
+
+        pipeline_btn = page.locator("button:has-text('Load Pipeline')")
+        assert pipeline_btn.count() > 0, "Load Pipeline button missing"
+        pipeline_btn.first.click()
+        page.wait_for_timeout(300)
+        agent_input = page.locator("input.tn_input").first
+        assert "shell_execute: ls -la && scan_sessions" in agent_input.input_value(), "Pipeline not formatted as chained && commands"
+        print("[E2E] ✓ Workflow template 'Load Pipeline' loads chained directives")
+
+        queue_all_btn = page.locator("button:has-text('+ Queue All')")
+        assert queue_all_btn.count() > 0, "+ Queue All button missing"
+        queue_all_btn.first.click()
+        page.wait_for_timeout(500)
+        assert page.locator("text=Autonomous Task Queue").count() > 0, "Autonomous Task Queue box not visible after Queue All"
+        print("[E2E] ✓ Workflow template '+ Queue All' populated autonomous task queue")
+
+        # Step 10: Verify Remote SSH Modal Flow
         ssh_btn = page.locator("button:has-text('Remote SSH')")
         assert ssh_btn.count() > 0, "Remote SSH button missing in Section 3"
         ssh_btn.first.scroll_into_view_if_needed()
@@ -135,7 +156,7 @@ def run_tests():
         page.wait_for_timeout(300)
         print("[E2E] ✓ Remote SSH Connection modal opened and cancelled cleanly")
 
-        # Step 10: Capture Final Comprehensive Screenshot
+        # Step 11: Capture Final Comprehensive Screenshot
         page.screenshot(path="/tmp/dashboard_mcp_ux_verified.png")
         print("[E2E] ✓ Captured visual verification screenshot to /tmp/dashboard_mcp_ux_verified.png")
 
