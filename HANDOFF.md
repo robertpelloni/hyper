@@ -69,6 +69,7 @@
    - Added `DELETE /history` endpoint and `ClearHistory()` method in Go backend, "Clear History" button in MCP Tool Monitor, and one-click "🔄 Re-run" directive buttons on agent reasoning feed steps.
    - Added dynamic tool count badges on category filter pills (`ALL (8)`, `System (4)`, `Filesystem (2)`, `Agent (1)`, `Intelligence (1)`) and color-coded latency performance thresholds (<25ms emerald, <100ms sky blue, <250ms amber, >=250ms rose).
    - Added interactive `🗑 Clear` button to reset arguments instantly to `{}`, keyboard selection accessibility for tool cards, and empty search state card with one-click `Reset Filters` action.
+   - Synchronized standalone HTTP MCP server in `cmd/tormentnexus/main.go` to provide 100% parity across all 8 standard tools with schemas, categories, and required argument validation. Added full test suite in `cmd/tormentnexus/main_test.go`.
 
 13. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).
