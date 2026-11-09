@@ -3,6 +3,46 @@ import type { AppConfig, SessionInfo, ServerStatus, MCPTool, MCPTelemetry, ToolE
 import * as api from "../api";
 import Tooltip from "./Tooltip";
 
+// Structured multi-step automation workflow templates for the Autonomous Agent
+export interface WorkflowTemplate {
+	id: string;
+	name: string;
+	desc: string;
+	category: "Audit" | "Security" | "Diagnostics" | "Indexing";
+	directives: string[];
+}
+
+export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
+	{
+		id: "audit",
+		name: "Code & Session Health Audit",
+		desc: "Runs git status check, scans active terminal sessions, and verifies system status",
+		category: "Audit",
+		directives: ["git_status", "scan_sessions", "system_info"],
+	},
+	{
+		id: "security",
+		name: "Security & Permissions Sweep",
+		desc: "Executes shell permission checks, audits active PTY sessions, and checks workspace config",
+		category: "Security",
+		directives: ["shell_execute: ls -la", "scan_sessions", "check_config"],
+	},
+	{
+		id: "mcp_diag",
+		name: "MCP Aggregator & Tool Diagnostic",
+		desc: "Tests system info, lists available MCP tools, and runs an agent status health check",
+		category: "Diagnostics",
+		directives: ["system_info", "agent_status", "scan_sessions"],
+	},
+	{
+		id: "indexing",
+		name: "Full Workspace Re-indexing",
+		desc: "Searches workspace files for configuration and documentation entry points",
+		category: "Indexing",
+		directives: ["workspace_search: config", "workspace_search: agent", "git_status"],
+	},
+];
+
 interface DashboardProps {
 	config: AppConfig;
 	sessions: Record<string, SessionInfo>;
@@ -36,6 +76,7 @@ export default function Dashboard({
 	});
 
 	const [agentCommand, setAgentCommand] = useState("");
+	const [selectedWorkflowId, setSelectedWorkflowId] = useState("audit");
 	const [agentLogs, setAgentLogs] = useState<string[]>([
 		"Agent Harness initialized in idle state.",
 	]);
@@ -257,6 +298,27 @@ export default function Dashboard({
 			refreshStatus();
 		} catch (err: any) {
 			showFeedback(`Failed to clear queue: ${err.message || err}`, "error");
+		}
+	};
+
+	const handleLoadWorkflowTemplate = async (mode: "queue" | "pipeline") => {
+		const template = WORKFLOW_TEMPLATES.find((t) => t.id === selectedWorkflowId);
+		if (!template) return;
+
+		if (mode === "pipeline") {
+			const chained = template.directives.join(" && ");
+			setAgentCommand(chained);
+			showFeedback(`Loaded "${template.name}" as pipeline into directive input`, "info");
+		} else {
+			try {
+				for (const directive of template.directives) {
+					await api.agentQueueTask(directive);
+				}
+				showFeedback(`Enqueued ${template.directives.length} tasks from "${template.name}"`, "success");
+				refreshStatus();
+			} catch (err: any) {
+				showFeedback(`Failed to queue workflow: ${err.message || err}`, "error");
+			}
 		}
 	};
 
@@ -864,6 +926,57 @@ export default function Dashboard({
 										{log}
 									</div>
 								))}
+							</div>
+
+							{/* Workflow Templates & Quick Automation Presets */}
+							<div
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: "8px",
+									padding: "6px 8px",
+									background: "rgba(255, 255, 255, 0.03)",
+									borderRadius: "4px",
+									border: "1px solid #2a2a2a",
+									marginBottom: "8px",
+									fontSize: "11px",
+								}}
+							>
+								<span style={{ fontWeight: "bold", color: "#81c784", whiteSpace: "nowrap" }}>
+									⚡ Workflows:
+								</span>
+								<select
+									className="tn_select"
+									style={{ flex: 1, padding: "2px 6px", fontSize: "11px", height: "24px" }}
+									value={selectedWorkflowId}
+									onChange={(e) => setSelectedWorkflowId(e.target.value)}
+									title="Select a predefined autonomous agent workflow template"
+									aria-label="Workflow Template Selector"
+								>
+									{WORKFLOW_TEMPLATES.map((w) => (
+										<option key={w.id} value={w.id}>
+											[{w.category}] {w.name} ({w.directives.length} steps)
+										</option>
+									))}
+								</select>
+								<button
+									type="button"
+									className="tn_btn tn_btn_small tn_btn_primary"
+									style={{ fontSize: "10px", padding: "2px 8px" }}
+									onClick={() => handleLoadWorkflowTemplate("queue")}
+									title="Enqueue all steps from this workflow into the autonomous task queue"
+								>
+									+ Queue All
+								</button>
+								<button
+									type="button"
+									className="tn_btn tn_btn_small tn_btn_secondary"
+									style={{ fontSize: "10px", padding: "2px 8px" }}
+									onClick={() => handleLoadWorkflowTemplate("pipeline")}
+									title="Load as chained pipeline (&&) into the directive command input"
+								>
+									Load Pipeline
+								</button>
 							</div>
 
 							{/* Multi-step Autonomous Task Queue */}

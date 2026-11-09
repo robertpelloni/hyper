@@ -72,6 +72,7 @@
    - Synchronized standalone HTTP MCP server in `cmd/tormentnexus/main.go` to provide 100% parity across all 8 standard tools with schemas, categories, and required argument validation. Added full test suite in `cmd/tormentnexus/main_test.go`.
    - Ported Remote SSH protocol and session orchestration in `internal/session/ssh.go` and `internal/session/manager.go` using `golang.org/x/crypto/ssh`. Wired interactive remote connection form and `LOCAL` vs `SSH` session badges in Section 3 of `Dashboard.tsx`.
    - Built end-to-end Playwright UX test suite in `test/test_dashboard_mcp_flow.py` covering tool discovery, category filtering, schema quick-fill badges, client-side JSON syntax errors, quick-clear arguments, execution timing, result piping, and remote SSH modals with 100% test pass rate.
+   - Built workflow automation templates (`WORKFLOW_TEMPLATES`) with `+ Queue All` and `Load Pipeline` actions in Mission Control Section 1 for Code Health Audit, Security Sweep, MCP Diagnostic, and Workspace Re-indexing.
 
 13. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).

@@ -72,11 +72,16 @@ The Autonomous Agent Harness operates a structured 5-phase cognitive loop:
 - **OBSERVE:** Ingests output payload, computes duration, and checks output validity.
 - **REFLECT:** Confirms goal resolution and evaluates whether follow-up tasks are required.
 
-### Preset Workflow Directives & Pipelines:
-- `git_status && system_info`: Executes chained multi-step pipeline running git status followed by system telemetry query.
-- `scan_sessions`: Dispatches an autonomous query to inspect all active PTY terminal sessions and tab contexts.
-- `check_config`: Inspects current configuration options, terminal font sizing, and shell defaults.
-- `status`: Queries the agent harness health and server runtime status.
+### Preset Workflow Automation Templates:
+The Autonomous Agent panel includes predefined, one-click workflow automation templates:
+- **Code & Session Health Audit (`audit`):** Runs `git_status`, `scan_sessions`, and `system_info` to ensure workspace cleanliness, verify active PTY processes, and review system memory.
+- **Security & Permissions Sweep (`security`):** Executes `shell_execute: ls -la`, audits active terminal sessions, and verifies runtime configuration permissions.
+- **MCP Aggregator & Tool Diagnostic (`mcp_diag`):** Runs `system_info`, `agent_status`, and queries active sessions to validate MCP tool responsiveness.
+- **Full Workspace Re-indexing (`indexing`):** Dispatches workspace content searches across configuration and agent files followed by git status synchronization.
+
+Users can either:
+- Click **+ Queue All** to push all workflow directives sequentially into the Autonomous Task Queue.
+- Click **Load Pipeline** to format directives into a single chained pipeline (`cmd1 && cmd2 && cmd3`) for instant execution.
 
 ## Advanced Features & Tool Piping
 
