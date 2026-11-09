@@ -813,19 +813,34 @@ export default function Dashboard({
 													</span>
 												)}
 												{s.tool && (s.phase === "ACT" || s.phase === "THINK") && (
-													<button
-														type="button"
-														className="tn_btn tn_btn_small tn_btn_secondary"
-														style={{ fontSize: "8px", padding: "1px 4px", marginLeft: "auto", borderColor: "#64b5f6", color: "#64b5f6" }}
-														onClick={(e) => {
-															e.stopPropagation();
-															setSelectedTool(s.tool);
-															showFeedback(`Loaded tool '${s.tool}' into MCP runner`, "info");
-														}}
-														title="Load this tool into the MCP Runner for manual inspection"
-													>
-														🔧 Inspect Tool
-													</button>
+													<div style={{ marginLeft: "auto", display: "flex", gap: "4px" }}>
+														<button
+															type="button"
+															className="tn_btn tn_btn_small tn_btn_secondary"
+															style={{ fontSize: "8px", padding: "1px 4px", borderColor: "#34d399", color: "#34d399" }}
+															onClick={(e) => {
+																e.stopPropagation();
+																handleAgentExec(s.tool);
+																showFeedback(`Re-dispatched step tool '${s.tool}'!`, "success");
+															}}
+															title="Re-run this directive step immediately"
+														>
+															🔄 Re-run
+														</button>
+														<button
+															type="button"
+															className="tn_btn tn_btn_small tn_btn_secondary"
+															style={{ fontSize: "8px", padding: "1px 4px", borderColor: "#64b5f6", color: "#64b5f6" }}
+															onClick={(e) => {
+																e.stopPropagation();
+																setSelectedTool(s.tool);
+																showFeedback(`Loaded tool '${s.tool}' into MCP runner`, "info");
+															}}
+															title="Load this tool into the MCP Runner for manual inspection"
+														>
+															🔧 Inspect Tool
+														</button>
+													</div>
 												)}
 											</div>
 											<div className="tn_step_thought">{s.thought}</div>
@@ -926,9 +941,24 @@ export default function Dashboard({
 								🔌 Model Context Protocol (MCP) Tool Monitor
 								<Tooltip text="Real-time tool performance monitoring, latency tracking, status codes, and execution harness." />
 							</div>
-							<span className="tn_panel_badge">
-								{mcpTools.length} Tools Loaded
-							</span>
+								<div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+									<button
+										type="button"
+										className="tn_btn tn_btn_small tn_btn_secondary"
+										onClick={async () => {
+											await api.mcpClearToolExecutionHistory();
+											setExecutionHistory([]);
+											showFeedback("Cleared MCP tool execution metrics & history", "info");
+										}}
+										style={{ fontSize: "9px", padding: "1px 6px" }}
+										title="Clear all recorded tool execution metrics and latency history"
+									>
+										Clear History
+									</button>
+									<span className="tn_panel_badge">
+										{mcpTools.length} Tools Loaded
+									</span>
+								</div>
 						</div>
 
 						<div className="tn_panel_body">

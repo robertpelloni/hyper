@@ -442,6 +442,16 @@ export async function mcpGetToolExecutionHistory(): Promise<ToolExecutionRecord[
 	return [];
 }
 
+export async function mcpClearToolExecutionHistory(): Promise<void> {
+	const app = getGoApp();
+	if (app && app.ClearMCPExecutionHistory) {
+		return app.ClearMCPExecutionHistory();
+	}
+	try {
+		await fetch("http://localhost:8080/history", { method: "DELETE" });
+	} catch {}
+}
+
 export async function agentGetExecutionSteps(): Promise<AgentExecutionStep[]> {
 	if (typeof window !== "undefined" && (window as any).go && (window as any).go.main && (window as any).go.main.AgentHarness && (window as any).go.main.AgentHarness.GetExecutionSteps) {
 		return (window as any).go.main.AgentHarness.GetExecutionSteps();

@@ -181,6 +181,17 @@ func TestServerEndpoints(t *testing.T) {
 	if len(historyRecords) > 100 {
 		t.Errorf("expected history capped at 100 records, got %d", len(historyRecords))
 	}
+
+	// 9. Test DELETE /history (ClearHistory)
+	reqClear, _ := http.NewRequest(http.MethodDelete, "/history", nil)
+	rrClear := httptest.NewRecorder()
+	mux.ServeHTTP(rrClear, reqClear)
+	if rrClear.Code != http.StatusOK {
+		t.Errorf("expected 200 OK from DELETE /history, got %d", rrClear.Code)
+	}
+	if len(server.GetHistory()) != 0 {
+		t.Errorf("expected 0 records after DELETE /history, got %d", len(server.GetHistory()))
+	}
 }
 
 func TestConcurrentMCPCalls(t *testing.T) {

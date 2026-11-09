@@ -46,6 +46,8 @@
 - [x] Implement interactive Tool Parameter Schema inspector and Quick-Fill snippet generator in Mission Control.
 - [x] Implement live microsecond-precision tool execution duration timer and sequential retry counter tracking.
 - [x] Implement backend validation for required tool parameters with `MISSING_REQUIRED_ARG` error code and actionable remediation advice.
+- [x] Implement `ClearHistory` (`DELETE /history`) in MCP server and "Clear History" UI control.
+- [x] Implement one-click "🔄 Re-run" directive action buttons on agent reasoning feed steps.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.

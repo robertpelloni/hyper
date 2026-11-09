@@ -267,6 +267,13 @@ func (ag *MCPAggregator) GetToolExecutionHistory() []ToolExecutionRecord {
 	return result
 }
 
+// ClearHistory resets tool execution history
+func (ag *MCPAggregator) ClearHistory() {
+	ag.mu.Lock()
+	defer ag.mu.Unlock()
+	ag.history = make([]ToolExecutionRecord, 0)
+}
+
 // ListServers returns aggregated MCP servers info
 func (ag *MCPAggregator) ListServers() []map[string]interface{} {
 	ag.mu.RLock()

@@ -66,6 +66,7 @@
    - Built "PARAMETER SCHEMA & QUICK-FILL" helper directly above the JSON editor in Mission Control UI (`Dashboard.tsx`), displaying parameter badges with type tags and required asterisks (`*`) that insert property snippets upon clicking.
    - Added live execution duration timer (`⏱ Xms`) and retry attempt counter tracking `(Retries: N)` on tool runner invocations.
    - Added dedicated actionable remediation callout banner (`💡 Remediation: ...`) and streamlined one-click "🔄 Retry" and "📋 Copy Error" actions.
+   - Added `DELETE /history` endpoint and `ClearHistory()` method in Go backend, "Clear History" button in MCP Tool Monitor, and one-click "🔄 Re-run" directive buttons on agent reasoning feed steps.
 
 13. **Testing and Verification:**
    - 100% test pass rate across all Go packages (`tormentnexus`, `internal/agent`, `internal/config`, `internal/intelligence`, `internal/mcp`, `internal/session`, `internal/terminal`).

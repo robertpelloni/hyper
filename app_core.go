@@ -219,6 +219,14 @@ func (a *App) StartMCPServer(port int) error {
 	return nil
 }
 
+// ClearMCPExecutionHistory resets tool execution history
+func (a *App) ClearMCPExecutionHistory() {
+	if a.mcp != nil {
+		a.mcp.ClearHistory()
+	}
+	a.EmitEvent("mcp:history_cleared")
+}
+
 // StopMCPServer stops the embedded HTTP MCP server
 func (a *App) StopMCPServer() error {
 	a.mcpMu.Lock()

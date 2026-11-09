@@ -206,8 +206,22 @@ func (s *Server) GetHistory() []ToolExecutionRecord {
 	return res
 }
 
+func (s *Server) ClearHistory() {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.history = []ToolExecutionRecord{}
+}
+
 func (s *Server) HandleHistory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	if r.Method == http.MethodDelete {
+		s.ClearHistory()
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  "cleared",
+			"history": []ToolExecutionRecord{},
+		})
+		return
+	}
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{
 		"history": s.GetHistory(),
 	})
