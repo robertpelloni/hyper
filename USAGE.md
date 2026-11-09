@@ -144,3 +144,15 @@ Example Error Response:
 - `Ctrl+Shift+K`: Clear Active Terminal Buffer
 - `Ctrl+,`: Open Configuration Editor
 - `F11`: Toggle Fullscreen
+
+## Automated End-to-End Testing (Playwright)
+
+To execute the automated end-to-end UX test suite verifying all Mission Control flows:
+```bash
+# Ensure frontend is built
+cd frontend && npm run build && cd ..
+
+# Run automated browser test suite
+python3 test/test_dashboard_mcp_flow.py
+```
+This tests tool discovery, category filtering, schema quick-fill badges, client-side JSON syntax errors, quick-clear arguments, execution timing, result piping, and remote SSH modals.
