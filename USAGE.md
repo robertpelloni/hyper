@@ -36,7 +36,9 @@ TormentNexus features a consolidated, singular Mission Control page providing co
    - **Think-Act-Observe Step Feed:** Streams color-coded reasoning step badges (`PLAN` in indigo, `THINK` in purple, `ACT` in blue, `OBSERVE` in green, `REFLECT` in amber) with per-step latency and tool identifiers.
    - **Autonomous Task Queue:** Queue sequential directives via the **➕ Queue Task** action. Review pending tasks as badges and remove individual items on demand with the inline `✕` button or clear all with **Clear Queue**.
 3. **Model Context Protocol (MCP) Tool Monitor:** Inspect per-tool performance telemetry with average latency metrics, HTTP status codes (`200 OK`), mini execution bar graphs, and an interactive test harness:
-   - **Real-Time Search & Filtering:** Search tools by name or description using the live search filter box.
+   - **Real-Time Search & Category Badges:** Search tools by name or description with real-time dynamic count badges across categories: **ALL (8)**, **System (4)**, **Filesystem (2)**, **Agent (1)**, and **Intelligence (1)**.
+   - **Color-Coded Latency Indicators:** Fast-glance latency health indicators categorized by performance thresholds: emerald green (<25ms), sky blue (<100ms), amber (<250ms), and rose (>=250ms).
+   - **Execution History Clearing:** One-click **Clear History** button to flush tool invocation logs and reset metrics.
    - **Status Tabs:** Filter the tool list by status: **All**, **Success** (`200 OK`), or **Error** (`500 / 4xx`).
    - **Parameter Schema & Quick-Fill Helper:** Directly above the arguments editor, view all available parameters with type tags and required asterisks (`*`). Click any parameter badge to automatically insert property snippets.
    - **One-Click Argument Templates:** Selecting a tool card automatically pre-populates a valid, editable JSON argument template with inline description hints.

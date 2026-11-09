@@ -997,20 +997,38 @@ export default function Dashboard({
 										</button>
 									</div>
 								</div>
-								{/* Category Pills */}
+								{/* Category Pills with Dynamic Tool Counts */}
 								<div style={{ display: "flex", gap: "6px", alignItems: "center", flexWrap: "wrap" }}>
 									<span style={{ fontSize: "10px", color: "#888" }}>Category:</span>
-									{["ALL", "System", "Filesystem", "Agent", "Intelligence"].map((cat) => (
-										<button
-											key={cat}
-											type="button"
-											className={`tn_btn tn_btn_small ${toolCategoryFilter === cat ? "tn_btn_primary" : "tn_btn_secondary"}`}
-											onClick={() => setToolCategoryFilter(cat)}
-											style={{ fontSize: "9px", padding: "1px 6px" }}
-										>
-											{cat}
-										</button>
-									))}
+									{["ALL", "System", "Filesystem", "Agent", "Intelligence"].map((cat) => {
+										const count = cat === "ALL"
+											? mcpTools.length
+											: mcpTools.filter((t) => {
+													const toolCat = (t as any).Category || (t as any).category || "System";
+													return toolCat.toLowerCase() === cat.toLowerCase();
+											  }).length;
+
+										return (
+											<button
+												key={cat}
+												type="button"
+												className={`tn_btn tn_btn_small ${toolCategoryFilter === cat ? "tn_btn_primary" : "tn_btn_secondary"}`}
+												onClick={() => setToolCategoryFilter(cat)}
+												style={{ fontSize: "9px", padding: "1px 6px", display: "inline-flex", alignItems: "center", gap: "4px" }}
+											>
+												<span>{cat}</span>
+												<span style={{
+													fontSize: "8px",
+													padding: "0 4px",
+													borderRadius: "8px",
+													background: toolCategoryFilter === cat ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.08)",
+													color: toolCategoryFilter === cat ? "#fff" : "#94a3b8",
+												}}>
+													{count}
+												</span>
+											</button>
+										);
+									})}
 								</div>
 							</div>
 
@@ -1109,7 +1127,30 @@ export default function Dashboard({
 											</div>
 											<div className="tn_tool_card_bottom">
 												<span>Avg: {avgLatency !== null ? `${avgLatency}ms` : "<1ms"}</span>
-												<span className="tn_latency_badge">
+												<span
+													className="tn_latency_badge"
+													style={{
+														color: latest
+															? latest.durationMs < 25
+																? "#4ade80"
+																: latest.durationMs < 100
+																? "#38bdf8"
+																: latest.durationMs < 250
+																? "#fbbf24"
+																: "#f87171"
+															: "#94a3b8",
+														borderColor: latest
+															? latest.durationMs < 25
+																? "rgba(74, 222, 128, 0.3)"
+																: latest.durationMs < 100
+																? "rgba(56, 189, 248, 0.3)"
+																: latest.durationMs < 250
+																? "rgba(251, 191, 36, 0.3)"
+																: "rgba(248, 113, 113, 0.3)"
+															: "rgba(255, 255, 255, 0.1)",
+													}}
+													title={latest ? `Last call duration: ${latest.durationMs}ms` : "No calls recorded yet"}
+												>
 													{latest ? `${latest.durationMs}ms` : "idle"}
 												</span>
 											</div>

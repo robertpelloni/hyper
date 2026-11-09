@@ -48,6 +48,7 @@
 - [x] Implement backend validation for required tool parameters with `MISSING_REQUIRED_ARG` error code and actionable remediation advice.
 - [x] Implement `ClearHistory` (`DELETE /history`) in MCP server and "Clear History" UI control.
 - [x] Implement one-click "🔄 Re-run" directive action buttons on agent reasoning feed steps.
+- [x] Implement dynamic category tool count badges and color-coded latency indicators in MCP Tool Monitor.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.
