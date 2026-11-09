@@ -571,6 +571,14 @@ func (a *App) GetRecommendedPlugins() []PluginInfo {
 	return catalog
 }
 
+// CreateSSHSession initializes a remote SSH session
+func (a *App) CreateSSHSession(host string, port int, user string, password string, keyPath string) (map[string]interface{}, error) {
+	if a.sessions == nil {
+		return nil, fmt.Errorf("session manager not initialized")
+	}
+	return a.sessions.CreateSSHSession(host, port, user, password, keyPath)
+}
+
 // ExportSessionSnapshot returns the active session snapshot as a JSON string
 func (a *App) ExportSessionSnapshot() string {
 	if a.sessions == nil {

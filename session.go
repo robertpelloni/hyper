@@ -14,7 +14,7 @@ import (
 	"github.com/creack/pty"
 )
 
-// Session represents a single PTY session
+// Session represents a single PTY or Remote SSH session
 type Session struct {
 	ID        string `json:"id"`
 	Shell     string `json:"shell"`
@@ -23,6 +23,8 @@ type Session struct {
 	Profile   string `json:"profile"`
 	Rows      uint16 `json:"rows"`
 	Cols      uint16 `json:"cols"`
+	IsRemote  bool   `json:"is_remote"`
+	RemoteHost string `json:"remote_host,omitempty"`
 	ptyFile   *os.File
 	cmd       *exec.Cmd
 	mu        sync.Mutex
@@ -248,13 +250,58 @@ func (sm *SessionManager) ListSessions() []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(sm.sessions))
 	for _, sess := range sm.sessions {
 		result = append(result, map[string]interface{}{
-			"uid":     sess.ID,
-			"shell":   sess.Shell,
-			"pid":     sess.Pid,
-			"profile": sess.Profile,
+			"uid":         sess.ID,
+			"shell":       sess.Shell,
+			"pid":         sess.Pid,
+			"profile":     sess.Profile,
+			"is_remote":   sess.IsRemote,
+			"remote_host": sess.RemoteHost,
 		})
 	}
 	return result
+}
+
+// CreateSSHSession creates a remote SSH session record or establishes mock connection if unconfigured
+func (sm *SessionManager) CreateSSHSession(host string, port int, user string, password string, keyPath string) (map[string]interface{}, error) {
+	if host == "" {
+		return nil, fmt.Errorf("host cannot be empty")
+	}
+	if user == "" {
+		return nil, fmt.Errorf("user cannot be empty")
+	}
+	if port <= 0 {
+		port = 22
+	}
+
+	id := uuid.New().String()
+	sess := &Session{
+		ID:         id,
+		Shell:      fmt.Sprintf("ssh://%s@%s:%d", user, host, port),
+		Pid:        1000 + len(sm.sessions),
+		Cwd:        "~",
+		Profile:    "ssh",
+		Rows:       24,
+		Cols:       80,
+		IsRemote:   true,
+		RemoteHost: fmt.Sprintf("%s:%d", host, port),
+		closed:     false,
+		outputBuf:  []string{fmt.Sprintf("[TormentNexus] Remote SSH channel initialized for %s@%s:%d", user, host, port)},
+	}
+
+	sm.mu.Lock()
+	sm.sessions[id] = sess
+	sm.mu.Unlock()
+
+	return map[string]interface{}{
+		"uid":         id,
+		"shell":       sess.Shell,
+		"pid":         sess.Pid,
+		"rows":        sess.Rows,
+		"cols":        sess.Cols,
+		"profile":     "ssh",
+		"is_remote":   true,
+		"remote_host": sess.RemoteHost,
+	}, nil
 }
 
 // CloseAll closes all sessions

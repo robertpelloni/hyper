@@ -86,6 +86,13 @@ export default function Dashboard({
 	const [pluginsList, setPluginsList] = useState<PluginInfo[]>([]);
 	const [pluginFilter, setPluginFilter] = useState<string>("ALL");
 
+	// Remote SSH Session Modal State
+	const [showSSHModal, setShowSSHModal] = useState<boolean>(false);
+	const [sshHost, setSshHost] = useState<string>("");
+	const [sshPort, setSshPort] = useState<number>(22);
+	const [sshUser, setSshUser] = useState<string>("root");
+	const [sshPassword, setSshPassword] = useState<string>("");
+
 	// Onboarding Guide banner visibility & progress tracking
 	const [showOnboarding, setShowOnboarding] = useState<boolean>(true);
 	const [activeOnboardingStep, setActiveOnboardingStep] = useState<number | null>(null);
@@ -1509,6 +1516,14 @@ export default function Dashboard({
 								</button>
 								<button
 									className="tn_btn tn_btn_secondary"
+									onClick={() => setShowSSHModal(true)}
+									title="Connect to a remote server over SSH"
+									style={{ borderColor: "#38bdf8", color: "#38bdf8" }}
+								>
+									🌐 Remote SSH
+								</button>
+								<button
+									className="tn_btn tn_btn_secondary"
 									onClick={onNewSession}
 									title="Create a new terminal tab"
 								>
@@ -1516,6 +1531,80 @@ export default function Dashboard({
 								</button>
 							</div>
 						</div>
+
+						{/* Interactive Remote SSH Connect Form */}
+						{showSSHModal && (
+							<div style={{ marginBottom: "12px", padding: "10px", background: "rgba(56, 189, 248, 0.05)", border: "1px solid rgba(56, 189, 248, 0.2)", borderRadius: "4px" }}>
+								<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
+									<span style={{ fontSize: "11px", fontWeight: "bold", color: "#38bdf8" }}>🌐 New Remote SSH Connection</span>
+									<button
+										type="button"
+										className="tn_btn tn_btn_small tn_btn_secondary"
+										onClick={() => setShowSSHModal(false)}
+										style={{ fontSize: "10px", padding: "1px 6px" }}
+									>
+										✕ Cancel
+									</button>
+								</div>
+								<div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 2fr 2fr auto", gap: "6px", alignItems: "center" }}>
+									<input
+										type="text"
+										className="tn_input"
+										placeholder="Host / IP (e.g. 192.168.1.5)"
+										value={sshHost}
+										onChange={(e) => setSshHost(e.target.value)}
+										style={{ fontSize: "11px", padding: "4px 8px" }}
+									/>
+									<input
+										type="number"
+										className="tn_input"
+										placeholder="Port"
+										value={sshPort}
+										onChange={(e) => setSshPort(parseInt(e.target.value) || 22)}
+										style={{ fontSize: "11px", padding: "4px 8px" }}
+									/>
+									<input
+										type="text"
+										className="tn_input"
+										placeholder="User (e.g. root)"
+										value={sshUser}
+										onChange={(e) => setSshUser(e.target.value)}
+										style={{ fontSize: "11px", padding: "4px 8px" }}
+									/>
+									<input
+										type="password"
+										className="tn_input"
+										placeholder="Password / Auth"
+										value={sshPassword}
+										onChange={(e) => setSshPassword(e.target.value)}
+										style={{ fontSize: "11px", padding: "4px 8px" }}
+									/>
+									<button
+										type="button"
+										className="tn_btn tn_btn_small tn_btn_primary"
+										onClick={async () => {
+											if (!sshHost.trim() || !sshUser.trim()) {
+												showFeedback("Please provide both host and username", "error");
+												return;
+											}
+											try {
+												const sess = await api.createSSHSession(sshHost.trim(), sshPort, sshUser.trim(), sshPassword);
+												showFeedback(`Connected remote SSH session: ${sess.shell}`, "success");
+												setShowSSHModal(false);
+												setSshHost("");
+												setSshPassword("");
+												onNewSession();
+											} catch (err: any) {
+												showFeedback(`SSH Connection failed: ${err.message || err}`, "error");
+											}
+										}}
+										style={{ fontSize: "11px", padding: "4px 10px", whiteSpace: "nowrap" }}
+									>
+										⚡ Connect
+									</button>
+								</div>
+							</div>
+						)}
 
 						<div className="tn_panel_body">
 							<div className="tn_session_list">
@@ -1534,6 +1623,19 @@ export default function Dashboard({
 									>
 										<div className="tn_session_info">
 											<span className="tn_session_name">{s.title || "Shell"}</span>
+											<span
+												style={{
+													fontSize: "9px",
+													padding: "1px 4px",
+													borderRadius: "3px",
+													background: (s.shell && s.shell.startsWith("ssh://")) || s.profile === "ssh" ? "rgba(56, 189, 248, 0.2)" : "rgba(74, 222, 128, 0.15)",
+													color: (s.shell && s.shell.startsWith("ssh://")) || s.profile === "ssh" ? "#38bdf8" : "#4ade80",
+													fontWeight: 600,
+													marginRight: "4px",
+												}}
+											>
+												{(s.shell && s.shell.startsWith("ssh://")) || s.profile === "ssh" ? "SSH" : "LOCAL"}
+											</span>
 											<span className="tn_session_pid">PID: {s.pid}</span>
 											<span className="tn_session_shell">{s.shell}</span>
 										</div>

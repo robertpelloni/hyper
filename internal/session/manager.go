@@ -113,15 +113,17 @@ func (s *Session) Close() error {
 	return nil
 }
 
-// Manager orchestrates all local active terminal sessions
+// Manager orchestrates all local and remote active terminal sessions
 type Manager struct {
-	sessions map[string]*Session
-	mu       sync.RWMutex
+	sessions       map[string]*Session
+	remoteSessions map[string]*RemoteSession
+	mu             sync.RWMutex
 }
 
 func NewManager() *Manager {
 	return &Manager{
-		sessions: make(map[string]*Session),
+		sessions:       make(map[string]*Session),
+		remoteSessions: make(map[string]*RemoteSession),
 	}
 }
 
@@ -131,16 +133,29 @@ func (m *Manager) AddSession(s *Session) {
 	m.sessions[s.ID] = s
 }
 
+func (m *Manager) AddRemoteSession(rs *RemoteSession) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+	m.remoteSessions[rs.ID] = rs
+}
+
 func (m *Manager) GetSession(id string) *Session {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 	return m.sessions[id]
 }
 
+func (m *Manager) GetRemoteSession(id string) *RemoteSession {
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+	return m.remoteSessions[id]
+}
+
 func (m *Manager) RemoveSession(id string) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
 	delete(m.sessions, id)
+	delete(m.remoteSessions, id)
 }
 
 // ListSessions returns a slice of all active session IDs
@@ -158,18 +173,22 @@ func (m *Manager) ListSessions() []string {
 func (m *Manager) Count() int {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
-	return len(m.sessions)
+	return len(m.sessions) + len(m.remoteSessions)
 }
 
 // GetSessionOutput returns the tail output lines for the specified session
 func (m *Manager) GetSessionOutput(id string, maxLines int) string {
 	m.mu.RLock()
 	sess := m.sessions[id]
+	rs := m.remoteSessions[id]
 	m.mu.RUnlock()
-	if sess == nil {
-		return ""
+	if sess != nil {
+		return sess.GetOutputTail(maxLines)
 	}
-	return sess.GetOutputTail(maxLines)
+	if rs != nil {
+		return rs.GetOutputTail(maxLines)
+	}
+	return ""
 }
 
 // CloseAll terminates all managed sessions safely
@@ -181,7 +200,13 @@ func (m *Manager) CloseAll() {
 			_ = sess.Close()
 		}
 	}
+	for _, rs := range m.remoteSessions {
+		if rs != nil {
+			_ = rs.Close()
+		}
+	}
 	m.sessions = make(map[string]*Session)
+	m.remoteSessions = make(map[string]*RemoteSession)
 }
 
 // SessionMetadata represents exported state and buffer of a session

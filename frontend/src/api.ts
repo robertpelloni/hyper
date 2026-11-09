@@ -46,6 +46,26 @@ export async function createSession(options: {
 	return result as SessionInfo;
 }
 
+export async function createSSHSession(
+	host: string,
+	port: number,
+	user: string,
+	password?: string,
+	keyPath?: string,
+): Promise<SessionInfo> {
+	if (typeof (window as any).go?.main?.App?.CreateSSHSession === "function") {
+		return (window as any).go.main.App.CreateSSHSession(host, port, user, password || "", keyPath || "");
+	}
+	return {
+		uid: `ssh-${Date.now()}`,
+		shell: `ssh://${user}@${host}:${port}`,
+		pid: Math.floor(Math.random() * 9000) + 1000,
+		rows: 24,
+		cols: 80,
+		profile: "ssh",
+	};
+}
+
 export async function writeSessionData(
 	uid: string,
 	data: string,

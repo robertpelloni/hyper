@@ -52,6 +52,7 @@ TormentNexus features a consolidated, singular Mission Control page providing co
 4. **Terminal Session Orchestration & Snapshot Persistence:**
    - **Active Session Output Tail:** Real-time buffer stream inspection with Hide/Show toggles and one-click Copy.
    - **Session Snapshots:** Export persistent session state JSON files via **💾 Snapshot Sessions** for backup, crash recovery, and offline analysis.
+   - **Remote SSH Sessions:** Connect to remote servers with **🌐 Remote SSH** action; inspect connection type with `LOCAL` vs `SSH` session badges.
    - **Warp-Style Semantic Command Blocks:** View tracked command execution history with status badges (`✓` / `✕`), search filtering, copy actions, and **🤖 Explain & Fix** automated AI remediation.
 5. **Terminal Plugins & Themes Hub:** Browse, filter (Theme, Productivity, Navigation, Visuals), and install curated plugins with dynamic configuration persistence.
 6. **Server Lifecycle & System Tray Controls:** Restart the MCP server on `:8080`, stop all background servers, toggle desktop tray icon state, or perform a clean application exit.

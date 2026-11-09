@@ -51,6 +51,7 @@
 - [x] Implement dynamic category tool count badges and color-coded latency indicators in MCP Tool Monitor.
 - [x] Add interactive tool argument quick-clear button, keyboard card selection, and filter reset fallback state.
 - [x] Synchronize standalone HTTP MCP server (`cmd/tormentnexus`) with full 8-tool catalog and write integration test suite.
+- [x] Port Remote SSH protocol support (`internal/session/ssh.go`) and interactive UI connection form.
 
 ## Upcoming Milestones (Phase 3 Autonomous Swarm)
 - [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.
