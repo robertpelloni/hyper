@@ -363,6 +363,40 @@ export default function Dashboard({
 		showFeedback(`Reset template for '${selectedTool}'`, "info");
 	};
 
+	const handleFillMinimalArgs = () => {
+		const currentToolObj = mcpTools.find((t) => (t.Name || t.name) === selectedTool);
+		const schema = currentToolObj?.inputSchema || (currentToolObj as any)?.InputSchema;
+		const props = schema?.properties || {};
+		const reqList: string[] = currentToolObj?.required || (currentToolObj as any)?.Required || schema?.required || [];
+
+		if (reqList.length === 0) {
+			setToolArgs("{}");
+			setJsonValidationError(null);
+			showFeedback(`'${selectedTool}' has no required parameters (using {})`, "info");
+			return;
+		}
+
+		const minimal: Record<string, any> = {};
+		for (const reqKey of reqList) {
+			const propDef = props[reqKey] || {};
+			if (propDef.type === "number") {
+				minimal[reqKey] = 0;
+			} else if (propDef.type === "boolean") {
+				minimal[reqKey] = true;
+			} else {
+				if (reqKey === "command") minimal[reqKey] = "echo test";
+				else if (reqKey === "path") minimal[reqKey] = "README.md";
+				else if (reqKey === "query") minimal[reqKey] = "TormentNexus";
+				else if (reqKey === "content") minimal[reqKey] = "Sample content";
+				else minimal[reqKey] = "value";
+			}
+		}
+
+		setToolArgs(JSON.stringify(minimal, null, 2));
+		setJsonValidationError(null);
+		showFeedback(`Populated minimal required arguments for '${selectedTool}'`, "success");
+	};
+
 	// MCP Tool Execution with strict validation, timeout, and distinct error states
 	const handleRunTool = async () => {
 		if (jsonValidationError) {
@@ -1466,6 +1500,16 @@ export default function Dashboard({
 										<button
 											type="button"
 											className="tn_btn tn_btn_small tn_btn_secondary"
+											onClick={handleFillMinimalArgs}
+											title="Populate minimal required parameters for this tool"
+											aria-label="Fill Required Parameters"
+											style={{ borderColor: "#81c784", color: "#81c784" }}
+										>
+											⚡ Fill Required
+										</button>
+										<button
+											type="button"
+											className="tn_btn tn_btn_small tn_btn_secondary"
 											onClick={handleResetTemplate}
 											title="Reset arguments to default template for this tool"
 											aria-label="Reset Template"
@@ -1494,6 +1538,29 @@ export default function Dashboard({
 										<span className="tn_error_text">JSON Syntax Error: {jsonValidationError}</span>
 									</div>
 								)}
+								{/* Pre-validation warning for missing required arguments */}
+								{!jsonValidationError && (() => {
+									const curTool = mcpTools.find((t) => (t.Name || t.name) === selectedTool);
+									const reqs: string[] = curTool?.required || (curTool as any)?.Required || curTool?.inputSchema?.required || (curTool as any)?.InputSchema?.required || [];
+									if (reqs.length === 0) return null;
+									try {
+										const currentParsed = JSON.parse(toolArgs.trim() || "{}");
+										const missing = reqs.filter((r) => {
+											const val = currentParsed[r];
+											return val === undefined || val === null || (typeof val === "string" && val.trim() === "");
+										});
+										if (missing.length > 0) {
+											return (
+												<div style={{ margin: "4px 0", padding: "4px 8px", background: "rgba(245, 158, 11, 0.1)", border: "1px solid rgba(245, 158, 11, 0.25)", borderRadius: "4px", fontSize: "11px", color: "#fbbf24" }}>
+													⚠️ <strong>Missing Required Parameter{missing.length > 1 ? "s" : ""}:</strong> {missing.join(", ")}
+												</div>
+											);
+										}
+									} catch {
+										// Handled by syntax validator
+									}
+									return null;
+								})()}
 							</div>
 
 							<div className="tn_btn_group">
