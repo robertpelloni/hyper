@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import Terms from "./components/Terms";
 import StatusBar from "./components/StatusBar";
 import Notifications from "./components/Notifications";
+import Dashboard from "./components/Dashboard";
 
 const DEFAULT_COLORS: TermColors = {
 	black: "#000000",
@@ -66,6 +67,7 @@ export interface AppState {
 	notifications: Notification[];
 	agentRunning: boolean;
 	agentStatus: string;
+	dashboardOpen: boolean;
 }
 
 export default function App() {
@@ -80,6 +82,7 @@ export default function App() {
 		notifications: [],
 		agentRunning: false,
 		agentStatus: "idle",
+		dashboardOpen: false,
 	});
 
 	const sessionsRef = useRef(state.sessions);
@@ -92,10 +95,9 @@ export default function App() {
 		createNewSession();
 	}, []);
 
-	// Listen for session data events from Go backend
+	// Listen for session and server events from Go backend
 	useEffect(() => {
 		api.onEvent("session:data", (sessionId: string, data: string) => {
-			// Forward to the active term component
 			window.dispatchEvent(
 				new CustomEvent("tn:session-data", {
 					detail: { sessionId, data },
@@ -116,9 +118,20 @@ export default function App() {
 			});
 		});
 
+		api.onEvent("server:status_changed", (srvStatus: any) => {
+			if (srvStatus) {
+				setState((prev) => ({
+					...prev,
+					agentRunning: srvStatus.agentRunning,
+					agentStatus: srvStatus.agentRunning ? "running" : "idle",
+				}));
+			}
+		});
+
 		return () => {
 			api.offEvent("session:data");
 			api.offEvent("session:exit");
+			api.offEvent("server:status_changed");
 		};
 	}, []);
 
@@ -215,7 +228,6 @@ export default function App() {
 					const sessionKeys = Object.keys(newSessions);
 
 					if (sessionKeys.length === 0) {
-						// Create a new session if we closed the last one
 						setTimeout(() => createNewSession(), 100);
 						return {
 							...prev,
@@ -300,6 +312,19 @@ export default function App() {
 		}
 	}, []);
 
+	const handleRestartServers = useCallback(async () => {
+		try {
+			await api.restartServers();
+			addNotification("MCP Servers restarted cleanly (:8080)");
+		} catch (err) {
+			addNotification(`Server restart error: ${err}`);
+		}
+	}, []);
+
+	const toggleDashboard = useCallback(() => {
+		setState((prev) => ({ ...prev, dashboardOpen: !prev.dashboardOpen }));
+	}, []);
+
 	const addNotification = useCallback(
 		(text: string, url?: string | null, dismissable: boolean = true) => {
 			const notif: Notification = {
@@ -314,7 +339,6 @@ export default function App() {
 				notifications: [...prev.notifications, notif],
 			}));
 
-			// Auto-dismiss after 5 seconds
 			if (dismissable) {
 				setTimeout(() => {
 					dismissNotification(notif.id);
@@ -337,6 +361,13 @@ export default function App() {
 			const ctrl = e.ctrlKey;
 			const shift = e.shiftKey;
 
+			// Ctrl+Shift+D: Toggle Mission Control Dashboard
+			if (ctrl && shift && e.key === "D") {
+				e.preventDefault();
+				toggleDashboard();
+				return;
+			}
+
 			// Ctrl+Shift+T: New tab
 			if (ctrl && shift && e.key === "T") {
 				e.preventDefault();
@@ -353,13 +384,6 @@ export default function App() {
 				return;
 			}
 
-			// Ctrl+Shift+N: New window (not possible in single-window, so new tab)
-			if (ctrl && shift && e.key === "N") {
-				e.preventDefault();
-				createNewSession();
-				return;
-			}
-
 			// Ctrl+Tab: Next tab
 			if (ctrl && !shift && e.key === "Tab") {
 				e.preventDefault();
@@ -372,83 +396,10 @@ export default function App() {
 				return;
 			}
 
-			// Ctrl+Shift+Tab: Prev tab
-			if (ctrl && shift && e.key === "Tab") {
-				e.preventDefault();
-				const sessionKeys = Object.keys(state.sessions);
-				if (sessionKeys.length > 1 && state.activeSessionId) {
-					const currentIdx = sessionKeys.indexOf(state.activeSessionId);
-					const prevIdx =
-						(currentIdx - 1 + sessionKeys.length) % sessionKeys.length;
-					setActiveSession(sessionKeys[prevIdx]);
-				}
-				return;
-			}
-
-			// Ctrl+Shift+F: Search
-			if (ctrl && shift && e.key === "F") {
-				e.preventDefault();
-				if (state.activeSessionId) {
-					toggleSearch(state.activeSessionId, true);
-				}
-				return;
-			}
-
-			// Ctrl+Shift+K: Clear buffer
-			if (ctrl && shift && e.key === "K") {
-				e.preventDefault();
-				// Handled by the Term component via the event
-				window.dispatchEvent(new CustomEvent("tn:clear-buffer"));
-				return;
-			}
-
-			// Ctrl+Shift+U: Update plugins (shows notification)
-			if (ctrl && shift && e.key === "U") {
-				e.preventDefault();
-				addNotification("Plugin updates checked");
-				return;
-			}
-
 			// Ctrl+,: Preferences
 			if (ctrl && e.key === ",") {
 				e.preventDefault();
 				handleOpenConfig();
-				return;
-			}
-
-			// Ctrl+=: Zoom in
-			if (ctrl && (e.key === "=" || e.key === "+")) {
-				e.preventDefault();
-				setState((prev) => ({
-					...prev,
-					config: {
-						...prev.config,
-						fontSize: (prev.config.fontSize || 12) + 1,
-					},
-				}));
-				return;
-			}
-
-			// Ctrl+-: Zoom out
-			if (ctrl && e.key === "-") {
-				e.preventDefault();
-				setState((prev) => ({
-					...prev,
-					config: {
-						...prev.config,
-						fontSize: Math.max(8, (prev.config.fontSize || 12) - 1),
-					},
-				}));
-				return;
-			}
-
-			// Ctrl+0: Reset zoom
-			if (ctrl && e.key === "0") {
-				e.preventDefault();
-				setState((prev) => ({
-					...prev,
-					config: { ...prev.config, fontSize: 12 },
-				}));
 				return;
 			}
 
@@ -463,13 +414,6 @@ export default function App() {
 				setState((prev) => ({ ...prev, fullScreen: !prev.fullScreen }));
 				return;
 			}
-
-			// Alt+F: Hamburger menu
-			if (e.altKey && e.key === "f") {
-				e.preventDefault();
-				// Could trigger a menu popup - for now just a notification
-				return;
-			}
 		};
 
 		window.addEventListener("keydown", handleKeyDown);
@@ -482,9 +426,8 @@ export default function App() {
 		createNewSession,
 		closeSession,
 		setActiveSession,
-		toggleSearch,
-		addNotification,
 		handleOpenConfig,
+		toggleDashboard,
 	]);
 
 	const {
@@ -494,6 +437,7 @@ export default function App() {
 		maximized,
 		fullScreen,
 		notifications,
+		dashboardOpen,
 	} = state;
 	const sessionList = Object.values(sessions);
 
@@ -508,6 +452,8 @@ export default function App() {
 				sessions={sessionList}
 				activeSessionId={activeSessionId}
 				maximized={maximized}
+				dashboardOpen={dashboardOpen}
+				onToggleDashboard={toggleDashboard}
 				onNewTab={() => createNewSession()}
 				onSelectTab={setActiveSession}
 				onCloseTab={closeSession}
@@ -516,16 +462,37 @@ export default function App() {
 				onClose={handleWindowClose}
 				onOpenConfig={handleOpenConfig}
 				onAgentCheck={handleAgentHealthCheck}
+				onRestartServers={handleRestartServers}
 			/>
-			<Terms
-				sessions={sessions}
-				activeSessionId={activeSessionId}
-				config={config}
-				onActive={setActiveSession}
-				onTitle={setSessionTitle}
-				onToggleSearch={toggleSearch}
+
+			{dashboardOpen ? (
+				<Dashboard
+					config={config}
+					sessions={sessions}
+					activeSessionId={activeSessionId}
+					onSelectSession={setActiveSession}
+					onCloseSession={closeSession}
+					onNewSession={() => createNewSession()}
+					onCloseDashboard={() => setState((prev) => ({ ...prev, dashboardOpen: false }))}
+					onNotification={addNotification}
+				/>
+			) : (
+				<Terms
+					sessions={sessions}
+					activeSessionId={activeSessionId}
+					config={config}
+					onActive={setActiveSession}
+					onTitle={setSessionTitle}
+					onToggleSearch={toggleSearch}
+				/>
+			)}
+
+			<StatusBar
+				sessions={sessionList}
+				agentStatus={state.agentStatus}
+				dashboardOpen={dashboardOpen}
+				onToggleDashboard={toggleDashboard}
 			/>
-			<StatusBar sessions={sessionList} agentStatus={state.agentStatus} />
 			<Notifications
 				notifications={notifications}
 				onDismiss={dismissNotification}

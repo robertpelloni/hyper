@@ -1,22 +1,29 @@
 # VISION: TormentNexus - The Ultimate LLM Harness
 
-TormentNexus is a high-performance terminal and autonomous agent harness built with a Go-based core and an Electron frontend. Our mission is to integrate the most powerful features from top-tier AI-powered terminals into a unified, extensible platform for the next generation of software engineering.
+TormentNexus is a high-performance terminal, MCP hub, and autonomous agent harness built with a Go-based core and an ergonomic desktop frontend. Our mission is to integrate the most powerful primitives of modern agentic workflows into a singular, cohesive developer workstation.
 
 ## Core Foundational Concepts
 
-### 1. Go-powered Performance
-We leverage Go for critical backend tasks, including PTY management, SSH protocols, and high-frequency agent loops. This ensures the terminal remains responsive even during heavy LLM-driven workloads.
+### 1. Unified Mission Control Architecture
+Rather than fragmenting developer tooling across hidden tabs and disparate subpages, TormentNexus consolidates high-frequency operations into a singular, prioritized control dashboard:
+- **Telemetry Banner:** Real-time visibility into agent state, MCP port listeners, active tool counts, and PTY sessions.
+- **Autonomous Agent Harness:** Direct access to Think-Act-Observe loops with dispatch controls and streaming event feeds.
+- **MCP Aggregator & Tool Runner:** Immediate interactive execution and discovery of local and remote tools.
+- **Terminal Session Manager:** Seamless orchestration of concurrent pseudo-terminals.
+- **Server Lifecycle & System Tray:** Complete control to restart, inspect, or cleanly terminate all background servers.
 
-### 2. Universal Agent Harness
-TormentNexus is designed to be the primary interface for autonomous coding agents. With a built-in REST API and future support for gRPC, agents can interact with the system, manipulate files, and execute commands with granular control.
+### 2. High-Performance Go Core
+Critical backend operations—PTY management, HTTP servers, MCP routing, and process supervision—are executed by the compiled Go core, ensuring high performance, instant startup, and zero UI stuttering.
 
-### 3. Model Context Protocol (MCP) Hub
-Acting as a centralized aggregator, TormentNexus allows for seamless discovery and integration of local and remote MCP servers, providing agents with a rich set of tools and data sources.
+### 3. Interactive MCP Invocation & Dynamic Result Piping
+Rather than treating Model Context Protocol (MCP) tools as opaque background endpoints, TormentNexus exposes first-class interactive tooling directly within the Mission Control interface:
+- **Instant Discovery & Templating:** Tool cards automatically generate editable JSON argument skeletons based on registered schema parameters.
+- **Client-Side Syntax Validation:** Real-time JSON validation prevents malformed execution payloads before they reach the backend Go core.
+- **Bi-Directional Result Piping:** Outputs from manual tool runs or terminal command blocks can be piped directly into autonomous agent directives via a single click ("Send to Agent Directive" / "Explain & Fix"), creating seamless human-in-the-loop workflows.
+- **Hardened Execution Pipeline:** Backend `/call` endpoints enforce strict 1MB body bounds and structured error reporting (`PAYLOAD_TOO_LARGE`, `INVALID_ARGUMENTS`, `TOOL_NOT_FOUND`).
 
-### 4. Semantic UI
-Our frontend goes beyond the traditional character stream. By implementing command blocks and rich metadata rendering, we provide a visual structure for AI interactions that feels natural and productive.
+### 4. Warp-Style Semantic Command Blocks
+TormentNexus elevates traditional continuous terminal scrollback into discrete semantic command blocks. Each executed command is tracked with its duration, exit status badge, and isolated output stream, empowering developers to search execution history and trigger targeted AI diagnostic workflows on demand.
 
-## User-Satisfaction Design
-- **Frictionless Onboarding:** Reusing the TormentNexus plugin ecosystem while offering deep AI primitives.
-- **Visual Clarity:** Interactive UI for agentic actions and command outputs.
-- **Stability:** A robust, type-safe architecture spanning Go and TypeScript.
+### 5. Contextual Usability & Tooltips
+Every UI element provides embedded, accessible tooltips and explanatory markers, ensuring that whether developers are executing complex agent chains or configuring PTY parameters, guidance is always accessible.

@@ -1,10 +1,63 @@
-# TODO
+# TODO: TormentNexus
 
-## Phase 2: Feature Integration
-- [ ] Port Warp-like command blocks.
-- [ ] Implement full support for Tabby LSP extensions.
-- [ ] Integrate notebook-style terminal output from Wave.
+## Immediate Tasks (Phase 2 Completed)
+- [x] Consolidate fragmented dashboard features into a single, cohesive Mission Control page.
+- [x] Implement System Tray icon support and application server shutdown controls.
+- [x] Implement HTTP `/call` POST handler in `internal/mcp/server.go`.
+- [x] Add descriptive labels, interactive forms, and tooltip markers for all dashboard components.
+- [x] Non-destructively archive legacy scripts and provide cross-platform build/start scripts.
+- [x] Connect agent harness directly to MCP tools for Think-Act-Observe autonomous workflows.
+- [x] Stream real-time `agent:step` telemetry and display phase badges in Dashboard.
+- [x] Implement MCP tool performance cards with latency tracking and mini history bar charts.
+- [x] Add one-click argument template pre-population and "Send to Agent Directive" result piping.
+- [x] Add real-time client-side JSON syntax validation and inline error display for tool runner.
+- [x] Implement Format JSON and Reset Template utility actions in Mission Control.
+- [x] Harden Go MCP server with 1MB payload limits and structured error codes (413, 400, 404).
 
-## Enhancement
-- [ ] Add gRPC interface for agent-core communication.
-- [ ] Implement secure SSH host key management.
+## Immediate Tasks (Phase 2 Completed)
+- [x] Consolidate fragmented dashboard features into a single, cohesive Mission Control page.
+- [x] Implement System Tray icon support and application server shutdown controls.
+- [x] Implement HTTP `/call` POST handler in `internal/mcp/server.go`.
+- [x] Add descriptive labels, interactive forms, and tooltip markers for all dashboard components.
+- [x] Non-destructively archive legacy scripts and provide cross-platform build/start scripts.
+- [x] Connect agent harness directly to MCP tools for Think-Act-Observe autonomous workflows.
+- [x] Stream real-time `agent:step` telemetry and display phase badges in Dashboard.
+- [x] Implement MCP tool performance cards with latency tracking and mini history bar charts.
+- [x] Add one-click argument template pre-population and "Send to Agent Directive" result piping.
+- [x] Add real-time client-side JSON syntax validation and inline error display for tool runner.
+- [x] Implement Format JSON and Reset Template utility actions in Mission Control.
+- [x] Harden Go MCP server with 1MB payload limits and structured error codes (413, 400, 404).
+- [x] Implement semantic command block tracking and history search in `internal/terminal/buffer.go`.
+- [x] Expose command history and search bindings in Go application core (`app_core.go`).
+- [x] Support dynamic parameterized directives (`file_read:`, `shell_execute:`) in `AgentHarness`.
+- [x] Add cognitive phase filtering pills (`ALL`, `PLAN`, `THINK`, `ACT`, `OBSERVE`, `REFLECT`) to Agent Control Panel.
+- [x] Integrate Warp-style Semantic Command Blocks inspector and "Explain & Fix" action in Mission Control.
+- [x] Expand MCP Tool registry with `workspace_search`, `git_status`, and `system_info` tools.
+- [x] Add MCP category filtering pills (`ALL`, `System`, `Filesystem`, `Agent`, `Intelligence`).
+- [x] Implement JSON export utilities for reasoning step telemetry (`Export Steps`) and command block history (`Export Blocks`).
+- [x] Add live terminal session output tail inspection with Hide/Show toggle and copy utilities in Mission Control.
+- [x] Implement Terminal Plugins & Themes Hub with category filtering, install/status tracking, and persistent configuration.
+- [x] Expand Quick-Start Onboarding Guide to 4-step interactive workflow including plugin customization.
+- [x] Implement thread-safe terminal session snapshot export and file persistence (`internal/session/manager.go`).
+- [x] Integrate interactive "💾 Snapshot Sessions" export button with toast feedback in Mission Control Section 3.
+- [x] Add "⚡ Pipe to Agent" direct invocation buttons to MCP Tool cards in Mission Control.
+- [x] Add "🔗 Pipeline: Audit" chained workflow preset and "🔧 Inspect Tool" shortcut on reasoning steps.
+- [x] Implement chained directive pipelines (`&&`) in Go `AgentHarness`.
+- [x] Implement interactive Tool Parameter Schema inspector and Quick-Fill snippet generator in Mission Control.
+- [x] Implement live microsecond-precision tool execution duration timer and sequential retry counter tracking.
+- [x] Implement backend validation for required tool parameters with `MISSING_REQUIRED_ARG` error code and actionable remediation advice.
+- [x] Implement `ClearHistory` (`DELETE /history`) in MCP server and "Clear History" UI control.
+- [x] Implement one-click "🔄 Re-run" directive action buttons on agent reasoning feed steps.
+- [x] Implement dynamic category tool count badges and color-coded latency indicators in MCP Tool Monitor.
+- [x] Add interactive tool argument quick-clear button, keyboard card selection, and filter reset fallback state.
+- [x] Synchronize standalone HTTP MCP server (`cmd/tormentnexus`) with full 8-tool catalog and write integration test suite.
+- [x] Port Remote SSH protocol support (`internal/session/ssh.go`) and interactive UI connection form.
+- [x] Build automated end-to-end Playwright UX test suite `test/test_dashboard_mcp_flow.py` for Mission Control.
+- [x] Add multi-step automation workflow templates (`WORKFLOW_TEMPLATES`) with `+ Queue All` and `Load Pipeline` actions in Mission Control.
+
+## Upcoming Milestones (Phase 3 Autonomous Swarm)
+- [ ] Multi-language parity: port core subsystems to Rust, C#, and Java matching Go and TypeScript.
+- [ ] Multi-agent collaborative swarm execution and task delegation.
+- [ ] WASM-sandboxed tool execution runner.
+- [ ] Support custom MCP servers over stdio, WebSockets, and SSE transport.
+- [ ] Configuration hot-reloading without terminal session interruption.

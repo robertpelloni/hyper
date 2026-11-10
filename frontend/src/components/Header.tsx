@@ -1,10 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import type { SessionInfo } from "../types";
+import Tooltip from "./Tooltip";
 
 interface HeaderProps {
 	sessions: SessionInfo[];
 	activeSessionId: string | null;
 	maximized: boolean;
+	dashboardOpen: boolean;
+	onToggleDashboard: () => void;
 	onNewTab: () => void;
 	onSelectTab: (uid: string) => void;
 	onCloseTab: (uid: string) => void;
@@ -13,12 +16,15 @@ interface HeaderProps {
 	onClose: () => void;
 	onOpenConfig: () => void;
 	onAgentCheck: () => void;
+	onRestartServers: () => void;
 }
 
 export default function Header({
 	sessions,
 	activeSessionId,
 	maximized,
+	dashboardOpen,
+	onToggleDashboard,
 	onNewTab,
 	onSelectTab,
 	onCloseTab,
@@ -27,6 +33,7 @@ export default function Header({
 	onClose,
 	onOpenConfig,
 	onAgentCheck,
+	onRestartServers,
 }: HeaderProps) {
 	const [showHamburger, setShowHamburger] = useState(false);
 	const hamburgerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +64,7 @@ export default function Header({
 					<div
 						className="tn_hamburger_btn"
 						onClick={() => setShowHamburger(!showHamburger)}
-						title="Menu"
+						title="TormentNexus Master Menu"
 					>
 						☰
 					</div>
@@ -69,11 +76,20 @@ export default function Header({
 							<div
 								className="tn_profile_item"
 								onClick={() => {
+									onToggleDashboard();
+									setShowHamburger(false);
+								}}
+							>
+								{dashboardOpen ? "Show Terminal View" : "Mission Control Dashboard"}
+							</div>
+							<div
+								className="tn_profile_item"
+								onClick={() => {
 									onNewTab();
 									setShowHamburger(false);
 								}}
 							>
-								New Tab
+								New Tab (Ctrl+Shift+T)
 							</div>
 							<div
 								className="tn_profile_item"
@@ -82,7 +98,7 @@ export default function Header({
 									setShowHamburger(false);
 								}}
 							>
-								Preferences
+								Preferences (Ctrl+,)
 							</div>
 							<div
 								className="tn_profile_item"
@@ -95,24 +111,38 @@ export default function Header({
 							</div>
 							<div
 								className="tn_profile_item"
-								onClick={() => setShowHamburger(false)}
+								onClick={() => {
+									onRestartServers();
+									setShowHamburger(false);
+								}}
 							>
-								About TormentNexus
+								Restart MCP Server
 							</div>
 						</div>
 					)}
 				</div>
 			)}
 
+			{/* Mission Control Quick Button */}
+			<button
+				className={`tn_header_dashboard_btn ${dashboardOpen ? "active" : ""}`}
+				onClick={onToggleDashboard}
+				title="Toggle Unified Mission Control Dashboard"
+			>
+				⚡ Dashboard
+			</button>
+
 			{/* Tab Bar */}
 			<ul className="tn_tabs">
 				{sessions.map((session) => (
 					<li
 						key={session.uid}
-						className={`tn_tab ${session.uid === activeSessionId ? "active" : ""}`}
-						onClick={() => onSelectTab(session.uid)}
+						className={`tn_tab ${session.uid === activeSessionId && !dashboardOpen ? "active" : ""}`}
+						onClick={() => {
+							if (dashboardOpen) onToggleDashboard();
+							onSelectTab(session.uid);
+						}}
 						onAuxClick={(e) => {
-							// Middle-click to close tab
 							if (e.button === 1) {
 								e.preventDefault();
 								onCloseTab(session.uid);

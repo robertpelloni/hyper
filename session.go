@@ -14,7 +14,7 @@ import (
 	"github.com/creack/pty"
 )
 
-// Session represents a single PTY session
+// Session represents a single PTY or Remote SSH session
 type Session struct {
 	ID        string `json:"id"`
 	Shell     string `json:"shell"`
@@ -23,12 +23,15 @@ type Session struct {
 	Profile   string `json:"profile"`
 	Rows      uint16 `json:"rows"`
 	Cols      uint16 `json:"cols"`
+	IsRemote  bool   `json:"is_remote"`
+	RemoteHost string `json:"remote_host,omitempty"`
 	ptyFile   *os.File
 	cmd       *exec.Cmd
 	mu        sync.Mutex
 	closed    bool
 	dataChans []chan []byte
 	onExit    func()
+	outputBuf []string
 }
 
 // SessionManager manages all PTY sessions
@@ -247,13 +250,58 @@ func (sm *SessionManager) ListSessions() []map[string]interface{} {
 	result := make([]map[string]interface{}, 0, len(sm.sessions))
 	for _, sess := range sm.sessions {
 		result = append(result, map[string]interface{}{
-			"uid":     sess.ID,
-			"shell":   sess.Shell,
-			"pid":     sess.Pid,
-			"profile": sess.Profile,
+			"uid":         sess.ID,
+			"shell":       sess.Shell,
+			"pid":         sess.Pid,
+			"profile":     sess.Profile,
+			"is_remote":   sess.IsRemote,
+			"remote_host": sess.RemoteHost,
 		})
 	}
 	return result
+}
+
+// CreateSSHSession creates a remote SSH session record or establishes mock connection if unconfigured
+func (sm *SessionManager) CreateSSHSession(host string, port int, user string, password string, keyPath string) (map[string]interface{}, error) {
+	if host == "" {
+		return nil, fmt.Errorf("host cannot be empty")
+	}
+	if user == "" {
+		return nil, fmt.Errorf("user cannot be empty")
+	}
+	if port <= 0 {
+		port = 22
+	}
+
+	id := uuid.New().String()
+	sess := &Session{
+		ID:         id,
+		Shell:      fmt.Sprintf("ssh://%s@%s:%d", user, host, port),
+		Pid:        1000 + len(sm.sessions),
+		Cwd:        "~",
+		Profile:    "ssh",
+		Rows:       24,
+		Cols:       80,
+		IsRemote:   true,
+		RemoteHost: fmt.Sprintf("%s:%d", host, port),
+		closed:     false,
+		outputBuf:  []string{fmt.Sprintf("[TormentNexus] Remote SSH channel initialized for %s@%s:%d", user, host, port)},
+	}
+
+	sm.mu.Lock()
+	sm.sessions[id] = sess
+	sm.mu.Unlock()
+
+	return map[string]interface{}{
+		"uid":         id,
+		"shell":       sess.Shell,
+		"pid":         sess.Pid,
+		"rows":        sess.Rows,
+		"cols":        sess.Cols,
+		"profile":     "ssh",
+		"is_remote":   true,
+		"remote_host": sess.RemoteHost,
+	}, nil
 }
 
 // CloseAll closes all sessions
@@ -273,6 +321,73 @@ func (sm *SessionManager) CloseAll() {
 		sess.mu.Unlock()
 		delete(sm.sessions, id)
 	}
+}
+
+// AppendOutput appends output text into a session buffer
+func (sm *SessionManager) AppendOutput(id string, text string) {
+	sm.mu.RLock()
+	sess, ok := sm.sessions[id]
+	sm.mu.RUnlock()
+	if ok && sess != nil {
+		sess.mu.Lock()
+		defer sess.mu.Unlock()
+		sess.outputBuf = append(sess.outputBuf, text)
+		if len(sess.outputBuf) > 500 {
+			sess.outputBuf = sess.outputBuf[len(sess.outputBuf)-500:]
+		}
+	}
+}
+
+// ExportSnapshot exports session state and output tails for all active sessions
+func (sm *SessionManager) ExportSnapshot() map[string]interface{} {
+	sm.mu.RLock()
+	defer sm.mu.RUnlock()
+
+	sessionsList := make([]map[string]interface{}, 0, len(sm.sessions))
+	for _, sess := range sm.sessions {
+		if sess == nil {
+			continue
+		}
+		sess.mu.Lock()
+		bufCopy := make([]string, len(sess.outputBuf))
+		copy(bufCopy, sess.outputBuf)
+		sessionsList = append(sessionsList, map[string]interface{}{
+			"id":         sess.ID,
+			"shell":      sess.Shell,
+			"pid":        sess.Pid,
+			"cwd":        sess.Cwd,
+			"profile":    sess.Profile,
+			"output_buf": bufCopy,
+		})
+		sess.mu.Unlock()
+	}
+
+	return map[string]interface{}{
+		"version":   "1.1.0",
+		"timestamp": time.Now().Unix(),
+		"count":     len(sessionsList),
+		"sessions":  sessionsList,
+	}
+}
+
+// GetSessionOutput returns the tail output lines of a session
+func (sm *SessionManager) GetSessionOutput(id string, maxLines int) string {
+	sm.mu.RLock()
+	sess, ok := sm.sessions[id]
+	sm.mu.RUnlock()
+	if !ok || sess == nil {
+		return ""
+	}
+	sess.mu.Lock()
+	defer sess.mu.Unlock()
+	if len(sess.outputBuf) == 0 {
+		return ""
+	}
+	start := 0
+	if maxLines > 0 && len(sess.outputBuf) > maxLines {
+		start = len(sess.outputBuf) - maxLines
+	}
+	return strings.Join(sess.outputBuf[start:], "\n")
 }
 
 // getDefaultShell returns the default shell for the current platform

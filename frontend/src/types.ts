@@ -109,12 +109,15 @@ export interface AgentStatus {
 	running: boolean;
 	messages: number;
 	timestamp?: number;
+	response?: string;
 }
 
 export interface MCPTool {
 	name: string;
+	category?: string;
 	description: string;
 	inputSchema: Record<string, any>;
+	required?: string[];
 }
 
 export interface MCPTelemetry {
@@ -122,4 +125,50 @@ export interface MCPTelemetry {
 	active_tools: number;
 	servers: number;
 	version: string;
+}
+
+export interface ServerStatus {
+	mcpServerRunning: boolean;
+	mcpServerPort: number;
+	agentRunning: boolean;
+	trayEnabled: boolean;
+	activeSessions: number;
+	uptimeSeconds: number;
+	version: string;
+}
+
+export interface ToolExecutionRecord {
+	tool: string;
+	statusCode: number;
+	durationMs: number;
+	timestamp: number;
+	success: boolean;
+	status: string;
+}
+
+export interface AgentExecutionStep {
+	id: string;
+	phase: "PLAN" | "THINK" | "ACT" | "OBSERVE" | "REFLECT";
+	tool?: string;
+	thought: string;
+	input?: Record<string, any>;
+	result?: string;
+	durationMs: number;
+	timestamp: number;
+}
+
+export interface TerminalBlock {
+	id: number;
+	command: string;
+	output: string;
+	success: boolean;
+	timestamp: string;
+}
+
+export interface PluginInfo {
+	name: string;
+	description: string;
+	category: string;
+	installed: boolean;
+	url: string;
 }
