@@ -1,11 +1,11 @@
-import React, {useState, useEffect, useRef, useCallback} from 'react';
-
-import * as api from './api';
-import Header from './components/Header';
-import Notifications from './components/Notifications';
-import StatusBar from './components/StatusBar';
-import Terms from './components/Terms';
-import type {AppConfig, SessionInfo, TermColors, Notification} from './types';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import type { AppConfig, SessionInfo, TermColors, Notification } from "./types";
+import * as api from "./api";
+import Header from "./components/Header";
+import Terms from "./components/Terms";
+import StatusBar from "./components/StatusBar";
+import Notifications from "./components/Notifications";
+import Dashboard from "./components/Dashboard";
 
 const DEFAULT_COLORS: TermColors = {
   black: '#000000',
@@ -57,31 +57,33 @@ const DEFAULT_CONFIG: AppConfig = {
 };
 
 export interface AppState {
-  config: AppConfig;
-  sessions: Record<string, SessionInfo>;
-  activeSessionId: string | null;
-  termGroups: Record<string, any>;
-  activeRootGroup: string | null;
-  maximized: boolean;
-  fullScreen: boolean;
-  notifications: Notification[];
-  agentRunning: boolean;
-  agentStatus: string;
+	config: AppConfig;
+	sessions: Record<string, SessionInfo>;
+	activeSessionId: string | null;
+	termGroups: Record<string, any>;
+	activeRootGroup: string | null;
+	maximized: boolean;
+	fullScreen: boolean;
+	notifications: Notification[];
+	agentRunning: boolean;
+	agentStatus: string;
+	dashboardOpen: boolean;
 }
 
 export default function App() {
-  const [state, setState] = useState<AppState>({
-    config: DEFAULT_CONFIG,
-    sessions: {},
-    activeSessionId: null,
-    termGroups: {},
-    activeRootGroup: null,
-    maximized: false,
-    fullScreen: false,
-    notifications: [],
-    agentRunning: false,
-    agentStatus: 'idle'
-  });
+	const [state, setState] = useState<AppState>({
+		config: DEFAULT_CONFIG,
+		sessions: {},
+		activeSessionId: null,
+		termGroups: {},
+		activeRootGroup: null,
+		maximized: false,
+		fullScreen: false,
+		notifications: [],
+		agentRunning: false,
+		agentStatus: "idle",
+		dashboardOpen: false,
+	});
 
   const sessionsRef = useRef(state.sessions);
   sessionsRef.current = state.sessions;
@@ -93,16 +95,15 @@ export default function App() {
     createNewSession();
   }, []);
 
-  // Listen for session data events from Go backend
-  useEffect(() => {
-    api.onEvent('session:data', (sessionId: string, data: string) => {
-      // Forward to the active term component
-      window.dispatchEvent(
-        new CustomEvent('tn:session-data', {
-          detail: {sessionId, data}
-        })
-      );
-    });
+	// Listen for session and server events from Go backend
+	useEffect(() => {
+		api.onEvent("session:data", (sessionId: string, data: string) => {
+			window.dispatchEvent(
+				new CustomEvent("tn:session-data", {
+					detail: { sessionId, data },
+				}),
+			);
+		});
 
     api.onEvent('session:exit', (sessionId: string) => {
       setState((prev) => {
@@ -117,11 +118,22 @@ export default function App() {
       });
     });
 
-    return () => {
-      api.offEvent('session:data');
-      api.offEvent('session:exit');
-    };
-  }, []);
+		api.onEvent("server:status_changed", (srvStatus: any) => {
+			if (srvStatus) {
+				setState((prev) => ({
+					...prev,
+					agentRunning: srvStatus.agentRunning,
+					agentStatus: srvStatus.agentRunning ? "running" : "idle",
+				}));
+			}
+		});
+
+		return () => {
+			api.offEvent("session:data");
+			api.offEvent("session:exit");
+			api.offEvent("server:status_changed");
+		};
+	}, []);
 
   const loadConfig = async () => {
     try {
@@ -215,15 +227,14 @@ export default function App() {
           delete newSessions[uid];
           const sessionKeys = Object.keys(newSessions);
 
-          if (sessionKeys.length === 0) {
-            // Create a new session if we closed the last one
-            setTimeout(() => createNewSession(), 100);
-            return {
-              ...prev,
-              sessions: newSessions,
-              activeSessionId: null
-            };
-          }
+					if (sessionKeys.length === 0) {
+						setTimeout(() => createNewSession(), 100);
+						return {
+							...prev,
+							sessions: newSessions,
+							activeSessionId: null,
+						};
+					}
 
           return {
             ...prev,
@@ -296,26 +307,41 @@ export default function App() {
     }
   }, []);
 
-  const addNotification = useCallback((text: string, url?: string | null, dismissable: boolean = true) => {
-    const notif: Notification = {
-      id: Date.now().toString() + Math.random().toString(36).slice(2),
-      text,
-      url,
-      dismissable,
-      timestamp: Date.now()
-    };
-    setState((prev) => ({
-      ...prev,
-      notifications: [...prev.notifications, notif]
-    }));
+	const handleRestartServers = useCallback(async () => {
+		try {
+			await api.restartServers();
+			addNotification("MCP Servers restarted cleanly (:8080)");
+		} catch (err) {
+			addNotification(`Server restart error: ${err}`);
+		}
+	}, []);
 
-    // Auto-dismiss after 5 seconds
-    if (dismissable) {
-      setTimeout(() => {
-        dismissNotification(notif.id);
-      }, 5000);
-    }
-  }, []);
+	const toggleDashboard = useCallback(() => {
+		setState((prev) => ({ ...prev, dashboardOpen: !prev.dashboardOpen }));
+	}, []);
+
+	const addNotification = useCallback(
+		(text: string, url?: string | null, dismissable: boolean = true) => {
+			const notif: Notification = {
+				id: Date.now().toString() + Math.random().toString(36).slice(2),
+				text,
+				url,
+				dismissable,
+				timestamp: Date.now(),
+			};
+			setState((prev) => ({
+				...prev,
+				notifications: [...prev.notifications, notif],
+			}));
+
+			if (dismissable) {
+				setTimeout(() => {
+					dismissNotification(notif.id);
+				}, 5000);
+			}
+		},
+		[],
+	);
 
   const dismissNotification = useCallback((id: string) => {
     setState((prev) => ({
@@ -330,12 +356,19 @@ export default function App() {
       const ctrl = e.ctrlKey;
       const shift = e.shiftKey;
 
-      // Ctrl+Shift+T: New tab
-      if (ctrl && shift && e.key === 'T') {
-        e.preventDefault();
-        createNewSession();
-        return;
-      }
+			// Ctrl+Shift+D: Toggle Mission Control Dashboard
+			if (ctrl && shift && e.key === "D") {
+				e.preventDefault();
+				toggleDashboard();
+				return;
+			}
+
+			// Ctrl+Shift+T: New tab
+			if (ctrl && shift && e.key === "T") {
+				e.preventDefault();
+				createNewSession();
+				return;
+			}
 
       // Ctrl+Shift+W: Close tab
       if (ctrl && shift && e.key === 'W') {
@@ -346,172 +379,119 @@ export default function App() {
         return;
       }
 
-      // Ctrl+Shift+N: New window (not possible in single-window, so new tab)
-      if (ctrl && shift && e.key === 'N') {
-        e.preventDefault();
-        createNewSession();
-        return;
-      }
+			// Ctrl+Tab: Next tab
+			if (ctrl && !shift && e.key === "Tab") {
+				e.preventDefault();
+				const sessionKeys = Object.keys(state.sessions);
+				if (sessionKeys.length > 1 && state.activeSessionId) {
+					const currentIdx = sessionKeys.indexOf(state.activeSessionId);
+					const nextIdx = (currentIdx + 1) % sessionKeys.length;
+					setActiveSession(sessionKeys[nextIdx]);
+				}
+				return;
+			}
 
-      // Ctrl+Tab: Next tab
-      if (ctrl && !shift && e.key === 'Tab') {
-        e.preventDefault();
-        const sessionKeys = Object.keys(state.sessions);
-        if (sessionKeys.length > 1 && state.activeSessionId) {
-          const currentIdx = sessionKeys.indexOf(state.activeSessionId);
-          const nextIdx = (currentIdx + 1) % sessionKeys.length;
-          setActiveSession(sessionKeys[nextIdx]);
-        }
-        return;
-      }
+			// Ctrl+,: Preferences
+			if (ctrl && e.key === ",") {
+				e.preventDefault();
+				handleOpenConfig();
+				return;
+			}
 
-      // Ctrl+Shift+Tab: Prev tab
-      if (ctrl && shift && e.key === 'Tab') {
-        e.preventDefault();
-        const sessionKeys = Object.keys(state.sessions);
-        if (sessionKeys.length > 1 && state.activeSessionId) {
-          const currentIdx = sessionKeys.indexOf(state.activeSessionId);
-          const prevIdx = (currentIdx - 1 + sessionKeys.length) % sessionKeys.length;
-          setActiveSession(sessionKeys[prevIdx]);
-        }
-        return;
-      }
+			// F11: Fullscreen
+			if (e.key === "F11") {
+				e.preventDefault();
+				if (state.fullScreen) {
+					api.windowUnfullscreen();
+				} else {
+					api.windowFullscreen();
+				}
+				setState((prev) => ({ ...prev, fullScreen: !prev.fullScreen }));
+				return;
+			}
+		};
 
-      // Ctrl+Shift+F: Search
-      if (ctrl && shift && e.key === 'F') {
-        e.preventDefault();
-        if (state.activeSessionId) {
-          toggleSearch(state.activeSessionId, true);
-        }
-        return;
-      }
+		window.addEventListener("keydown", handleKeyDown);
+		return () => window.removeEventListener("keydown", handleKeyDown);
+	}, [
+		state.activeSessionId,
+		state.sessions,
+		state.maximized,
+		state.fullScreen,
+		createNewSession,
+		closeSession,
+		setActiveSession,
+		handleOpenConfig,
+		toggleDashboard,
+	]);
 
-      // Ctrl+Shift+K: Clear buffer
-      if (ctrl && shift && e.key === 'K') {
-        e.preventDefault();
-        // Handled by the Term component via the event
-        window.dispatchEvent(new CustomEvent('tn:clear-buffer'));
-        return;
-      }
+	const {
+		config,
+		sessions,
+		activeSessionId,
+		maximized,
+		fullScreen,
+		notifications,
+		dashboardOpen,
+	} = state;
+	const sessionList = Object.values(sessions);
 
-      // Ctrl+Shift+U: Update plugins (shows notification)
-      if (ctrl && shift && e.key === 'U') {
-        e.preventDefault();
-        addNotification('Plugin updates checked');
-        return;
-      }
+	return (
+		<div
+			className={`tn_main ${maximized ? "maximized" : ""} ${fullScreen ? "fullScreen" : ""}`}
+			style={{
+				borderColor: config.borderColor || "#333",
+			}}
+		>
+			<Header
+				sessions={sessionList}
+				activeSessionId={activeSessionId}
+				maximized={maximized}
+				dashboardOpen={dashboardOpen}
+				onToggleDashboard={toggleDashboard}
+				onNewTab={() => createNewSession()}
+				onSelectTab={setActiveSession}
+				onCloseTab={closeSession}
+				onMinimise={handleWindowMinimise}
+				onMaximise={handleWindowMaximise}
+				onClose={handleWindowClose}
+				onOpenConfig={handleOpenConfig}
+				onAgentCheck={handleAgentHealthCheck}
+				onRestartServers={handleRestartServers}
+			/>
 
-      // Ctrl+,: Preferences
-      if (ctrl && e.key === ',') {
-        e.preventDefault();
-        handleOpenConfig();
-        return;
-      }
+			{dashboardOpen ? (
+				<Dashboard
+					config={config}
+					sessions={sessions}
+					activeSessionId={activeSessionId}
+					onSelectSession={setActiveSession}
+					onCloseSession={closeSession}
+					onNewSession={() => createNewSession()}
+					onCloseDashboard={() => setState((prev) => ({ ...prev, dashboardOpen: false }))}
+					onNotification={addNotification}
+				/>
+			) : (
+				<Terms
+					sessions={sessions}
+					activeSessionId={activeSessionId}
+					config={config}
+					onActive={setActiveSession}
+					onTitle={setSessionTitle}
+					onToggleSearch={toggleSearch}
+				/>
+			)}
 
-      // Ctrl+=: Zoom in
-      if (ctrl && (e.key === '=' || e.key === '+')) {
-        e.preventDefault();
-        setState((prev) => ({
-          ...prev,
-          config: {
-            ...prev.config,
-            fontSize: (prev.config.fontSize || 12) + 1
-          }
-        }));
-        return;
-      }
-
-      // Ctrl+-: Zoom out
-      if (ctrl && e.key === '-') {
-        e.preventDefault();
-        setState((prev) => ({
-          ...prev,
-          config: {
-            ...prev.config,
-            fontSize: Math.max(8, (prev.config.fontSize || 12) - 1)
-          }
-        }));
-        return;
-      }
-
-      // Ctrl+0: Reset zoom
-      if (ctrl && e.key === '0') {
-        e.preventDefault();
-        setState((prev) => ({
-          ...prev,
-          config: {...prev.config, fontSize: 12}
-        }));
-        return;
-      }
-
-      // F11: Fullscreen
-      if (e.key === 'F11') {
-        e.preventDefault();
-        if (state.fullScreen) {
-          api.windowUnfullscreen();
-        } else {
-          api.windowFullscreen();
-        }
-        setState((prev) => ({...prev, fullScreen: !prev.fullScreen}));
-        return;
-      }
-
-      // Alt+F: Hamburger menu
-      if (e.altKey && e.key === 'f') {
-        e.preventDefault();
-        // Could trigger a menu popup - for now just a notification
-        return;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [
-    state.activeSessionId,
-    state.sessions,
-    state.maximized,
-    state.fullScreen,
-    createNewSession,
-    closeSession,
-    setActiveSession,
-    toggleSearch,
-    addNotification,
-    handleOpenConfig
-  ]);
-
-  const {config, sessions, activeSessionId, maximized, fullScreen, notifications} = state;
-  const sessionList = Object.values(sessions);
-
-  return (
-    <div
-      className={`tn_main ${maximized ? 'maximized' : ''} ${fullScreen ? 'fullScreen' : ''}`}
-      style={{
-        borderColor: config.borderColor || '#333'
-      }}
-    >
-      <Header
-        sessions={sessionList}
-        activeSessionId={activeSessionId}
-        maximized={maximized}
-        onNewTab={() => createNewSession()}
-        onSelectTab={setActiveSession}
-        onCloseTab={closeSession}
-        onMinimise={handleWindowMinimise}
-        onMaximise={handleWindowMaximise}
-        onClose={handleWindowClose}
-        onOpenConfig={handleOpenConfig}
-        onAgentCheck={handleAgentHealthCheck}
-      />
-      <Terms
-        sessions={sessions}
-        activeSessionId={activeSessionId}
-        config={config}
-        onActive={setActiveSession}
-        onTitle={setSessionTitle}
-        onToggleSearch={toggleSearch}
-      />
-      <StatusBar sessions={sessionList} agentStatus={state.agentStatus} />
-      <Notifications notifications={notifications} onDismiss={dismissNotification} />
-    </div>
-  );
+			<StatusBar
+				sessions={sessionList}
+				agentStatus={state.agentStatus}
+				dashboardOpen={dashboardOpen}
+				onToggleDashboard={toggleDashboard}
+			/>
+			<Notifications
+				notifications={notifications}
+				onDismiss={dismissNotification}
+			/>
+		</div>
+	);
 }

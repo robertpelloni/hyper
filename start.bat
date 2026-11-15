@@ -1,16 +1,11 @@
 @echo off
-:: TormentNexus Go Build Script - v4.63.0
+:: TormentNexus Start Script
 :: ===================================
-:: Builds the tormentnexus Go binary from the cmd/tormentnexus entry point
-:: (Module was originally branded "tormentnexus" by Jules AI)
-:: TODO: Rebrand module path from tormentnexus to tormentnexus
+:: Launches the TormentNexus backend and application services
 
-echo [TormentNexus] Building tormentnexus.exe...
-go build -buildvcs=false -o tormentnexus.exe -ldflags "-s -w" ./cmd/tormentnexus/
-if %ERRORLEVEL% NEQ 0 (
-    echo [TormentNexus] BUILD FAILED
-    exit /b 1
+echo [TormentNexus] Starting TormentNexus MCP Server on :8080...
+if exist bin\tormentnexus-mcp.exe (
+    start /b bin\tormentnexus-mcp.exe
+) else (
+    go run .\cmd\tormentnexus\
 )
-for %%A in (tormentnexus.exe) do echo [TormentNexus] Built: %%~zA bytes
-echo [TormentNexus] Starting on :8080...
-start /b tormentnexus.exe

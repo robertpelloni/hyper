@@ -1,22 +1,25 @@
 @echo off
-echo TormentNexus Build Script
-echo =========================
+:: TormentNexus Build Script
+:: ===================================
+:: Builds frontend assets and compiles the Go backend binary
 
-echo.
-echo [1/3] Building frontend...
+echo [TormentNexus] Building frontend...
 cd frontend
 call npm run build
+if %ERRORLEVEL% NEQ 0 (
+    echo [TormentNexus] Frontend build failed
+    exit /b 1
+)
 cd ..
 
 echo.
-echo [2/3] Building Go binary...
-wails build -ldflags "-s -w"
+echo [TormentNexus] Compiling Go Core...
+go build -buildvcs=false -o bin\tormentnexus.exe .
+go build -buildvcs=false -o bin\tormentnexus-mcp.exe .\cmd\tormentnexus\
+if %ERRORLEVEL% NEQ 0 (
+    echo [TormentNexus] Go compilation failed
+    exit /b 1
+)
 
 echo.
-echo [3/3] Copying to project root...
-copy /Y build\bin\tormentnexus.exe tormentnexus.exe
-
-echo.
-echo Done! Run tormentnexus.exe to launch TormentNexus.
-echo Binary size:
-for %%A in (tormentnexus.exe) do echo %%~zA bytes
+echo [TormentNexus] Build complete!
